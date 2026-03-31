@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Mastery Game Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <div id="auth-screen" class="glass rounded-3xl shadow-2xl p-8 text-center animate-fade-in">
+            <h1 class="text-4xl font-bold text-indigo-700 mb-2">Welcome, Explorer! 🚀</h1>
+            <p class="text-gray-600 mb-8">Ready to test your English skills?</p>
+            <div class="space-y-4 max-w-sm mx-auto text-left">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Student Name</label>
+<input type="text" id="student-name" list="name-suggestions" oninput="this.value = this.value.toUpperCase(); autoFillClass()" autocomplete="off" class="w-full px-4 py-3 rounded-xl border-2 border-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="Enter your name...">
+                    
+                    <datalist id="name-suggestions"></datalist>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Class</label>
+                    <input type="text" id="student-class" class="w-full px-4 py-3 rounded-xl border-2 border-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="e.g. 5 Brilliant">
+                </div>
+                <button onclick="startGameHub()" id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:scale-105">
+                    START ADVENTURE
+                </button>
+                <p id="loading-status" class="text-xs text-center text-indigo-500 font-medium animate-pulse">Loading profiles from database...</p>
+            </div>
+        </div>
+
+        <div id="menu-screen" class="hidden animate-fade-in">
+            <div class="glass rounded-3xl p-6 mb-6 flex justify-between items-center shadow-lg">
+                <div>
+                    <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
+                    <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
+                    <button onclick="logout()" class="text-xs text-red-500 hover:text-red-700 underline mt-1 font-semibold transition">
+                        <i class="fas fa-sign-out-alt"></i> Not you? Change Player
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="showLeaderboard()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 px-4 py-2 rounded-full font-bold shadow transition">
+                        <i class="fas fa-trophy"></i> Leaderboard
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button onclick="initGame('guessing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-orange-400">
+                    <div class="text-4xl mb-4 text-orange-500"><i class="fas fa-search"></i></div>
+                    <h3 class="text-xl font-bold mb-1">Guessing Word</h3>
+                    <p class="text-sm text-gray-500">Guess the word based on hints.</p>
+                </button>
+                
+                <button onclick="initGame('puzzle')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-blue-400">
+                    <div class="text-4xl mb-4 text-blue-500"><i class="fas fa-puzzle-piece"></i></div>
+                    <h3 class="text-xl font-bold mb-1">Word Scramble</h3>
+                    <p class="text-sm text-gray-500">Unscramble the messy letters.</p>
+                </button>
+
+                <button onclick="initGame('synonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-purple-400">
+                    <div class="text-4xl mb-4 text-purple-500"><i class="fas fa-link"></i></div>
+                    <h3 class="text-xl font-bold mb-1">Synonyms</h3>
+                    <p class="text-sm text-gray-500">Find words with the SAME meaning.</p>
+                </button>
+
+                <button onclick="initGame('antonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-red-400">
+                    <div class="text-4xl mb-4 text-red-500"><i class="fas fa-not-equal"></i></div>
+                    <h3 class="text-xl font-bold mb-1">Antonyms</h3>
+                    <p class="text-sm text-gray-500">Find words with the OPPOSITE meaning.</p>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-arena" class="hidden glass rounded-3xl shadow-2xl p-6 md:p-8 animate-fade-in">
+            <div class="flex justify-between items-center mb-8 border-b pb-4">
+                <button onclick="backToMenu()" class="text-gray-500 hover:text-red-500 font-semibold"><i class="fas fa-arrow-left"></i> Back</button>
+                <div class="text-center">
+                    <h2 id="game-title" class="text-2xl font-bold text-indigo-700 uppercase tracking-wider">Game</h2>
+                    <p id="game-subtitle" class="text-xs text-gray-400">Answer as many as you can!</p>
+                </div>
+                <div id="timer-box" class="bg-red-500 text-white px-4 py-2 rounded-lg font-mono text-xl font-bold shadow-inner">
+                    03:00
+                </div>
+            </div>
+
+            <div id="question-container" class="custom-scroll space-y-6 mb-8 max-h-[60vh] overflow-y-auto px-2">
+            </div>
+
+            <div class="flex flex-col items-center gap-4">
+                <button id="check-btn" onclick="finishGame()" class="hidden w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg transition-all">
+                    CHECK ANSWERS & SEE SCORE
+                </button>
+                <div id="final-score" class="hidden text-center p-6 bg-indigo-50 rounded-2xl w-full border-2 border-dashed border-indigo-200">
+                    <p class="text-gray-600">Your Score:</p>
+                    <h2 id="score-val" class="text-5xl font-black text-indigo-600">0/0</h2>
+                    <p id="praise-text" class="text-sm font-medium mt-2 mb-4 text-indigo-500 italic"></p>
+                    <p id="save-status" class="text-xs text-gray-400 mb-4">Saving to Cloud...</p>
+                    <button onclick="showLeaderboard()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 px-6 py-2 rounded-full font-bold shadow transition">
+                        View Leaderboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="leaderboard-screen" class="hidden glass rounded-3xl shadow-2xl p-8 animate-fade-in">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-3xl font-bold text-indigo-700"><i class="fas fa-crown text-yellow-500"></i> Leaderboard</h2>
+                <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-full font-bold transition">CLOSE</button>
+            </div>
+            <div class="overflow-hidden rounded-2xl border border-gray-100 shadow-sm max-h-[60vh] overflow-y-auto custom-scroll">
+                <table class="w-full text-left bg-white">
+<thead class="bg-indigo-600 text-white sticky top-0 z-10">
+                        <tr>
+                            <th class="p-4">Rank</th>
+                            <th class="p-4">Name</th>
+                            <th class="p-4">Class</th>
+                            <th class="p-4">Game</th>
+                            <th class="p-4 text-center">Score</th>
+                            <th class="p-4 text-center">Total</th> </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="text-gray-700">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // URL GOOGLE APPS SCRIPT ANDA
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpiILYW_Intq-Snf3kmUJfNXzUIV6_pbBRxG1f18_TIfZFnYiD4VifnzIJsNAm11jG/exec";
+
+        let currentTimer;
+        let timeLeft;
+        let studentInfo = { name: '', class: '' };
+        let currentGameType = ''; 
+        let studentDatabase = []; // Memori untuk simpan nama dari Google Sheet
+
+        // DATA SOALAN
+        const gameData = {
+            guessing: [
+                { q: "I have a tail and a mane, and I like to gallop.", a: "horse" },
+                { q: "I am a fruit that is usually yellow and long.", a: "banana" },
+                { q: "I have four legs and I bark.", a: "dog" },
+                { q: "I am the king of the jungle.", a: "lion" },
+                { q: "I twinkle at night in the sky.", a: "star" },
+                { q: "You use me to write on paper.", a: "pencil" },
+                { q: "I have pages and stories inside me.", a: "book" },
+                { q: "I am cold, white, and fall from the sky in winter.", a: "snow" },
+                { q: "I have a long neck to eat leaves from tall trees.", a: "giraffe" },
+                { q: "I am the round object that shines during the day.", a: "sun" },
+                { q: "I have many teeth but cannot bite. I fix your hair.", a: "comb" },
+                { q: "You wear me on your feet to go running.", a: "shoes" },
+                { q: "I am a place where you go to learn.", a: "school" },
+                { q: "I am a bird that can swim but cannot fly. I live in the cold.", a: "penguin" },
+                { q: "I help you stay dry when it rains.", a: "umbrella" },
+                { q: "I am a large animal with a very long trunk.", a: "elephant" },
+                { q: "You use me to cut paper.", a: "scissors" },
+                { q: "I am a red fruit with seeds on the outside.", a: "strawberry" },
+                { q: "I am the person who treats sick people.", a: "doctor" },
+                { q: "I am a room where you cook food.", a: "kitchen" },
+                { q: "I have wings but I am not a bird. I carry passengers.", a: "airplane" },
+                { q: "I am a slow animal with a hard shell.", a: "turtle" },
+                { q: "I am what you use to smell things.", a: "nose" },
+                { q: "I am the opposite of day.", a: "night" },
+                { q: "I am a giant cat with stripes.", a: "tiger" },
+                { q: "I am a place where you can see many wild animals.", a: "zoo" },
+                { q: "I grow on your head and can be cut.", a: "hair" },
+                { q: "I am a insect that makes honey.", a: "bee" },
+                { q: "I am a sweet treat that melts in the sun.", a: "icecream" },
+                { q: "I am a building where you watch movies.", a: "cinema" },
+                { q: "I am the color of the grass.", a: "green" },
+                { q: "I am a machine that tells the time.", a: "clock" },
+                { q: "I have a screen and a keyboard.", a: "computer" },
+                { q: "I am a person who flies a plane.", a: "pilot" },
+                { q: "I am a sport played with a round ball and feet.", a: "football" },
+                { q: "I am the planet we live on.", a: "earth" },
+                { q: "I am a month that starts with 'J' and has 31 days.", a: "january" },
+                { q: "I am a shape with three sides.", a: "triangle" },
+                { q: "I am the son of your father and mother.", a: "brother" },
+                { q: "I am a vehicle with two wheels and no engine.", a: "bicycle" },
+                { q: "I am the liquid inside a pen.", a: "ink" },
+                { q: "I am the largest ocean in the world.", a: "pacific" },
+                { q: "I am a piece of furniture you sleep on.", a: "bed" },
+                { q: "I am the sound a cat makes.", a: "meow" },
+                { q: "I am a yellow flower that follows the sun.", a: "sunflower" },
+                { q: "I am a large body of salt water.", a: "ocean" },
+                { q: "I am the tool you use to eat soup.", a: "spoon" },
+                { q: "I am a colorful arc in the sky after rain.", a: "rainbow" },
+                { q: "I am the holiday celebrated on December 25th.", a: "christmas" },
+                { q: "I am the capital city of Malaysia.", a: "kuala lumpur" }
+            ],
+            puzzle: [
+                { q: "C-H-E-A-T-R-E", a: "teacher" }, { q: "F-R-I-E-N-D", a: "friend" },
+                { q: "G-A-R-D-E-N", a: "garden" }, { q: "W-I-N-D-O-W", a: "window" },
+                { q: "F-A-M-I-L-Y", a: "family" }, { q: "O-R-A-N-G-E", a: "orange" },
+                { q: "M-O-T-H-E-R", a: "mother" }, { q: "F-A-T-H-E-R", a: "father" },
+                { q: "P-L-A-S-T-I-C", a: "plastic" }, { q: "B-O-T-T-L-E", a: "bottle" },
+                { q: "M-A-R-K-E-T", a: "market" }, { q: "P-E-N-C-I-L", a: "pencil" },
+                { q: "S-U-M-M-E-R", a: "summer" }, { q: "W-I-N-T-E-R", a: "winter" },
+                { q: "C-O-F-F-E-E", a: "coffee" }, { q: "D-I-N-N-E-R", a: "dinner" },
+                { q: "Y-E-L-L-O-W", a: "yellow" }, { q: "B-R-I-D-G-E", a: "bridge" },
+                { q: "C-H-I-C-K-E-N", a: "chicken" }, { q: "D-O-L-P-H-I-N", a: "dolphin" },
+                { q: "H-A-M-B-U-R-G-E-R", a: "hamburger" }, { q: "M-O-U-N-T-A-I-N", a: "mountain" },
+                { q: "H-O-S-P-I-T-A-L", a: "hospital" }, { q: "B-I-R-T-H-D-A-Y", a: "birthday" },
+                { q: "E-L-E-P-H-A-N-T", a: "elephant" }, { q: "C-O-M-P-U-T-E-R", a: "computer" },
+                { q: "K-I-T-C-H-E-N", a: "kitchen" }, { q: "S-A-N-D-W-I-C-H", a: "sandwich" },
+                { q: "V-E-G-E-T-A-B-L-E", a: "vegetable" }, { q: "U-N-I-V-E-R-S-E", a: "universe" },
+                { q: "L-I-B-R-A-R-Y", a: "library" }, { q: "C-A-P-T-A-I-N", a: "captain" },
+                { q: "H-O-L-I-D-A-Y", a: "holiday" }, { q: "B-U-T-T-E-R-F-L-Y", a: "butterfly" },
+                { q: "D-I-A-M-O-N-D", a: "diamond" }, { q: "F-E-S-T-I-V-A-L", a: "festival" },
+                { q: "M-A-G-A-Z-I-N-E", a: "magazine" }, { q: "N-E-I-G-H-B-O-U-R", a: "neighbour" },
+                { q: "Q-U-E-S-T-I-O-N", a: "question" }, { q: "S-T-R-A-W-B-E-R-R-Y", a: "strawberry" },
+                { q: "T-R-I-A-N-G-L-E", a: "triangle" }, { q: "V-I-L-L-A-G-E", a: "village" },
+                { q: "W-E-A-T-H-E-R", a: "weather" }, { q: "Y-E-S-T-E-R-D-A-Y", a: "yesterday" },
+                { q: "Z-E-B-R-A", a: "zebra" }, { q: "A-N-I-M-A-L", a: "animal" },
+                { q: "B-E-A-U-T-I-F-U-L", a: "beautiful" }, { q: "C-O-U-N-T-R-Y", a: "country" },
+                { q: "D-A-N-G-E-R-O-U-S", a: "dangerous" }, { q: "E-X-E-R-C-I-S-E", a: "exercise" }
+            ],
+            synonym: [
+                { q: "Synonym of 'Happy'", a: "joyful|glad|cheerful" },
+                { q: "Synonym of 'Big'", a: "huge|large|giant" },
+                { q: "Synonym of 'Fast'", a: "quick|rapid|speedy" },
+                { q: "Synonym of 'Smart'", a: "intelligent|clever|bright" },
+                { q: "Synonym of 'Small'", a: "tiny|little|mini" },
+                { q: "Synonym of 'Beautiful'", a: "pretty|lovely|gorgeous" },
+                { q: "Synonym of 'Quiet'", a: "silent|calm|peaceful" },
+                { q: "Synonym of 'Simple'", a: "easy|basic|plain" },
+                { q: "Synonym of 'Sick'", a: "ill|unwell" },
+                { q: "Synonym of 'Angry'", a: "mad|furious" },
+                { q: "Synonym of 'Gift'", a: "present|reward" },
+                { q: "Synonym of 'Begin'", a: "start|commence" },
+                { q: "Synonym of 'Sad'", a: "unhappy|sorrowful|depressed" },
+                { q: "Synonym of 'Funny'", a: "hilarious|comical|amusing" },
+                { q: "Synonym of 'Shout'", a: "yell|scream|cry" },
+                { q: "Synonym of 'Scared'", a: "afraid|frightened|terrified" },
+                { q: "Synonym of 'Rich'", a: "wealthy|affluent" },
+                { q: "Synonym of 'Buy'", a: "purchase|get" },
+                { q: "Synonym of 'Finish'", a: "end|complete|conclude" },
+                { q: "Synonym of 'Help'", a: "assist|support|aid" },
+                { q: "Synonym of 'Idea'", a: "thought|concept|plan" },
+                { q: "Synonym of 'Job'", a: "work|occupation|career" },
+                { q: "Synonym of 'Look'", a: "see|watch|stare" },
+                { q: "Synonym of 'Make'", a: "create|build|produce" },
+                { q: "Synonym of 'Neat'", a: "tidy|clean|orderly" },
+                { q: "Synonym of 'Old'", a: "ancient|aged" },
+                { q: "Synonym of 'Part'", a: "section|piece|portion" },
+                { q: "Synonym of 'Right'", a: "correct|accurate|true" },
+                { q: "Synonym of 'Safe'", a: "secure|protected" },
+                { q: "Synonym of 'Tell'", a: "say|speak|inform" },
+                { q: "Synonym of 'Use'", a: "utilize|employ" },
+                { q: "Synonym of 'Wrong'", a: "incorrect|false|mistaken" },
+                { q: "Synonym of 'Always'", a: "forever|constantly" },
+                { q: "Synonym of 'Brave'", a: "courageous|fearless|bold" },
+                { q: "Synonym of 'Cold'", a: "chilly|freezing|cool" },
+                { q: "Synonym of 'Dirty'", a: "messy|unclean|filthy" },
+                { q: "Synonym of 'Enjoy'", a: "like|love|appreciate" },
+                { q: "Synonym of 'Famous'", a: "well-known|popular|renowned" },
+                { q: "Synonym of 'Good'", a: "great|excellent|fine" },
+                { q: "Synonym of 'Hard'", a: "difficult|tough|solid" },
+                { q: "Synonym of 'Important'", a: "crucial|significant|vital" },
+                { q: "Synonym of 'Jump'", a: "leap|hop|bounce" },
+                { q: "Synonym of 'Keep'", a: "hold|save|retain" },
+                { q: "Synonym of 'Lazy'", a: "idle|sluggish|inactive" },
+                { q: "Synonym of 'Many'", a: "numerous|multiple|plenty" },
+                { q: "Synonym of 'New'", a: "fresh|modern|recent" },
+                { q: "Synonym of 'Polite'", a: "courteous|respectful|civil" },
+                { q: "Synonym of 'Strong'", a: "powerful|tough|sturdy" },
+                { q: "Synonym of 'Tired'", a: "sleepy|exhausted|fatigued" },
+                { q: "Synonym of 'Weak'", a: "frail|fragile|feeble" }
+            ],
+            antonym: [
+                { q: "Antonym of 'Hot'", a: "cold|freezing" },
+                { q: "Antonym of 'Up'", a: "down" },
+                { q: "Antonym of 'Good'", a: "bad|evil|terrible" },
+                { q: "Antonym of 'Fast'", a: "slow" },
+                { q: "Antonym of 'Happy'", a: "sad|unhappy|depressed" },
+                { q: "Antonym of 'Big'", a: "small|tiny|little" },
+                { q: "Antonym of 'Light'", a: "dark|heavy" },
+                { q: "Antonym of 'Day'", a: "night" },
+                { q: "Antonym of 'Open'", a: "close|closed|shut" },
+                { q: "Antonym of 'New'", a: "old|ancient" },
+                { q: "Antonym of 'Rich'", a: "poor|broke" },
+                { q: "Antonym of 'Hard'", a: "soft|easy" },
+                { q: "Antonym of 'Empty'", a: "full" },
+                { q: "Antonym of 'Clean'", a: "dirty|messy" },
+                { q: "Antonym of 'Strong'", a: "weak|frail" },
+                { q: "Antonym of 'Right'", a: "wrong|left" },
+                { q: "Antonym of 'Tall'", a: "short" },
+                { q: "Antonym of 'Beautiful'", a: "ugly" },
+                { q: "Antonym of 'Brave'", a: "coward|scared|fearful" },
+                { q: "Antonym of 'Cheap'", a: "expensive|costly" },
+                { q: "Antonym of 'Cry'", a: "laugh|smile" },
+                { q: "Antonym of 'Early'", a: "late" },
+                { q: "Antonym of 'Fat'", a: "thin|skinny|slim" },
+                { q: "Antonym of 'First'", a: "last|final" },
+                { q: "Antonym of 'Friend'", a: "enemy|foe" },
+                { q: "Antonym of 'Give'", a: "take|receive" },
+                { q: "Antonym of 'Inside'", a: "outside" },
+                { q: "Antonym of 'Loud'", a: "quiet|silent|soft" },
+                { q: "Antonym of 'Love'", a: "hate|dislike" },
+                { q: "Antonym of 'Near'", a: "far|distant" },
+                { q: "Antonym of 'Never'", a: "always|forever" },
+                { q: "Antonym of 'Pull'", a: "push" },
+                { q: "Antonym of 'Rough'", a: "smooth|soft" },
+                { q: "Antonym of 'Safe'", a: "dangerous|unsafe" },
+                { q: "Antonym of 'Same'", a: "different|opposite" },
+                { q: "Antonym of 'Start'", a: "stop|finish|end" },
+                { q: "Antonym of 'Sweet'", a: "sour|bitter" },
+                { q: "Antonym of 'Thick'", a: "thin" },
+                { q: "Antonym of 'True'", a: "false|fake" },
+                { q: "Antonym of 'Win'", a: "lose" },
+                { q: "Antonym of 'Young'", a: "old" },
+                { q: "Antonym of 'Alive'", a: "dead" },
+                { q: "Antonym of 'Awake'", a: "asleep|sleeping" },
+                { q: "Antonym of 'Careful'", a: "careless|reckless" },
+                { q: "Antonym of 'Cruel'", a: "kind|gentle|compassionate" },
+                { q: "Antonym of 'Deep'", a: "shallow" },
+                { q: "Antonym of 'Float'", a: "sink" },
+                { q: "Antonym of 'Generous'", a: "stingy|selfish|greedy" },
+                { q: "Antonym of 'Healthy'", a: "sick|ill|unhealthy" },
+                { q: "Antonym of 'Import'", a: "export" }
+            ]
+        };
+ 
+        // Muat turun profil dari Google Sheet apabila aplikasi dibuka
+        window.onload = async () => {
+            const datalist = document.getElementById('name-suggestions');
+            const loadingText = document.getElementById('loading-status');
+            const startBtn = document.getElementById('start-btn');
+            
+            startBtn.disabled = true; // Kunci butang sementara data dimuat turun
+            startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                
+                // Saring data supaya tiada nama berulang
+                const uniqueStudents = [];
+                const checkDuplicate = new Map();
+                
+                for (const item of data) {
+                    if(!checkDuplicate.has(item.name.toLowerCase())){
+                        checkDuplicate.set(item.name.toLowerCase(), true);
+                        uniqueStudents.push({
+    name: item.name.toUpperCase(), // Paksa nama menjadi HURUF BESAR
+    class: item.cls 
+});
+                    }
+                }
+                
+                studentDatabase = uniqueStudents;
+                
+                // Masukkan nama ke dalam dropdown
+                studentDatabase.forEach(profile => {
+                    const option = document.createElement('option');
+                    option.value = profile.name;
+                    datalist.appendChild(option);
+                });
+
+                loadingText.innerText = "Profiles loaded successfully!";
+                loadingText.classList.replace('text-indigo-500', 'text-green-500');
+                loadingText.classList.remove('animate-pulse');
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                loadingText.innerText = "Warning: Could not load profiles. Proceed manually.";
+                loadingText.classList.replace('text-indigo-500', 'text-red-500');
+                loadingText.classList.remove('animate-pulse');
+            } finally {
+                startBtn.disabled = false;
+                startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        };
+
+        // Fungsi ini dipanggil setiap kali pelajar menaip nama
+        function autoFillClass() {
+            const inputName = document.getElementById('student-name').value.trim().toLowerCase();
+            const foundProfile = studentDatabase.find(p => p.name.toLowerCase() === inputName);
+            
+            if (foundProfile) {
+                // Jika nama dijumpai dalam rekod, isi kelas secara automatik
+                document.getElementById('student-class').value = foundProfile.class;
+            }
+        }
+
+        function startGameHub() {
+            const name = document.getElementById('student-name').value.trim();
+            const cls = document.getElementById('student-class').value.trim();
+            
+            if(!name || !cls) return alert("Please enter your name and class first!");
+
+            studentInfo = { name, class: cls };
+            document.getElementById('display-name').innerText = "Hi, " + name + "!";
+            document.getElementById('display-class').innerText = "Class: " + cls;
+            
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+
+        function logout() {
+            studentInfo = { name: '', class: '' };
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-class').value = '';
+
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+        }
+
+        function backToMenu() {
+            clearInterval(currentTimer);
+            document.getElementById('game-arena').classList.add('hidden');
+            document.getElementById('leaderboard-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+
+        function initGame(type) {
+            currentGameType = type;
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('game-arena').classList.remove('hidden');
+            document.getElementById('check-btn').classList.add('hidden');
+            document.getElementById('final-score').classList.add('hidden');
+            
+            const container = document.getElementById('question-container');
+            container.innerHTML = "";
+            
+            let title = "";
+            if(type === 'guessing') title = "Guess the Word";
+            if(type === 'puzzle') title = "Word Scramble";
+            if(type === 'synonym') title = "Synonyms (Same Meaning)";
+            if(type === 'antonym') title = "Antonyms (Opposite Meaning)";
+            
+            document.getElementById('game-title').innerText = title;
+
+            const questions = gameData[type] || [];
+            questions.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
+                div.innerHTML = `
+                    <p class="font-bold text-gray-700 mb-3">${index + 1}. ${item.q}</p>
+                    <input type="text" class="game-input w-full p-3 rounded-lg bg-gray-50 border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Type your answer here..." data-answer="${item.a}">
+                `;
+                container.appendChild(div);
+            });
+
+            startTimer(180); // 3 minit
+        }
+
+        function startTimer(seconds) {
+            timeLeft = seconds;
+            clearInterval(currentTimer);
+            
+            currentTimer = setInterval(() => {
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                document.getElementById('timer-box').innerText = 
+                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 10) {
+                    document.getElementById('timer-box').classList.add('animate-pulse', 'bg-red-600');
+                } else {
+                    document.getElementById('timer-box').classList.remove('animate-pulse', 'bg-red-600');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(currentTimer);
+                    timeUp();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function timeUp() {
+            document.getElementById('timer-box').innerText = "TIME UP!";
+            const inputs = document.querySelectorAll('.game-input');
+            inputs.forEach(input => input.disabled = true);
+            document.getElementById('check-btn').classList.remove('hidden');
+            alert("TIME'S UP! Check your answers below.");
+        }
+
+        function finishGame() {
+            const inputs = document.querySelectorAll('.game-input');
+            let score = 0;
+            let total = inputs.length;
+
+            inputs.forEach(input => {
+                const userAns = input.value.trim().toLowerCase();
+                const correctAns = input.dataset.answer.toLowerCase();
+
+                if (correctAns.includes('|')) {
+                    const validAnswers = correctAns.split('|');
+                    if(validAnswers.includes(userAns)) {
+                        score++;
+                        input.classList.add('bg-green-100', 'border-green-500');
+                    } else {
+                        input.classList.add('bg-red-100', 'border-red-500');
+                        showHint(input, correctAns);
+                    }
+                } else {
+                    if(userAns === correctAns) {
+                        score++;
+                        input.classList.add('bg-green-100', 'border-green-500');
+                    } else {
+                        input.classList.add('bg-red-100', 'border-red-500');
+                        showHint(input, correctAns);
+                    }
+                }
+            });
+
+            document.getElementById('score-val').innerText = `${score}/${total}`;
+            document.getElementById('final-score').classList.remove('hidden');
+            document.getElementById('check-btn').classList.add('hidden');
+            
+            const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
+            document.getElementById('praise-text').innerText = praise;
+
+            saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
+        }
+
+        function showHint(inputElement, correctAns) {
+            const hint = document.createElement('span');
+            hint.className = "text-xs text-green-600 block mt-1 font-bold";
+            hint.innerText = "Correct: " + correctAns.replace(/\|/g, ' or ');
+            inputElement.parentNode.appendChild(hint);
+        }
+
+        async function saveScoreToSheets(name, cls, score, total, type) {
+            const statusText = document.getElementById('save-status');
+            statusText.innerText = "Saving to Cloud...";
+            statusText.classList.replace('text-gray-400', 'text-yellow-500');
+
+            const data = { name, class: cls, score, total, type };
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Ditukar ke text/plain untuk elak halangan CORS
+                    body: JSON.stringify(data)
+                });
+                statusText.innerText = "✅ Saved to Leaderboard!";
+                statusText.classList.replace('text-yellow-500', 'text-green-500');
+            } catch (error) {
+                console.error(error);
+                statusText.innerText = "❌ Failed to save. Please check connection.";
+                statusText.classList.replace('text-yellow-500', 'text-red-500');
+            }
+        }
+
+async function showLeaderboard() {
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('game-arena').classList.add('hidden');
+            document.getElementById('leaderboard-screen').classList.remove('hidden');
+            
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = "<tr><td colspan='6' class='p-8 text-center text-indigo-500 font-bold animate-pulse'><i class='fas fa-spinner fa-spin mr-2'></i> Fetching live scores...</td></tr>";
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const scores = await response.json();
+                
+                if(scores.length === 0) {
+                    body.innerHTML = "<tr><td colspan='6' class='p-8 text-center text-gray-400'>No records yet. Be the first to play!</td></tr>";
+                    return;
+                }
+
+                // 1. KUMPULKAN DATA MENGIKUT NAMA PELAJAR
+                const studentData = {};
+                
+                scores.forEach(s => {
+                    // Gunakan gabungan Nama dan Kelas sebagai ID Unik
+                    const key = s.name.toUpperCase() + "_" + s.cls.toUpperCase();
+                    
+                    if (!studentData[key]) {
+                        studentData[key] = {
+                            name: s.name.toUpperCase(),
+                            cls: s.cls,
+                            games: {}
+                        };
+                    }
+                    
+                    // Jika pelajar main game yang sama banyak kali, ambil markah paling tinggi sahaja
+                    if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
+                        studentData[key].games[s.type] = { score: s.score, total: s.total };
+                    }
+                });
+
+                // 2. KIRA JUMLAH KESELURUHAN (GRAND TOTAL)
+                const leaderboard = Object.values(studentData).map(student => {
+                    let grandScore = 0;
+                    let grandMax = 0;
+                    const gameList = [];
+                    
+                    for (const [gameName, gameData] of Object.entries(student.games)) {
+                        grandScore += gameData.score;
+                        grandMax += gameData.total;
+                        gameList.push({ name: gameName, score: gameData.score, total: gameData.total });
+                    }
+                    
+                    return {
+                        ...student,
+                        gameList,
+                        grandScore,
+                        grandMax
+                    };
+                });
+
+                // 3. SUSUN MENGIKUT MARKAH TERTINGGI (RANKING)
+                leaderboard.sort((a, b) => b.grandScore - a.grandScore);
+
+                // 4. BINA PAPARAN JADUAL
+                body.innerHTML = "";
+                
+                leaderboard.slice(0, 50).forEach((student, index) => {
+                    let rankIcon = `#${index+1}`;
+                    if(index === 0) rankIcon = `🥇`;
+                    if(index === 1) rankIcon = `🥈`;
+                    if(index === 2) rankIcon = `🥉`;
+
+                    const gamesCount = student.gameList.length;
+
+                    student.gameList.forEach((game, gIndex) => {
+                        // Semak jika ini baris pertama atau baris terakhir untuk pelajar tersebut
+                        const isFirstRow = gIndex === 0;
+                        const isLastRow = gIndex === (gamesCount - 1);
+
+                        // Hanya paparkan Rank, Nama, dan Kelas pada baris pertama
+                        const rankText = isFirstRow ? rankIcon : '';
+                        const nameText = isFirstRow ? student.name : '';
+                        const classText = isFirstRow ? student.cls : '';
+                        
+                        // Hanya paparkan Grand Total pada baris terakhir
+                        const totalHtml = isLastRow ? `<span class="bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-md">${student.grandScore}/${student.grandMax}</span>` : '';
+
+                        // Tambahkan garisan tebal pada baris terakhir untuk memisahkan antara pelajar
+                        const rowClass = isLastRow ? 'border-b-2 border-indigo-200' : 'border-b border-gray-50';
+
+                        const row = `
+                            <tr class="${rowClass} hover:bg-gray-50 transition">
+                                <td class="p-4 font-bold text-indigo-600 text-lg">${rankText}</td>
+                                <td class="p-4 font-bold uppercase text-gray-800">${nameText}</td>
+                                <td class="p-4 text-sm text-gray-500">${classText}</td>
+                                <td class="p-4 text-xs uppercase font-bold text-gray-500">${game.name}</td>
+                                <td class="p-4 text-center font-semibold text-gray-700">${game.score}/${game.total}</td>
+                                <td class="p-4 text-center">${totalHtml}</td>
+                            </tr>
+                        `;
+                        body.innerHTML += row;
+                    });
+                });
+                
+            } catch (error) {
+                console.error(error);
+                body.innerHTML = "<tr><td colspan='6' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
+            }
+        }
+    </script>
+</body>
+</html>
