@@ -22,6 +22,19 @@
         .legendary-avatar {
             animation: legendaryGlow 2s infinite ease-in-out;
         }
+
+        /* Animasi 3D dan Bercahaya Untuk Leaderboard */
+        @keyframes avatar3DGlow {
+            0% { box-shadow: 0 4px 6px rgba(0,0,0,0.3), 0 0 10px #fcd34d; transform: translateY(0px) scale(1); }
+            50% { box-shadow: 0 10px 15px rgba(0,0,0,0.4), 0 0 25px #fbbf24; transform: translateY(-3px) scale(1.05); }
+            100% { box-shadow: 0 4px 6px rgba(0,0,0,0.3), 0 0 10px #fcd34d; transform: translateY(0px) scale(1); }
+        }
+        
+        .avatar-3d-glow {
+            animation: avatar3DGlow 2.5s infinite ease-in-out;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #fbbf24;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen p-4 md:p-8">
@@ -185,10 +198,10 @@
             </div>
             <div class="overflow-hidden rounded-2xl border border-gray-100 shadow-sm max-h-[60vh] overflow-y-auto custom-scroll">
                 <table class="w-full text-left bg-white">
-                    <thead class="bg-indigo-600 text-white sticky top-0 z-10">
+                   <thead class="bg-indigo-600 text-white sticky top-0 z-10">
                         <tr>
                             <th class="p-4">Rank</th>
-                            <th class="p-4">Name</th>
+                            <th class="p-2 text-center">Avatar</th> <th class="p-4">Name</th>
                             <th class="p-4">Class</th>
                             <th class="p-4">Game</th>
                             <th class="p-4 text-center">Score</th>
@@ -245,7 +258,7 @@
         let studentInfo = { name: '', class: '' };
         let currentGameType = ''; 
         let studentDatabase = [];
-        let localPlayerData = { coins: 0, inventory: [], avatars: {} };
+        let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
 
         window.onload = async () => {
             const datalist = document.getElementById('name-suggestions');
@@ -365,12 +378,13 @@
                 class: studentInfo.class,
                 coins: localPlayerData.coins,
                 inventory: localPlayerData.inventory,
-                avatars: localPlayerData.avatars
+                avatars: localPlayerData.avatars,
+                activeAvatar: localPlayerData.activeAvatar // TAMBAHAN KOD
             };
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // PENAMBAHBAIKAN SEBELUM INI
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
             } catch(e) {
@@ -599,24 +613,34 @@ async function buyItem(itemId) {
         function renderInventory() {
             const container = document.getElementById('inventory-container');
             container.innerHTML = '';
-            
             let hasItems = false;
 
+            // 1. Tunjuk Avatar yang dimiliki & Butang EQUIP
             if(localPlayerData.avatars) {
                 for (const [key, level] of Object.entries(localPlayerData.avatars)) {
                     if(level > 0 && avatars[key]) {
                         hasItems = true;
                         let displayData = avatars[key].levels[level - 1];
+                        
+                        // Semak jika avatar ini sedang dipakai
+                        let isEquipped = localPlayerData.activeAvatar && localPlayerData.activeAvatar.key === key;
+                        
+                        let actionBtn = isEquipped 
+                            ? `<button disabled class="mt-2 text-[10px] bg-green-500 text-white px-3 py-1 rounded-full font-bold shadow-sm">EQUIPPED <i class="fas fa-check-circle"></i></button>`
+                            : `<button onclick="equipAvatar('${key}', ${level})" class="mt-2 text-[10px] bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-sm transition transform hover:scale-105">EQUIP</button>`;
+
                         container.innerHTML += `
-                            <div class="bg-gradient-to-r from-indigo-100 to-purple-100 px-4 py-2 rounded-xl border-2 border-indigo-300 flex items-center gap-3 shadow-sm hover:scale-105 transition transform cursor-pointer" title="${displayData.desc}">
-                                <i class="${displayData.icon} text-xl"></i> 
-                                <span class="text-sm font-bold text-indigo-900">${displayData.name} <span class="text-xs bg-indigo-200 px-2 py-0.5 rounded-full ml-1">Lvl ${level}</span></span>
+                            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-xl border-2 ${isEquipped ? 'border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]' : 'border-indigo-200'} flex flex-col items-center shadow-sm w-32">
+                                <i class="${displayData.icon} text-3xl mb-1 ${isEquipped ? 'text-green-600' : 'text-indigo-500'}"></i> 
+                                <span class="text-xs font-bold text-center h-8 flex items-center text-indigo-900">${displayData.name}</span>
+                                <span class="text-[10px] bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-full font-bold mt-1">Lvl ${level}</span>
+                                ${actionBtn}
                             </div>
                         `;
                     }
                 }
             }
-
+            
             if(localPlayerData.inventory && localPlayerData.inventory.length > 0) {
                 localPlayerData.inventory.forEach(itemId => {
                     const item = shopItems.find(i => i.id === itemId);
@@ -635,6 +659,23 @@ async function buyItem(itemId) {
             if(!hasItems) {
                 container.innerHTML = '<p class="text-sm text-gray-400 italic">Your inventory is empty. Play more games to buy guardians and stationeries!</p>';
             }
+        }
+
+        // --- FUNGSI BAHARU UNTUK EQUIP AVATAR ---
+        async function equipAvatar(avatarKey, level) {
+            let displayData = avatars[avatarKey].levels[level - 1];
+            
+            localPlayerData.activeAvatar = {
+                key: avatarKey,
+                level: level,
+                name: displayData.name,
+                icon: displayData.icon
+            };
+            
+            renderInventory(); // Refresh paparan beg galas
+            await saveCloudPlayerData(); // Simpan ke Cloud
+            updateDashboardAvatars(); // Tukar gambar di menu
+            alert(`✅ Avatar bertukar! Anda kini menggunakan [${displayData.name} Lvl ${level}].`);
         }
         
 function initGame(type) {
@@ -784,8 +825,8 @@ function initGame(type) {
             statusText.innerText = "Saving to Cloud...";
             statusText.classList.replace('text-gray-400', 'text-yellow-500');
 
-            const data = { name, class: cls, score, total, type };
-
+            const data = { name, class: cls, score, total, type, activeAvatar: localPlayerData.activeAvatar };
+            
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -854,7 +895,7 @@ function initGame(type) {
 
                 body.innerHTML = "";
                 
-                leaderboard.slice(0, 50).forEach((student, index) => {
+leaderboard.slice(0, 50).forEach((student, index) => {
                     let rankIcon = `#${index+1}`;
                     if(index === 0) rankIcon = `🥇`;
                     if(index === 1) rankIcon = `🥈`;
@@ -870,16 +911,36 @@ function initGame(type) {
                         const nameText = isFirstRow ? student.name : '';
                         const classText = isFirstRow ? student.cls : '';
                         
-                        const totalHtml = isLastRow ? `<span class="bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-md">${student.grandScore}/${student.grandMax}</span>` : '';
+                        // KOD MELUKIS AVATAR 3D YANG HILANG SEBELUM INI
+                        let avatarHtml = '';
+                        if (isFirstRow) {
+                            if (student.activeAvatar) {
+                                avatarHtml = `
+                                    <div class="flex flex-col items-center justify-center p-2">
+                                        <div class="avatar-3d-glow rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative">
+                                            <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
+                                            <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
+                                        </div>
+                                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm max-w-[80px] truncate" title="${student.activeAvatar.name}">
+                                            ${student.activeAvatar.name}
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
+                            }
+                        }
 
+                        const totalHtml = isLastRow ? `<span class="bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-md">${student.grandScore}/${student.grandMax}</span>` : '';
                         const rowClass = isLastRow ? 'border-b-2 border-indigo-200' : 'border-b border-gray-50';
 
                         const row = `
                             <tr class="${rowClass} hover:bg-gray-50 transition">
-                                <td class="p-4 font-bold text-indigo-600 text-lg">${rankText}</td>
-                                <td class="p-4 font-bold uppercase text-gray-800">${nameText}</td>
+                                <td class="p-4 font-bold text-indigo-600 text-xl">${rankText}</td>
+                                <td class="p-2 w-24">${avatarHtml}</td>
+                                <td class="p-4 font-black uppercase text-gray-800 text-lg">${nameText}</td>
                                 <td class="p-4 text-sm text-gray-500">${classText}</td>
-                                <td class="p-4 text-xs uppercase font-bold text-gray-500">${game.name}</td>
+                                <td class="p-4 text-xs uppercase font-bold text-indigo-400">${game.name}</td>
                                 <td class="p-4 text-center font-semibold text-gray-700">${game.score}/${game.total}</td>
                                 <td class="p-4 text-center">${totalHtml}</td>
                             </tr>
@@ -890,7 +951,7 @@ function initGame(type) {
                 
             } catch (error) {
                 console.error(error);
-                body.innerHTML = "<tr><td colspan='6' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
+                body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
             }
         }
     </script>
