@@ -179,12 +179,12 @@
         let localPlayerData = { coins: 0, inventory: [] };
 const shopItems = [
             // Lencana Digital (Digital Badges)
-            { id: 'badge_star', name: 'Star Player', price: 300, icon: 'fas fa-star text-yellow-400', desc: 'BEGINNER BADGE' },
-            { id: 'badge_rocket', name: 'Speed Rocket', price: 350, icon: 'fas fa-rocket text-red-500', desc: 'QUICK THINKER' },
-            { id: 'badge_ninja', name: 'Word Ninja', price: 400, icon: 'fas fa-user-ninja text-gray-800', desc: 'ENGLISH EXPERT!' },
-            { id: 'badge_diamond', name: 'Rare Diamond', price: 500, icon: 'fas fa-gem text-blue-400', desc: 'DIAMOND IN THE ROUGH' },
-            { id: 'badge_wizard', name: 'Grammar Wizard', price: 600, icon: 'fas fa-hat-wizard text-purple-500', desc: 'ENGLISH WIZARD!' },
-            { id: 'badge_crown', name: 'King Crown', price: 800, icon: 'fas fa-crown text-yellow-500', desc: 'kING OF THE LEADERBOARD' },
+            { id: 'badge_star', name: 'Star Player', price: 300, icon: 'fas fa-star text-yellow-400', desc: 'Sesuai untuk pemain bintang.' },
+            { id: 'badge_rocket', name: 'Speed Rocket', price: 350, icon: 'fas fa-rocket text-red-500', desc: 'Bukti anda berfikir pantas!' },
+            { id: 'badge_ninja', name: 'Word Ninja', price: 400, icon: 'fas fa-user-ninja text-gray-800', desc: 'Pakar meneka perkataan.' },
+            { id: 'badge_diamond', name: 'Rare Diamond', price: 500, icon: 'fas fa-gem text-blue-400', desc: 'Permata istimewa yang sangat mahal.' },
+            { id: 'badge_wizard', name: 'Grammar Wizard', price: 600, icon: 'fas fa-hat-wizard text-purple-500', desc: 'Ahli sihir bahasa Inggeris!' },
+            { id: 'badge_crown', name: 'King Crown', price: 800, icon: 'fas fa-crown text-yellow-500', desc: 'Mahkota untuk raja leaderboard.' },
 
             // Item Tebusan Fizikal (Stationery Exchange)
             { id: 'item_eraser', name: 'Eraser', price: 300, icon: 'fas fa-eraser text-pink-400', desc: 'Make a mistake? No problem! Wipe it away cleanly with this eraser.' },
@@ -195,6 +195,93 @@ const shopItems = [
             { id: 'item_colorpencil', name: 'Color Pencils', price: 800, icon: 'fas fa-palette text-orange-500', desc: 'Bring your imagination to life with these vibrant color pencils.' },
             { id: 'item_watercolor', name: 'Water Colors', price: 1000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Paint beautiful masterpieces with this premium water color set.' }
         ];
+
+
+// ---------------------------------------------------------
+        // EVOLVING AVATARS SYSTEM (10 GUARDIANS)
+        // ---------------------------------------------------------
+        const avatars = {
+            dragon: {
+                id: 'avatar_dragon', maxLevel: 3, theme: 'Fire/Fantasy',
+                levels: [
+                    { level: 1, name: 'Ignis Egg', price: 300, icon: 'fas fa-egg text-orange-400', desc: 'A warm mystic egg. Keep playing to hatch it!' },
+                    { level: 2, name: 'Baby Ignis', price: 1500, icon: 'fas fa-dragon text-orange-500', desc: 'A cute fire dragon. It loves learning new English words.' },
+                    { level: 3, name: 'Inferno Dragon', price: 5000, icon: 'fas fa-dragon text-red-600 drop-shadow-lg text-2xl', desc: 'The ultimate master of the sky! A true symbol of a champion.' }
+                ]
+            },
+            owl: {
+                id: 'avatar_owl', maxLevel: 3, theme: 'Wisdom',
+                levels: [
+                    { level: 1, name: 'Athena Egg', price: 300, icon: 'fas fa-egg text-blue-300', desc: 'A glowing blue egg. It vibrates when you answer correctly.' },
+                    { level: 2, name: 'Smart Owlet', price: 1500, icon: 'fas fa-crow text-blue-500', desc: 'A young bird that reads books late at night.' },
+                    { level: 3, name: 'Mystic Owl', price: 5000, icon: 'fas fa-feather-alt text-indigo-600 drop-shadow-lg text-2xl', desc: 'The wisest guardian of the vocabulary. Highly intelligent!' }
+                ]
+            },
+            bot: {
+                id: 'avatar_bot', maxLevel: 3, theme: 'Sci-Fi',
+                levels: [
+                    { level: 1, name: 'Scrap Cube', price: 300, icon: 'fas fa-box text-gray-400', desc: 'A small cube waiting to be upgraded with points.' },
+                    { level: 2, name: 'Mecha Buddy', price: 1500, icon: 'fas fa-robot text-teal-500', desc: 'Your personal AI assistant. It processes grammar very fast!' },
+                    { level: 3, name: 'Galactic Cyborg', price: 5000, icon: 'fas fa-user-astronaut text-purple-600 drop-shadow-lg text-2xl', desc: 'A high-tech cyborg ready to conquer the English universe!' }
+                ]
+            },
+            wolf: {
+                id: 'avatar_wolf', maxLevel: 3, theme: 'Ice/Forest',
+                levels: [
+                    { level: 1, name: 'Frost Paw', price: 300, icon: 'fas fa-paw text-cyan-300', desc: 'A cold paw print on the snow. What could it be?' },
+                    { level: 2, name: 'Snow Wolf', price: 1500, icon: 'fas fa-dog text-cyan-500', desc: 'A loyal wolf pup that hunts for correct answers.' },
+                    { level: 3, name: 'Blizzard Fenrir', price: 5000, icon: 'fas fa-moon text-blue-800 drop-shadow-lg text-2xl', desc: 'The legendary wolf of the winter night. Fierce and brave!' }
+                ]
+            },
+            phoenix: {
+                id: 'avatar_phoenix', maxLevel: 3, theme: 'Rebirth',
+                levels: [
+                    { level: 1, name: 'Ash Feather', price: 300, icon: 'fas fa-fire text-yellow-500', desc: 'A glowing feather found in the ashes.' },
+                    { level: 2, name: 'Fire Bird', price: 1500, icon: 'fas fa-dove text-orange-400', desc: 'A beautiful bird made of gentle flames.' },
+                    { level: 3, name: 'Majestic Phoenix', price: 5000, icon: 'fas fa-fire-alt text-red-500 drop-shadow-lg text-2xl', desc: 'The immortal bird! Proof of your never-ending dedication.' }
+                ]
+            },
+            leviathan: {
+                id: 'avatar_leviathan', maxLevel: 3, theme: 'Ocean',
+                levels: [
+                    { level: 1, name: 'Aqua Drop', price: 300, icon: 'fas fa-tint text-blue-400', desc: 'A magical water drop from the deep sea.' },
+                    { level: 2, name: 'River Spirit', price: 1500, icon: 'fas fa-fish text-teal-500', desc: 'A playful spirit that swims through the dictionary.' },
+                    { level: 3, name: 'Ocean Leviathan', price: 5000, icon: 'fas fa-water text-blue-700 drop-shadow-lg text-2xl', desc: 'The king of the ocean! Unstoppable wave of knowledge.' }
+                ]
+            },
+            unicorn: {
+                id: 'avatar_unicorn', maxLevel: 3, theme: 'Light/Magic',
+                levels: [
+                    { level: 1, name: 'Star Dust', price: 300, icon: 'fas fa-star text-pink-400', desc: 'Magical dust that shines brightly.' },
+                    { level: 2, name: 'Mystic Pony', price: 1500, icon: 'fas fa-horse text-pink-500', desc: 'A cute pony with a tiny horn growing on its head.' },
+                    { level: 3, name: 'Celestial Unicorn', price: 5000, icon: 'fas fa-horse-head text-purple-600 drop-shadow-lg text-2xl', desc: 'A glorious unicorn with the power of the stars!' }
+                ]
+            },
+            golem: {
+                id: 'avatar_golem', maxLevel: 3, theme: 'Earth/Stone',
+                levels: [
+                    { level: 1, name: 'Mud Pebble', price: 300, icon: 'fas fa-circle text-yellow-800', desc: 'A heavy stone with strange magic inside.' },
+                    { level: 2, name: 'Rock Guardian', price: 1500, icon: 'fas fa-cube text-gray-500', desc: 'A solid guardian that protects your points.' },
+                    { level: 3, name: 'Obsidian Titan', price: 5000, icon: 'fas fa-cubes text-gray-900 drop-shadow-lg text-2xl', desc: 'An unbreakable giant! Your grammar foundation is rock solid.' }
+                ]
+            },
+            fairy: {
+                id: 'avatar_fairy', maxLevel: 3, theme: 'Nature',
+                levels: [
+                    { level: 1, name: 'Magic Seedling', price: 300, icon: 'fas fa-seedling text-green-400', desc: 'A tiny plant waiting to grow with your correct answers.' },
+                    { level: 2, name: 'Forest Sprite', price: 1500, icon: 'fas fa-leaf text-green-500', desc: 'A cheeky nature spirit that loves spelling.' },
+                    { level: 3, name: 'Sylph Queen', price: 5000, icon: 'fas fa-tree text-green-800 drop-shadow-lg text-2xl', desc: 'The protector of the forest. Beautiful and powerful!' }
+                ]
+            },
+            lion: {
+                id: 'avatar_lion', maxLevel: 3, theme: 'Thunder/Electric',
+                levels: [
+                    { level: 1, name: 'Spark Kitten', price: 300, icon: 'fas fa-bolt text-yellow-400', desc: 'A small kitten that gives a static shock!' },
+                    { level: 2, name: 'Volt Cat', price: 1500, icon: 'fas fa-cat text-yellow-500', desc: 'A fast feline that dashes through sentences.' },
+                    { level: 3, name: 'Thunder God Beast', price: 5000, icon: 'fas fa-crown text-yellow-600 drop-shadow-lg text-2xl', desc: 'The roaring thunder! You are the absolute king of this game.' }
+                ]
+            }
+        };
         // -------------------------------------
 
         // DATA SOALAN
@@ -471,14 +558,17 @@ puzzle: [
             document.getElementById('menu-screen').classList.remove('hidden');
         }
 
-        // --- SISTEM VIRTUAL SHOP FUNCTIONS ---
+// --- LOGIK VIRTUAL SHOP & AVATAR ---
+
         function loadLocalPlayerData() {
             const key = 'EduGames_' + studentInfo.name.toUpperCase() + "_" + studentInfo.class.toUpperCase();
             const stored = localStorage.getItem(key);
             if(stored) {
                 localPlayerData = JSON.parse(stored);
+                // Pastikan pelajar lama ada tempat simpan avatar
+                if(!localPlayerData.avatars) localPlayerData.avatars = {}; 
             } else {
-                localPlayerData = { coins: 0, inventory: [] };
+                localPlayerData = { coins: 0, inventory: [], avatars: {} };
             }
         }
 
@@ -502,35 +592,86 @@ puzzle: [
         function renderShop() {
             document.getElementById('coin-balance').innerText = localPlayerData.coins;
             const container = document.getElementById('shop-items-container');
-            container.innerHTML = '';
+            container.innerHTML = ''; // Kosongkan kedai sebelum render
 
-            shopItems.forEach(item => {
-                const isOwned = localPlayerData.inventory.includes(item.id);
-                const canAfford = localPlayerData.coins >= item.price;
-                
+            // 1. RENDER AVATARS / GUARDIANS (Boleh di-upgrade)
+            for (const [key, avatar] of Object.entries(avatars)) {
+                let currentLevel = localPlayerData.avatars[key] || 0;
+                let nextLevelData = avatar.levels.find(l => l.level === currentLevel + 1);
+                let displayData = nextLevelData || avatar.levels[avatar.maxLevel - 1]; // Jika dah max, tunjuk gambar max
+
                 let btnHtml = '';
-                if(isOwned) {
-                    btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed">Owned</button>`;
-                } else if(canAfford) {
-                    btnHtml = `<button onclick="buyItem('${item.id}')" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
+                if (currentLevel >= avatar.maxLevel) {
+                    btnHtml = `<button disabled class="w-full mt-4 bg-gray-300 text-gray-600 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-400">MAX LEVEL REACHED</button>`;
                 } else {
-                    btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed">Need ${item.price} <i class="fas fa-coins"></i></button>`;
+                    const canAfford = localPlayerData.coins >= nextLevelData.price;
+                    if (canAfford) {
+                        btnHtml = `<button onclick="buyAvatar('${key}', ${nextLevelData.level}, ${nextLevelData.price})" class="w-full mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 rounded-xl transition shadow shadow-indigo-300">Unlock Lvl ${nextLevelData.level} (${nextLevelData.price} <i class="fas fa-coins"></i>)</button>`;
+                    } else {
+                        btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${nextLevelData.price} <i class="fas fa-coins"></i></button>`;
+                    }
                 }
 
                 container.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 hover:border-indigo-300 transition shadow-sm text-center flex flex-col justify-between">
+                    <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition shadow-sm text-center flex flex-col justify-between">
                         <div>
-                            <div class="text-5xl mb-3"><i class="${item.icon}"></i></div>
-                            <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
-                            <p class="text-xs text-gray-500 mt-1">${item.desc}</p>
+                            <div class="text-xs font-bold text-indigo-400 uppercase mb-1 tracking-wider">${avatar.theme}</div>
+                            <div class="text-5xl mb-3 mt-2 flex justify-center h-16 items-center"><i class="${displayData.icon}"></i></div>
+                            <h3 class="font-bold text-gray-800 text-lg">${displayData.name}</h3>
+                            <p class="text-[10px] font-bold text-indigo-600 mb-2">Current: Level ${currentLevel}/${avatar.maxLevel}</p>
+                            <p class="text-xs text-gray-600 mt-1">${displayData.desc}</p>
                         </div>
                         ${btnHtml}
                     </div>
                 `;
-            });
-            renderInventory();
+            }
+
+            // 2. RENDER NORMAL ITEMS (Barang tebusan seperti pensel/buku)
+            if (typeof shopItems !== 'undefined') {
+                shopItems.forEach(item => {
+                    const isOwned = localPlayerData.inventory.includes(item.id);
+                    const canAfford = localPlayerData.coins >= item.price;
+                    
+                    let btnHtml = '';
+                    if(isOwned) {
+                        btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed">Owned</button>`;
+                    } else if(canAfford) {
+                        btnHtml = `<button onclick="buyItem('${item.id}')" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
+                    } else {
+                        btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${item.price} <i class="fas fa-coins"></i></button>`;
+                    }
+
+                    container.innerHTML += `
+                        <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 hover:border-green-300 transition shadow-sm text-center flex flex-col justify-between">
+                            <div>
+                                <div class="text-5xl mb-3 h-16 flex items-center justify-center"><i class="${item.icon}"></i></div>
+                                <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
+                                <p class="text-xs text-gray-500 mt-2">${item.desc}</p>
+                            </div>
+                            ${btnHtml}
+                        </div>
+                    `;
+                });
+            }
+
+            renderInventory(); // Kemaskini beg galas (inventory)
         }
 
+        // FUNGSI BELI AVATAR (BARU)
+        function buyAvatar(avatarKey, level, price) {
+            if(localPlayerData.coins >= price) {
+                localPlayerData.coins -= price;
+                localPlayerData.avatars[avatarKey] = level;
+                saveLocalPlayerData();
+                renderShop();
+                
+                // Pop-up mesej seronok
+                let guardianName = avatars[avatarKey].levels[level - 1].name;
+                alert(`✨ MAGIC UNLOCKED! ✨\nYour guardian has evolved to [${guardianName}] (Level ${level})!`);
+            }
+        }
+
+        // FUNGSI BELI ITEM BIASA (KEKAL)
         function buyItem(itemId) {
             const item = shopItems.find(i => i.id === itemId);
             if(localPlayerData.coins >= item.price && !localPlayerData.inventory.includes(itemId)) {
@@ -542,25 +683,48 @@ puzzle: [
             }
         }
 
+        // KEMASKINI PAPARAN INVENTORY (BEG GALAS PELAJAR)
         function renderInventory() {
             const container = document.getElementById('inventory-container');
             container.innerHTML = '';
-            if(localPlayerData.inventory.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-400 italic">Your inventory is empty. Play more games to buy items!</p>';
-                return;
+            
+            let hasItems = false;
+
+            // Tunjuk Avatar yang dimiliki
+            if(localPlayerData.avatars) {
+                for (const [key, level] of Object.entries(localPlayerData.avatars)) {
+                    if(level > 0) {
+                        hasItems = true;
+                        let displayData = avatars[key].levels[level - 1];
+                        container.innerHTML += `
+                            <div class="bg-gradient-to-r from-indigo-100 to-purple-100 px-4 py-2 rounded-xl border-2 border-indigo-300 flex items-center gap-3 shadow-sm hover:scale-105 transition transform cursor-pointer" title="${displayData.desc}">
+                                <i class="${displayData.icon} text-xl"></i> 
+                                <span class="text-sm font-bold text-indigo-900">${displayData.name} <span class="text-xs bg-indigo-200 px-2 py-0.5 rounded-full ml-1">Lvl ${level}</span></span>
+                            </div>
+                        `;
+                    }
+                }
             }
 
-            localPlayerData.inventory.forEach(itemId => {
-                const item = shopItems.find(i => i.id === itemId);
-                if(item) {
-                    container.innerHTML += `
-                        <div class="bg-indigo-50 px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-3 shadow-sm hover:scale-105 transition transform cursor-pointer" title="${item.desc}">
-                            <i class="${item.icon} text-xl"></i> 
-                            <span class="text-sm font-bold text-indigo-900">${item.name}</span>
-                        </div>
-                    `;
-                }
-            });
+            // Tunjuk item alat tulis biasa
+            if(localPlayerData.inventory && localPlayerData.inventory.length > 0) {
+                localPlayerData.inventory.forEach(itemId => {
+                    const item = shopItems.find(i => i.id === itemId);
+                    if(item) {
+                        hasItems = true;
+                        container.innerHTML += `
+                            <div class="bg-green-50 px-4 py-2 rounded-xl border-2 border-green-200 flex items-center gap-3 shadow-sm hover:scale-105 transition transform cursor-pointer" title="${item.desc}">
+                                <i class="${item.icon} text-xl"></i> 
+                                <span class="text-sm font-bold text-green-900">${item.name}</span>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            if(!hasItems) {
+                container.innerHTML = '<p class="text-sm text-gray-400 italic">Your inventory is empty. Play more games to buy guardians and stationeries!</p>';
+            }
         }
         // ---------------------------------------------
 
