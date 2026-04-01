@@ -774,7 +774,7 @@ const shopItems = [
     // ------------------------------------------
     { id: 'badge_grammar_1', category: 'badge', name: 'Beginner Grammar', price: 300, icon: 'fas fa-star text-green-300', desc: 'A good start for your grammar journey!' },
     { id: 'badge_grammar_2', category: 'badge', name: 'Novice Grammar', price: 400, icon: 'fas fa-medal text-green-400', desc: 'You are getting better at grammar.' },
-    { id: 'badge_grammar_3', category: 'badge', name: 'Intermediate Grammar', price: 500, icon: 'fas fa-rosette text-green-500', desc: 'Solid grammar skills proven.' },
+    { id: 'badge_grammar_3', category: 'badge', name: 'Intermediate Grammar', price: 500, icon: 'fas fa-ribbon text-green-500', desc: 'Solid grammar skills proven.' },
     { id: 'badge_grammar_4', category: 'badge', name: 'Advanced Grammar', price: 600, icon: 'fas fa-certificate text-green-600', desc: 'Excellent understanding of grammar.' },
     { id: 'badge_grammar_5', category: 'badge', name: 'Master Grammar', price: 700, icon: 'fas fa-award text-green-700', desc: 'A shiny badge to show off perfect grammar!' },
     { id: 'badge_grammar_6', category: 'badge', name: 'Ultimate Grammar', price: 800, icon: 'fas fa-trophy text-green-800', desc: 'The God of Grammar! Flawless!' },
@@ -784,7 +784,7 @@ const shopItems = [
     // ------------------------------------------
     { id: 'badge_vocab_1', category: 'badge', name: 'Beginner Vocab', price: 300, icon: 'fas fa-star text-purple-300', desc: 'Learning new words every day.' },
     { id: 'badge_vocab_2', category: 'badge', name: 'Novice Vocab', price: 400, icon: 'fas fa-medal text-purple-400', desc: 'Your vocabulary is expanding.' },
-    { id: 'badge_vocab_3', category: 'badge', name: 'Intermediate Vocab', price: 500, icon: 'fas fa-rosette text-purple-500', desc: 'You know a lot of useful words.' },
+    { id: 'badge_vocab_3', category: 'badge', name: 'Intermediate Vocab', price: 500, icon: 'fas fa-ribbon text-purple-500', desc: 'You know a lot of useful words.' },
     { id: 'badge_vocab_4', category: 'badge', name: 'Advanced Vocab', price: 600, icon: 'fas fa-certificate text-purple-600', desc: 'A walking dictionary!' },
     { id: 'badge_vocab_5', category: 'badge', name: 'Vocab Master', price: 700, icon: 'fas fa-award text-purple-700', desc: 'Proof that you know thousands of words.' },
     { id: 'badge_vocab_6', category: 'badge', name: 'Ultimate Vocab King', price: 800, icon: 'fas fa-crown text-purple-800', desc: 'The ruler of all English words!' },
@@ -794,7 +794,7 @@ const shopItems = [
     // ------------------------------------------
     { id: 'badge_speed_1', category: 'badge', name: 'Beginner Speed', price: 300, icon: 'fas fa-star text-blue-300', desc: 'Answering questions at a steady pace.' },
     { id: 'badge_speed_2', category: 'badge', name: 'Novice Speed', price: 400, icon: 'fas fa-medal text-blue-400', desc: 'Getting faster with your fingers.' },
-    { id: 'badge_speed_3', category: 'badge', name: 'Intermediate Speed', price: 500, icon: 'fas fa-rosette text-blue-500', desc: 'Quick thinker and fast typer.' },
+    { id: 'badge_speed_3', category: 'badge', name: 'Intermediate Speed', price: 500, icon: 'fas fa-ribbon text-blue-500', desc: 'Quick thinker and fast typer.' },
     { id: 'badge_speed_4', category: 'badge', name: 'Advanced Speed', price: 600, icon: 'fas fa-certificate text-blue-600', desc: 'Lightning fast reflexes!' },
     { id: 'badge_speed_5', category: 'badge', name: 'Speed Master', price: 700, icon: 'fas fa-award text-blue-700', desc: 'Almost impossible to beat your speed.' },
     { id: 'badge_speed_6', category: 'badge', name: 'Ultimate Speedster', price: 800, icon: 'fas fa-bolt text-blue-800', desc: 'The speed of light! Unstoppable!' },
