@@ -12,13 +12,21 @@
         .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+
+/* Custom animation for Level 3 Legendary Avatars */
+        @keyframes legendaryGlow {
+            0%, 100% { filter: drop-shadow(0 0 5px currentColor); opacity: 1; }
+            50% { filter: drop-shadow(0 0 15px currentColor); opacity: 0.8; }
+        }
+        
+        .legendary-avatar {
+            animation: legendaryGlow 2s infinite ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto">
-        
-        <div id="auth-screen" class="glass rounded-3xl shadow-2xl p-8 text-center animate-fade-in">
+    <div class="max-w-6xl mx-auto"> <div id="auth-screen" class="glass rounded-3xl shadow-2xl p-8 text-center animate-fade-in max-w-4xl mx-auto">
             <h1 class="text-4xl font-bold text-indigo-700 mb-2">Welcome, Explorer! 🚀</h1>
             <p class="text-gray-600 mb-8">Ready to test your English skills?</p>
             <div class="space-y-4 max-w-sm mx-auto text-left">
@@ -39,52 +47,83 @@
         </div>
 
         <div id="menu-screen" class="hidden animate-fade-in">
-            <div class="glass rounded-3xl p-6 mb-6 flex justify-between items-center shadow-lg">
+            <div class="glass rounded-3xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
-                    <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
-                    <button onclick="logout()" class="text-xs text-red-500 hover:text-red-700 underline mt-1 font-semibold transition">
-                        <i class="fas fa-sign-out-alt"></i> Not you? Change Player
-                    </button>
-                </div>
+                    <div class="flex items-center gap-3">
+                        <div>
+                            <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
+                            <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
+                            <button onclick="logout()" class="text-xs text-red-500 hover:text-red-700 underline mt-1 font-semibold transition">
+                                <i class="fas fa-sign-out-alt"></i> Not you? Change Player
+                            </button>
+                        </div>
+                        <div id="dashboard-avatars" class="flex items-center gap-2 ml-2"></div>
+                    </div>
+                </div> 
                 <div class="flex gap-2">
-                    <button onclick="openShop()" class="bg-green-400 hover:bg-green-500 text-indigo-900 px-4 py-2 rounded-full font-bold shadow transition">
+                    <button onclick="openShop()" class="bg-green-400 hover:bg-green-500 text-indigo-900 px-6 py-3 rounded-full font-bold shadow transition flex items-center gap-2">
                         <i class="fas fa-store"></i> Shop
                     </button>
-                    <button onclick="showLeaderboard()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 px-4 py-2 rounded-full font-bold shadow transition">
+                    <button onclick="showLeaderboard()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 px-6 py-3 rounded-full font-bold shadow transition flex items-center gap-2">
                         <i class="fas fa-trophy"></i> Leaderboard
                     </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <button onclick="initGame('guessing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-orange-400">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <button onclick="initGame('guessing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-orange-400 shadow-sm hover:shadow-md">
                     <div class="text-4xl mb-4 text-orange-500"><i class="fas fa-search"></i></div>
-                    <h3 class="text-xl font-bold mb-1">Guessing Word</h3>
-                    <p class="text-sm text-gray-500">Guess the word based on hints.</p>
+                    <h3 class="text-lg font-bold mb-1">Guessing Word</h3>
+                    <p class="text-xs text-gray-500">Guess the word based on hints.</p>
                 </button>
                 
-                <button onclick="initGame('puzzle')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-blue-400">
+                <button onclick="initGame('puzzle')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-blue-400 shadow-sm hover:shadow-md">
                     <div class="text-4xl mb-4 text-blue-500"><i class="fas fa-puzzle-piece"></i></div>
-                    <h3 class="text-xl font-bold mb-1">Word Scramble</h3>
-                    <p class="text-sm text-gray-500">Unscramble the messy letters.</p>
+                    <h3 class="text-lg font-bold mb-1">Word Scramble</h3>
+                    <p class="text-xs text-gray-500">Unscramble the messy letters.</p>
                 </button>
 
-                <button onclick="initGame('synonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-purple-400">
+                <button onclick="initGame('synonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-purple-400 shadow-sm hover:shadow-md">
                     <div class="text-4xl mb-4 text-purple-500"><i class="fas fa-link"></i></div>
-                    <h3 class="text-xl font-bold mb-1">Synonyms</h3>
-                    <p class="text-sm text-gray-500">Find words with the SAME meaning.</p>
+                    <h3 class="text-lg font-bold mb-1">Synonyms</h3>
+                    <p class="text-xs text-gray-500">Find words with the SAME meaning.</p>
                 </button>
 
-                <button onclick="initGame('antonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-red-400">
+                <button onclick="initGame('antonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-red-400 shadow-sm hover:shadow-md">
                     <div class="text-4xl mb-4 text-red-500"><i class="fas fa-not-equal"></i></div>
-                    <h3 class="text-xl font-bold mb-1">Antonyms</h3>
-                    <p class="text-sm text-gray-500">Find words with the OPPOSITE meaning.</p>
+                    <h3 class="text-lg font-bold mb-1">Antonyms</h3>
+                    <p class="text-xs text-gray-500">Find words with the OPPOSITE meaning.</p>
                 </button>
+
+                <button onclick="initGame('missing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-teal-400 shadow-sm hover:shadow-md">
+                    <div class="text-4xl mb-4 text-teal-500"><i class="fas fa-pen-nib"></i></div>
+                    <h3 class="text-lg font-bold mb-1">Missing Letters</h3>
+                    <p class="text-xs text-gray-500">Fill in the missing alphabets.</p>
+                </button>
+
+                <button onclick="initGame('pastTense')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-pink-400 shadow-sm hover:shadow-md">
+                    <div class="text-4xl mb-4 text-pink-500"><i class="fas fa-history"></i></div>
+                    <h3 class="text-lg font-bold mb-1">Past Tense</h3>
+                    <p class="text-xs text-gray-500">Change verb to the past tense.</p>
+                </button>
+
+                <button onclick="initGame('plural')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-cyan-400 shadow-sm hover:shadow-md">
+                    <div class="text-4xl mb-4 text-cyan-500"><i class="fas fa-clone"></i></div>
+                    <h3 class="text-lg font-bold mb-1">Plural Forms</h3>
+                    <p class="text-xs text-gray-500">Change 1 object to many objects.</p>
+                </button>
+
+                <button onclick="initGame('spelling')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-emerald-400 shadow-sm hover:shadow-md">
+                    <div class="text-4xl mb-4 text-emerald-500"><i class="fas fa-spell-check"></i></div>
+                    <h3 class="text-lg font-bold mb-1">Correct Spelling</h3>
+                    <p class="text-xs text-gray-500">Fix the wrongly spelled word.</p>
+                </button>
+
             </div>
         </div>
 
-        <div id="game-arena" class="hidden glass rounded-3xl shadow-2xl p-6 md:p-8 animate-fade-in">
+        <div id="game-arena" class="hidden glass rounded-3xl shadow-2xl p-6 md:p-8 animate-fade-in max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-8 border-b pb-4">
                 <button onclick="backToMenu()" class="text-gray-500 hover:text-red-500 font-semibold"><i class="fas fa-arrow-left"></i> Back</button>
                 <div class="text-center">
@@ -115,7 +154,7 @@
             </div>
         </div>
 
-        <div id="leaderboard-screen" class="hidden glass rounded-3xl shadow-2xl p-8 animate-fade-in">
+        <div id="leaderboard-screen" class="hidden glass rounded-3xl shadow-2xl p-8 animate-fade-in max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
                 <h2 class="text-3xl font-bold text-indigo-700"><i class="fas fa-crown text-yellow-500"></i> Leaderboard</h2>
                 <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-full font-bold transition">CLOSE</button>
@@ -138,7 +177,7 @@
             </div>
         </div>
 
-        <div id="shop-screen" class="hidden glass rounded-3xl shadow-2xl p-8 animate-fade-in">
+        <div id="shop-screen" class="hidden glass rounded-3xl shadow-2xl p-8 animate-fade-in max-w-5xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b pb-4 gap-4">
                 <h2 class="text-3xl font-bold text-indigo-700"><i class="fas fa-store text-green-500"></i> Virtual Shop</h2>
                 <div class="flex items-center gap-4">
@@ -151,19 +190,27 @@
                 </div>
             </div>
             
-            <p class="text-sm text-gray-500 mb-4 italic">Answer questions correctly to earn coins and buy these exclusive badges!</p>
+            <p class="text-sm text-gray-500 mb-4 italic text-center md:text-left">Answer questions correctly to earn coins and buy these exclusive items!</p>
             
-            <div id="shop-items-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-h-[50vh] overflow-y-auto custom-scroll p-2">
-                </div>
+            <div class="flex justify-center md:justify-start space-x-2 mb-6">
+                <button onclick="switchShopTab('tab-avatars')" id="btn-tab-avatars" class="shop-tab-btn px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow-md transition">Avatars</button>
+                <button onclick="switchShopTab('tab-badges')" id="btn-tab-badges" class="shop-tab-btn px-4 py-2 bg-indigo-200 text-indigo-800 hover:bg-indigo-300 rounded-xl font-bold transition">Badges</button>
+                <button onclick="switchShopTab('tab-edu')" id="btn-tab-edu" class="shop-tab-btn px-4 py-2 bg-indigo-200 text-indigo-800 hover:bg-indigo-300 rounded-xl font-bold transition">Edu Shop</button>
+            </div>
+
+            <div id="tab-avatars" class="shop-tab-content grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-h-[50vh] overflow-y-auto custom-scroll p-2"></div>
+            <div id="tab-badges" class="shop-tab-content grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-h-[50vh] overflow-y-auto custom-scroll p-2 hidden"></div>
+            <div id="tab-edu" class="shop-tab-content grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-h-[50vh] overflow-y-auto custom-scroll p-2 hidden"></div>
 
             <div class="mt-8 border-t pt-4">
                 <h3 class="font-bold text-lg text-indigo-700 mb-3"><i class="fas fa-backpack text-indigo-500"></i> My Inventory</h3>
-                <div id="inventory-container" class="flex flex-wrap gap-3">
-                    </div>
+                <div id="inventory-container" class="flex flex-wrap gap-3"></div>
             </div>
         </div>
 
     </div>
+
+    <script src="data.js"></script>
 
     <script>
         // URL GOOGLE APPS SCRIPT ANDA
@@ -175,302 +222,6 @@
         let currentGameType = ''; 
         let studentDatabase = [];
 
-        // --- SISTEM VIRTUAL SHOP VARIABLES ---
-        let localPlayerData = { coins: 0, inventory: [] };
-const shopItems = [
-            // Lencana Digital (Digital Badges)
-            { id: 'badge_star', name: 'Star Player', price: 300, icon: 'fas fa-star text-yellow-400', desc: 'Sesuai untuk pemain bintang.' },
-            { id: 'badge_rocket', name: 'Speed Rocket', price: 350, icon: 'fas fa-rocket text-red-500', desc: 'Bukti anda berfikir pantas!' },
-            { id: 'badge_ninja', name: 'Word Ninja', price: 400, icon: 'fas fa-user-ninja text-gray-800', desc: 'Pakar meneka perkataan.' },
-            { id: 'badge_diamond', name: 'Rare Diamond', price: 500, icon: 'fas fa-gem text-blue-400', desc: 'Permata istimewa yang sangat mahal.' },
-            { id: 'badge_wizard', name: 'Grammar Wizard', price: 600, icon: 'fas fa-hat-wizard text-purple-500', desc: 'Ahli sihir bahasa Inggeris!' },
-            { id: 'badge_crown', name: 'King Crown', price: 800, icon: 'fas fa-crown text-yellow-500', desc: 'Mahkota untuk raja leaderboard.' },
-
-            // Item Tebusan Fizikal (Stationery Exchange)
-            { id: 'item_eraser', name: 'Eraser', price: 300, icon: 'fas fa-eraser text-pink-400', desc: 'Make a mistake? No problem! Wipe it away cleanly with this eraser.' },
-            { id: 'item_pencil', name: 'Pencil', price: 350, icon: 'fas fa-pencil-alt text-yellow-600', desc: 'A sharp pencil ready for your sketches, notes, and exams.' },
-            { id: 'item_sharpener', name: 'Sharpener', price: 400, icon: 'fas fa-wrench text-gray-500', desc: 'Keep your pencils sharp and your mind even sharper.' },
-            { id: 'item_pen', name: 'Ballpoint Pen', price: 450, icon: 'fas fa-pen text-blue-700', desc: 'A smooth and reliable writing pen for your daily homework tasks.' },
-            { id: 'item_book', name: 'Notebook', price: 600, icon: 'fas fa-book text-indigo-500', desc: 'A brand new notebook to write down all your brilliant ideas and notes.' },
-            { id: 'item_colorpencil', name: 'Color Pencils', price: 800, icon: 'fas fa-palette text-orange-500', desc: 'Bring your imagination to life with these vibrant color pencils.' },
-            { id: 'item_watercolor', name: 'Water Colors', price: 1000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Paint beautiful masterpieces with this premium water color set.' }
-        ];
-
-
-// ---------------------------------------------------------
-        // EVOLVING AVATARS SYSTEM (10 GUARDIANS)
-        // ---------------------------------------------------------
-        const avatars = {
-            dragon: {
-                id: 'avatar_dragon', maxLevel: 3, theme: 'Fire/Fantasy',
-                levels: [
-                    { level: 1, name: 'Ignis Egg', price: 300, icon: 'fas fa-egg text-orange-400', desc: 'A warm mystic egg. Keep playing to hatch it!' },
-                    { level: 2, name: 'Baby Ignis', price: 1500, icon: 'fas fa-dragon text-orange-500', desc: 'A cute fire dragon. It loves learning new English words.' },
-                    { level: 3, name: 'Inferno Dragon', price: 5000, icon: 'fas fa-dragon text-red-600 drop-shadow-lg text-2xl', desc: 'The ultimate master of the sky! A true symbol of a champion.' }
-                ]
-            },
-            owl: {
-                id: 'avatar_owl', maxLevel: 3, theme: 'Wisdom',
-                levels: [
-                    { level: 1, name: 'Athena Egg', price: 300, icon: 'fas fa-egg text-blue-300', desc: 'A glowing blue egg. It vibrates when you answer correctly.' },
-                    { level: 2, name: 'Smart Owlet', price: 1500, icon: 'fas fa-crow text-blue-500', desc: 'A young bird that reads books late at night.' },
-                    { level: 3, name: 'Mystic Owl', price: 5000, icon: 'fas fa-feather-alt text-indigo-600 drop-shadow-lg text-2xl', desc: 'The wisest guardian of the vocabulary. Highly intelligent!' }
-                ]
-            },
-            bot: {
-                id: 'avatar_bot', maxLevel: 3, theme: 'Sci-Fi',
-                levels: [
-                    { level: 1, name: 'Scrap Cube', price: 300, icon: 'fas fa-box text-gray-400', desc: 'A small cube waiting to be upgraded with points.' },
-                    { level: 2, name: 'Mecha Buddy', price: 1500, icon: 'fas fa-robot text-teal-500', desc: 'Your personal AI assistant. It processes grammar very fast!' },
-                    { level: 3, name: 'Galactic Cyborg', price: 5000, icon: 'fas fa-user-astronaut text-purple-600 drop-shadow-lg text-2xl', desc: 'A high-tech cyborg ready to conquer the English universe!' }
-                ]
-            },
-            wolf: {
-                id: 'avatar_wolf', maxLevel: 3, theme: 'Ice/Forest',
-                levels: [
-                    { level: 1, name: 'Frost Paw', price: 300, icon: 'fas fa-paw text-cyan-300', desc: 'A cold paw print on the snow. What could it be?' },
-                    { level: 2, name: 'Snow Wolf', price: 1500, icon: 'fas fa-dog text-cyan-500', desc: 'A loyal wolf pup that hunts for correct answers.' },
-                    { level: 3, name: 'Blizzard Fenrir', price: 5000, icon: 'fas fa-moon text-blue-800 drop-shadow-lg text-2xl', desc: 'The legendary wolf of the winter night. Fierce and brave!' }
-                ]
-            },
-            phoenix: {
-                id: 'avatar_phoenix', maxLevel: 3, theme: 'Rebirth',
-                levels: [
-                    { level: 1, name: 'Ash Feather', price: 300, icon: 'fas fa-fire text-yellow-500', desc: 'A glowing feather found in the ashes.' },
-                    { level: 2, name: 'Fire Bird', price: 1500, icon: 'fas fa-dove text-orange-400', desc: 'A beautiful bird made of gentle flames.' },
-                    { level: 3, name: 'Majestic Phoenix', price: 5000, icon: 'fas fa-fire-alt text-red-500 drop-shadow-lg text-2xl', desc: 'The immortal bird! Proof of your never-ending dedication.' }
-                ]
-            },
-            leviathan: {
-                id: 'avatar_leviathan', maxLevel: 3, theme: 'Ocean',
-                levels: [
-                    { level: 1, name: 'Aqua Drop', price: 300, icon: 'fas fa-tint text-blue-400', desc: 'A magical water drop from the deep sea.' },
-                    { level: 2, name: 'River Spirit', price: 1500, icon: 'fas fa-fish text-teal-500', desc: 'A playful spirit that swims through the dictionary.' },
-                    { level: 3, name: 'Ocean Leviathan', price: 5000, icon: 'fas fa-water text-blue-700 drop-shadow-lg text-2xl', desc: 'The king of the ocean! Unstoppable wave of knowledge.' }
-                ]
-            },
-            unicorn: {
-                id: 'avatar_unicorn', maxLevel: 3, theme: 'Light/Magic',
-                levels: [
-                    { level: 1, name: 'Star Dust', price: 300, icon: 'fas fa-star text-pink-400', desc: 'Magical dust that shines brightly.' },
-                    { level: 2, name: 'Mystic Pony', price: 1500, icon: 'fas fa-horse text-pink-500', desc: 'A cute pony with a tiny horn growing on its head.' },
-                    { level: 3, name: 'Celestial Unicorn', price: 5000, icon: 'fas fa-horse-head text-purple-600 drop-shadow-lg text-2xl', desc: 'A glorious unicorn with the power of the stars!' }
-                ]
-            },
-            golem: {
-                id: 'avatar_golem', maxLevel: 3, theme: 'Earth/Stone',
-                levels: [
-                    { level: 1, name: 'Mud Pebble', price: 300, icon: 'fas fa-circle text-yellow-800', desc: 'A heavy stone with strange magic inside.' },
-                    { level: 2, name: 'Rock Guardian', price: 1500, icon: 'fas fa-cube text-gray-500', desc: 'A solid guardian that protects your points.' },
-                    { level: 3, name: 'Obsidian Titan', price: 5000, icon: 'fas fa-cubes text-gray-900 drop-shadow-lg text-2xl', desc: 'An unbreakable giant! Your grammar foundation is rock solid.' }
-                ]
-            },
-            fairy: {
-                id: 'avatar_fairy', maxLevel: 3, theme: 'Nature',
-                levels: [
-                    { level: 1, name: 'Magic Seedling', price: 300, icon: 'fas fa-seedling text-green-400', desc: 'A tiny plant waiting to grow with your correct answers.' },
-                    { level: 2, name: 'Forest Sprite', price: 1500, icon: 'fas fa-leaf text-green-500', desc: 'A cheeky nature spirit that loves spelling.' },
-                    { level: 3, name: 'Sylph Queen', price: 5000, icon: 'fas fa-tree text-green-800 drop-shadow-lg text-2xl', desc: 'The protector of the forest. Beautiful and powerful!' }
-                ]
-            },
-            lion: {
-                id: 'avatar_lion', maxLevel: 3, theme: 'Thunder/Electric',
-                levels: [
-                    { level: 1, name: 'Spark Kitten', price: 300, icon: 'fas fa-bolt text-yellow-400', desc: 'A small kitten that gives a static shock!' },
-                    { level: 2, name: 'Volt Cat', price: 1500, icon: 'fas fa-cat text-yellow-500', desc: 'A fast feline that dashes through sentences.' },
-                    { level: 3, name: 'Thunder God Beast', price: 5000, icon: 'fas fa-crown text-yellow-600 drop-shadow-lg text-2xl', desc: 'The roaring thunder! You are the absolute king of this game.' }
-                ]
-            }
-        };
-        // -------------------------------------
-
-        // DATA SOALAN
-        const gameData = {
-            guessing: [
-                { q: "I have a tail and a mane, and I like to gallop.", a: "horse" },
-                { q: "I am a fruit that is usually yellow and long.", a: "banana" },
-                { q: "I have four legs and I bark.", a: "dog" },
-                { q: "I am the king of the jungle.", a: "lion" },
-                { q: "I twinkle at night in the sky.", a: "star" },
-                { q: "You use me to write on paper.", a: "pencil" },
-                { q: "I have pages and stories inside me.", a: "book" },
-                { q: "I am cold, white, and fall from the sky in winter.", a: "snow" },
-                { q: "I have a long neck to eat leaves from tall trees.", a: "giraffe" },
-                { q: "I am the round object that shines during the day.", a: "sun" },
-                { q: "I have many teeth but cannot bite. I fix your hair.", a: "comb" },
-                { q: "You wear me on your feet to go running.", a: "shoes" },
-                { q: "I am a place where you go to learn.", a: "school" },
-                { q: "I am a bird that can swim but cannot fly. I live in the cold.", a: "penguin" },
-                { q: "I help you stay dry when it rains.", a: "umbrella" },
-                { q: "I am a large animal with a very long trunk.", a: "elephant" },
-                { q: "You use me to cut paper.", a: "scissors" },
-                { q: "I am a red fruit with seeds on the outside.", a: "strawberry" },
-                { q: "I am the person who treats sick people.", a: "doctor" },
-                { q: "I am a room where you cook food.", a: "kitchen" },
-                { q: "I have wings but I am not a bird. I carry passengers.", a: "airplane" },
-                { q: "I am a slow animal with a hard shell.", a: "turtle" },
-                { q: "I am what you use to smell things.", a: "nose" },
-                { q: "I am the opposite of day.", a: "night" },
-                { q: "I am a giant cat with stripes.", a: "tiger" },
-                { q: "I am a place where you can see many wild animals.", a: "zoo" },
-                { q: "I grow on your head and can be cut.", a: "hair" },
-                { q: "I am a insect that makes honey.", a: "bee" },
-                { q: "I am a sweet treat that melts in the sun.", a: "icecream" },
-                { q: "I am a building where you watch movies.", a: "cinema" },
-                { q: "I am the color of the grass.", a: "green" },
-                { q: "I am a machine that tells the time.", a: "clock" },
-                { q: "I have a screen and a keyboard.", a: "computer" },
-                { q: "I am a person who flies a plane.", a: "pilot" },
-                { q: "I am a sport played with a round ball and feet.", a: "football" },
-                { q: "I am the planet we live on.", a: "earth" },
-                { q: "I am a month that starts with 'J' and has 31 days.", a: "january" },
-                { q: "I am a shape with three sides.", a: "triangle" },
-                { q: "I am the son of your father and mother.", a: "brother" },
-                { q: "I am a vehicle with two wheels and no engine.", a: "bicycle" },
-                { q: "I am the liquid inside a pen.", a: "ink" },
-                { q: "I am the largest ocean in the world.", a: "pacific" },
-                { q: "I am a piece of furniture you sleep on.", a: "bed" },
-                { q: "I am the sound a cat makes.", a: "meow" },
-                { q: "I am a yellow flower that follows the sun.", a: "sunflower" },
-                { q: "I am a large body of salt water.", a: "ocean" },
-                { q: "I am the tool you use to eat soup.", a: "spoon" },
-                { q: "I am a colorful arc in the sky after rain.", a: "rainbow" },
-                { q: "I am the holiday celebrated on December 25th.", a: "christmas" },
-                { q: "I am the capital city of Malaysia.", a: "kuala lumpur" }
-            ],
-puzzle: [
-                { q: "C-H-E-A-T-R-E", a: "teacher" }, { q: "D-N-I-E-F-R", a: "friend" },
-                { q: "N-D-A-G-R-E", a: "garden" }, { q: "D-O-W-W-I-N", a: "window" },
-                { q: "L-Y-M-A-I-F", a: "family" }, { q: "G-N-E-R-O-A", a: "orange" },
-                { q: "R-E-T-M-O-H", a: "mother" }, { q: "R-A-H-T-F-E", a: "father" },
-                { q: "T-I-C-S-P-A-L", a: "plastic" }, { q: "T-E-L-T-O-B", a: "bottle" },
-                { q: "K-E-R-M-A-T", a: "market" }, { q: "L-I-C-E-N-P", a: "pencil" },
-                { q: "R-U-M-S-M-E", a: "summer" }, { q: "T-E-N-I-R-W", a: "winter" },
-                { q: "F-E-E-O-C-F", a: "coffee" }, { q: "R-E-N-N-I-D", a: "dinner" },
-                { q: "W-O-L-E-Y-L", a: "yellow" }, { q: "E-D-G-R-I-B", a: "bridge" },
-                { q: "K-E-N-I-C-C-H", a: "chicken" }, { q: "N-I-P-L-O-H-D", a: "dolphin" },
-                { q: "R-G-E-U-M-A-H-R-B", a: "hamburger" }, { q: "N-I-A-T-O-U-M-N", a: "mountain" },
-                { q: "L-A-T-P-I-O-S-H", a: "hospital" }, { q: "Y-A-D-H-T-R-I-B", a: "birthday" },
-                { q: "T-N-A-H-E-P-E-L", a: "elephant" }, { q: "R-E-T-U-P-O-M-C", a: "computer" },
-                { q: "N-E-H-C-T-I-K", a: "kitchen" }, { q: "H-C-I-W-D-N-A-S", a: "sandwich" },
-                { q: "E-L-B-A-T-E-G-E-V", a: "vegetable" }, { q: "E-S-R-E-V-I-N-U", a: "universe" },
-                { q: "Y-R-A-R-B-I-L", a: "library" }, { q: "N-I-A-T-P-A-C", a: "captain" },
-                { q: "Y-A-D-I-L-O-H", a: "holiday" }, { q: "Y-L-F-R-E-T-T-U-B", a: "butterfly" },
-                { q: "D-N-O-M-A-I-D", a: "diamond" }, { q: "L-A-V-I-T-S-E-F", a: "festival" },
-                { q: "E-N-I-Z-A-G-A-M", a: "magazine" }, { q: "R-U-O-B-H-G-I-E-N", a: "neighbour" },
-                { q: "N-O-I-T-S-E-U-Q", a: "question" }, { q: "Y-R-R-E-B-W-A-R-T-S", a: "strawberry" },
-                { q: "E-L-G-N-A-I-R-T", a: "triangle" }, { q: "E-G-A-L-L-I-V", a: "village" },
-                { q: "R-E-H-T-A-E-W", a: "weather" }, { q: "Y-A-D-R-E-T-S-E-Y", a: "yesterday" },
-                { q: "A-R-B-E-Z", a: "zebra" }, { q: "L-A-M-I-N-A", a: "animal" },
-                { q: "L-U-F-I-T-U-A-E-B", a: "beautiful" }, { q: "Y-R-T-N-U-O-C", a: "country" },
-                { q: "S-U-O-R-E-G-N-A-D", a: "dangerous" }, { q: "E-S-I-C-R-E-X-E", a: "exercise" }
-            ],
-            synonym: [
-                { q: "Synonym of 'Happy'", a: "joyful|glad|cheerful" },
-                { q: "Synonym of 'Big'", a: "huge|large|giant" },
-                { q: "Synonym of 'Fast'", a: "quick|rapid|speedy" },
-                { q: "Synonym of 'Smart'", a: "intelligent|clever|bright" },
-                { q: "Synonym of 'Small'", a: "tiny|little|mini" },
-                { q: "Synonym of 'Beautiful'", a: "pretty|lovely|gorgeous" },
-                { q: "Synonym of 'Quiet'", a: "silent|calm|peaceful" },
-                { q: "Synonym of 'Simple'", a: "easy|basic|plain" },
-                { q: "Synonym of 'Sick'", a: "ill|unwell" },
-                { q: "Synonym of 'Angry'", a: "mad|furious" },
-                { q: "Synonym of 'Gift'", a: "present|reward" },
-                { q: "Synonym of 'Begin'", a: "start|commence" },
-                { q: "Synonym of 'Sad'", a: "unhappy|sorrowful|depressed" },
-                { q: "Synonym of 'Funny'", a: "hilarious|comical|amusing" },
-                { q: "Synonym of 'Shout'", a: "yell|scream|cry" },
-                { q: "Synonym of 'Scared'", a: "afraid|frightened|terrified" },
-                { q: "Synonym of 'Rich'", a: "wealthy|affluent" },
-                { q: "Synonym of 'Buy'", a: "purchase|get" },
-                { q: "Synonym of 'Finish'", a: "end|complete|conclude" },
-                { q: "Synonym of 'Help'", a: "assist|support|aid" },
-                { q: "Synonym of 'Idea'", a: "thought|concept|plan" },
-                { q: "Synonym of 'Job'", a: "work|occupation|career" },
-                { q: "Synonym of 'Look'", a: "see|watch|stare" },
-                { q: "Synonym of 'Make'", a: "create|build|produce" },
-                { q: "Synonym of 'Neat'", a: "tidy|clean|orderly" },
-                { q: "Synonym of 'Old'", a: "ancient|aged" },
-                { q: "Synonym of 'Part'", a: "section|piece|portion" },
-                { q: "Synonym of 'Right'", a: "correct|accurate|true" },
-                { q: "Synonym of 'Safe'", a: "secure|protected" },
-                { q: "Synonym of 'Tell'", a: "say|speak|inform" },
-                { q: "Synonym of 'Use'", a: "utilize|employ" },
-                { q: "Synonym of 'Wrong'", a: "incorrect|false|mistaken" },
-                { q: "Synonym of 'Always'", a: "forever|constantly" },
-                { q: "Synonym of 'Brave'", a: "courageous|fearless|bold" },
-                { q: "Synonym of 'Cold'", a: "chilly|freezing|cool" },
-                { q: "Synonym of 'Dirty'", a: "messy|unclean|filthy" },
-                { q: "Synonym of 'Enjoy'", a: "like|love|appreciate" },
-                { q: "Synonym of 'Famous'", a: "well-known|popular|renowned" },
-                { q: "Synonym of 'Good'", a: "great|excellent|fine" },
-                { q: "Synonym of 'Hard'", a: "difficult|tough|solid" },
-                { q: "Synonym of 'Important'", a: "crucial|significant|vital" },
-                { q: "Synonym of 'Jump'", a: "leap|hop|bounce" },
-                { q: "Synonym of 'Keep'", a: "hold|save|retain" },
-                { q: "Synonym of 'Lazy'", a: "idle|sluggish|inactive" },
-                { q: "Synonym of 'Many'", a: "numerous|multiple|plenty" },
-                { q: "Synonym of 'New'", a: "fresh|modern|recent" },
-                { q: "Synonym of 'Polite'", a: "courteous|respectful|civil" },
-                { q: "Synonym of 'Strong'", a: "powerful|tough|sturdy" },
-                { q: "Synonym of 'Tired'", a: "sleepy|exhausted|fatigued" },
-                { q: "Synonym of 'Weak'", a: "frail|fragile|feeble" }
-            ],
-            antonym: [
-                { q: "Antonym of 'Hot'", a: "cold|freezing" },
-                { q: "Antonym of 'Up'", a: "down" },
-                { q: "Antonym of 'Good'", a: "bad|evil|terrible" },
-                { q: "Antonym of 'Fast'", a: "slow" },
-                { q: "Antonym of 'Happy'", a: "sad|unhappy|depressed" },
-                { q: "Antonym of 'Big'", a: "small|tiny|little" },
-                { q: "Antonym of 'Light'", a: "dark|heavy" },
-                { q: "Antonym of 'Day'", a: "night" },
-                { q: "Antonym of 'Open'", a: "close|closed|shut" },
-                { q: "Antonym of 'New'", a: "old|ancient" },
-                { q: "Antonym of 'Rich'", a: "poor|broke" },
-                { q: "Antonym of 'Hard'", a: "soft|easy" },
-                { q: "Antonym of 'Empty'", a: "full" },
-                { q: "Antonym of 'Clean'", a: "dirty|messy" },
-                { q: "Antonym of 'Strong'", a: "weak|frail" },
-                { q: "Antonym of 'Right'", a: "wrong|left" },
-                { q: "Antonym of 'Tall'", a: "short" },
-                { q: "Antonym of 'Beautiful'", a: "ugly" },
-                { q: "Antonym of 'Brave'", a: "coward|scared|fearful" },
-                { q: "Antonym of 'Cheap'", a: "expensive|costly" },
-                { q: "Antonym of 'Cry'", a: "laugh|smile" },
-                { q: "Antonym of 'Early'", a: "late" },
-                { q: "Antonym of 'Fat'", a: "thin|skinny|slim" },
-                { q: "Antonym of 'First'", a: "last|final" },
-                { q: "Antonym of 'Friend'", a: "enemy|foe" },
-                { q: "Antonym of 'Give'", a: "take|receive" },
-                { q: "Antonym of 'Inside'", a: "outside" },
-                { q: "Antonym of 'Loud'", a: "quiet|silent|soft" },
-                { q: "Antonym of 'Love'", a: "hate|dislike" },
-                { q: "Antonym of 'Near'", a: "far|distant" },
-                { q: "Antonym of 'Never'", a: "always|forever" },
-                { q: "Antonym of 'Pull'", a: "push" },
-                { q: "Antonym of 'Rough'", a: "smooth|soft" },
-                { q: "Antonym of 'Safe'", a: "dangerous|unsafe" },
-                { q: "Antonym of 'Same'", a: "different|opposite" },
-                { q: "Antonym of 'Start'", a: "stop|finish|end" },
-                { q: "Antonym of 'Sweet'", a: "sour|bitter" },
-                { q: "Antonym of 'Thick'", a: "thin" },
-                { q: "Antonym of 'True'", a: "false|fake" },
-                { q: "Antonym of 'Win'", a: "lose" },
-                { q: "Antonym of 'Young'", a: "old" },
-                { q: "Antonym of 'Alive'", a: "dead" },
-                { q: "Antonym of 'Awake'", a: "asleep|sleeping" },
-                { q: "Antonym of 'Careful'", a: "careless|reckless" },
-                { q: "Antonym of 'Cruel'", a: "kind|gentle|compassionate" },
-                { q: "Antonym of 'Deep'", a: "shallow" },
-                { q: "Antonym of 'Float'", a: "sink" },
-                { q: "Antonym of 'Generous'", a: "stingy|selfish|greedy" },
-                { q: "Antonym of 'Healthy'", a: "sick|ill|unhealthy" },
-                { q: "Antonym of 'Import'", a: "export" }
-            ]
-        };
- 
         window.onload = async () => {
             const datalist = document.getElementById('name-suggestions');
             const loadingText = document.getElementById('loading-status');
@@ -528,18 +279,24 @@ puzzle: [
             }
         }
 
-        function startGameHub() {
+        async function startGameHub() {
             const name = document.getElementById('student-name').value.trim();
             const cls = document.getElementById('student-class').value.trim();
             
             if(!name || !cls) return alert("Please enter your name and class first!");
 
             studentInfo = { name, class: cls };
-            document.getElementById('display-name').innerText = "Hi, " + name + "!";
+            document.getElementById('display-name').innerText = name;
             document.getElementById('display-class').innerText = "Class: " + cls;
             
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('menu-screen').classList.remove('hidden');
+
+            const avatarContainer = document.getElementById('dashboard-avatars');
+            if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
+            
+            await loadCloudPlayerData();
+            updateDashboardAvatars(); 
         }
 
         function logout() {
@@ -558,47 +315,125 @@ puzzle: [
             document.getElementById('menu-screen').classList.remove('hidden');
         }
 
-// --- LOGIK VIRTUAL SHOP & AVATAR ---
-
-        function loadLocalPlayerData() {
-            const key = 'EduGames_' + studentInfo.name.toUpperCase() + "_" + studentInfo.class.toUpperCase();
-            const stored = localStorage.getItem(key);
-            if(stored) {
-                localPlayerData = JSON.parse(stored);
-                // Pastikan pelajar lama ada tempat simpan avatar
-                if(!localPlayerData.avatars) localPlayerData.avatars = {}; 
-            } else {
+        // --- SISTEM CLOUD DATABASE & DASHBOARD AVATAR ---
+        async function loadCloudPlayerData() {
+            const url = SCRIPT_URL + `?action=getPlayer&name=${encodeURIComponent(studentInfo.name)}&cls=${encodeURIComponent(studentInfo.class)}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data) {
+                    localPlayerData = data;
+                    if(!localPlayerData.avatars) localPlayerData.avatars = {}; 
+                } else {
+                    localPlayerData = { coins: 0, inventory: [], avatars: {} };
+                }
+            } catch(e) {
+                console.error("Error fetching player data", e);
                 localPlayerData = { coins: 0, inventory: [], avatars: {} };
             }
         }
 
-        function saveLocalPlayerData() {
-            const key = 'EduGames_' + studentInfo.name.toUpperCase() + "_" + studentInfo.class.toUpperCase();
-            localStorage.setItem(key, JSON.stringify(localPlayerData));
+        async function saveCloudPlayerData() {
+            const payload = {
+                action: "updatePlayer",
+                name: studentInfo.name,
+                class: studentInfo.class,
+                coins: localPlayerData.coins,
+                inventory: localPlayerData.inventory,
+                avatars: localPlayerData.avatars
+            };
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // PENAMBAHBAIKAN SEBELUM INI
+                    body: JSON.stringify(payload)
+                });
+            } catch(e) {
+                console.error("Error saving player data", e);
+            }
         }
 
-        function openShop() {
+        function updateDashboardAvatars() {
+            const container = document.getElementById('dashboard-avatars');
+            if (!container) return; 
+            
+            container.innerHTML = ''; 
+            let hasAvatar = false;
+
+            if (localPlayerData && localPlayerData.avatars) {
+                for (const [key, level] of Object.entries(localPlayerData.avatars)) {
+                    if (level > 0 && avatars[key]) {
+                        hasAvatar = true;
+                        let displayData = avatars[key].levels[level - 1];
+                        container.innerHTML += `
+                            <div class="bg-indigo-100 p-2 rounded-full shadow-sm border-2 border-indigo-300 flex items-center justify-center hover:scale-110 transition cursor-pointer" title="${displayData.name} (Level ${level})">
+                                <i class="${displayData.icon} text-2xl"></i>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            if (!hasAvatar) {
+                container.innerHTML = `
+                    <div class="bg-gray-100 p-2 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center" title="No Guardian Yet">
+                        <i class="fas fa-question text-gray-400 text-xl"></i>
+                    </div>
+                `;
+            }
+        }
+
+        // --- FUNGSI TUKAR TAB KEDAI ---
+        function switchShopTab(tabId) {
+            document.querySelectorAll('.shop-tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.shop-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('bg-indigo-200', 'text-indigo-800');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-indigo-200', 'text-indigo-800');
+                activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+            }
+        }
+
+        async function openShop() {
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('shop-screen').classList.remove('hidden');
-            loadLocalPlayerData();
+            
+            switchShopTab('tab-avatars');
+            document.getElementById('tab-avatars').innerHTML = '<div class="col-span-1 md:col-span-3 text-center py-10 text-indigo-500 font-bold"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><br>Connecting to Cloud Server...</div>';
+            
+            await loadCloudPlayerData();
             renderShop();
         }
 
         function backToMenuFromShop() {
             document.getElementById('shop-screen').classList.add('hidden');
             document.getElementById('menu-screen').classList.remove('hidden');
+            updateDashboardAvatars(); 
         }
 
         function renderShop() {
             document.getElementById('coin-balance').innerText = localPlayerData.coins;
-            const container = document.getElementById('shop-items-container');
-            container.innerHTML = ''; // Kosongkan kedai sebelum render
+            
+            const avatarsContainer = document.getElementById('tab-avatars');
+            const badgesContainer = document.getElementById('tab-badges');
+            const eduContainer = document.getElementById('tab-edu');
+            
+            avatarsContainer.innerHTML = ''; 
+            badgesContainer.innerHTML = '';
+            eduContainer.innerHTML = '';
 
-            // 1. RENDER AVATARS / GUARDIANS (Boleh di-upgrade)
             for (const [key, avatar] of Object.entries(avatars)) {
                 let currentLevel = localPlayerData.avatars[key] || 0;
                 let nextLevelData = avatar.levels.find(l => l.level === currentLevel + 1);
-                let displayData = nextLevelData || avatar.levels[avatar.maxLevel - 1]; // Jika dah max, tunjuk gambar max
+                let displayData = nextLevelData || avatar.levels[avatar.maxLevel - 1]; 
 
                 let btnHtml = '';
                 if (currentLevel >= avatar.maxLevel) {
@@ -612,7 +447,7 @@ puzzle: [
                     }
                 }
 
-                container.innerHTML += `
+                avatarsContainer.innerHTML += `
                     <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition shadow-sm text-center flex flex-col justify-between">
                         <div>
                             <div class="text-xs font-bold text-indigo-400 uppercase mb-1 tracking-wider">${avatar.theme}</div>
@@ -626,7 +461,6 @@ puzzle: [
                 `;
             }
 
-            // 2. RENDER NORMAL ITEMS (Barang tebusan seperti pensel/buku)
             if (typeof shopItems !== 'undefined') {
                 shopItems.forEach(item => {
                     const isOwned = localPlayerData.inventory.includes(item.id);
@@ -641,7 +475,7 @@ puzzle: [
                         btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${item.price} <i class="fas fa-coins"></i></button>`;
                     }
 
-                    container.innerHTML += `
+                    const itemHTML = `
                         <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 hover:border-green-300 transition shadow-sm text-center flex flex-col justify-between">
                             <div>
                                 <div class="text-5xl mb-3 h-16 flex items-center justify-center"><i class="${item.icon}"></i></div>
@@ -651,49 +485,54 @@ puzzle: [
                             ${btnHtml}
                         </div>
                     `;
+
+                    if (item.category === 'badge') {
+                        badgesContainer.innerHTML += itemHTML;
+                    } else if (item.category === 'edu') {
+                        eduContainer.innerHTML += itemHTML;
+                    }
                 });
             }
 
-            renderInventory(); // Kemaskini beg galas (inventory)
+            if (badgesContainer.innerHTML === '') badgesContainer.innerHTML = '<p class="col-span-full text-center text-gray-400 italic">No badges available.</p>';
+            if (eduContainer.innerHTML === '') eduContainer.innerHTML = '<p class="col-span-full text-center text-gray-400 italic">No items available.</p>';
+
+            renderInventory(); 
         }
 
-        // FUNGSI BELI AVATAR (BARU)
-        function buyAvatar(avatarKey, level, price) {
+        async function buyAvatar(avatarKey, level, price) {
             if(localPlayerData.coins >= price) {
                 localPlayerData.coins -= price;
                 localPlayerData.avatars[avatarKey] = level;
-                saveLocalPlayerData();
-                renderShop();
+                renderShop(); 
+                await saveCloudPlayerData(); 
                 
-                // Pop-up mesej seronok
                 let guardianName = avatars[avatarKey].levels[level - 1].name;
                 alert(`✨ MAGIC UNLOCKED! ✨\nYour guardian has evolved to [${guardianName}] (Level ${level})!`);
             }
         }
 
-        // FUNGSI BELI ITEM BIASA (KEKAL)
-        function buyItem(itemId) {
+        async function buyItem(itemId) {
             const item = shopItems.find(i => i.id === itemId);
             if(localPlayerData.coins >= item.price && !localPlayerData.inventory.includes(itemId)) {
                 localPlayerData.coins -= item.price;
                 localPlayerData.inventory.push(itemId);
-                saveLocalPlayerData();
-                renderShop();
+                renderShop(); 
+                await saveCloudPlayerData(); 
+                
                 alert(`🎉 Congratulations! You bought [${item.name}]. It is now in your inventory!`);
             }
         }
 
-        // KEMASKINI PAPARAN INVENTORY (BEG GALAS PELAJAR)
         function renderInventory() {
             const container = document.getElementById('inventory-container');
             container.innerHTML = '';
             
             let hasItems = false;
 
-            // Tunjuk Avatar yang dimiliki
             if(localPlayerData.avatars) {
                 for (const [key, level] of Object.entries(localPlayerData.avatars)) {
-                    if(level > 0) {
+                    if(level > 0 && avatars[key]) {
                         hasItems = true;
                         let displayData = avatars[key].levels[level - 1];
                         container.innerHTML += `
@@ -706,7 +545,6 @@ puzzle: [
                 }
             }
 
-            // Tunjuk item alat tulis biasa
             if(localPlayerData.inventory && localPlayerData.inventory.length > 0) {
                 localPlayerData.inventory.forEach(itemId => {
                     const item = shopItems.find(i => i.id === itemId);
@@ -726,9 +564,8 @@ puzzle: [
                 container.innerHTML = '<p class="text-sm text-gray-400 italic">Your inventory is empty. Play more games to buy guardians and stationeries!</p>';
             }
         }
-        // ---------------------------------------------
-
-        function initGame(type) {
+        
+function initGame(type) {
             currentGameType = type;
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('game-arena').classList.remove('hidden');
@@ -743,16 +580,30 @@ puzzle: [
             if(type === 'puzzle') title = "Word Scramble";
             if(type === 'synonym') title = "Synonyms (Same Meaning)";
             if(type === 'antonym') title = "Antonyms (Opposite Meaning)";
+            if(type === 'missing') title = "Missing Letters";
+            if(type === 'pastTense') title = "Past Tense Challenge";
+            if(type === 'plural') title = "Singular to Plural";
+            if(type === 'spelling') title = "Correct the Spelling";
             
             document.getElementById('game-title').innerText = title;
 
-            const questions = gameData[type] || [];
-            if(questions.length === 0) {
-                container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila masukkan data di dalam kod (gameData).</p>";
+            // 1. Dapatkan soalan dari data.js dan salin ke dalam array baharu
+            let allQuestions = [...(gameData[type] || [])];
+            
+            if(allQuestions.length === 0) {
+                container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila pastikan data.js anda telah dikemaskini.</p>";
                 return;
             }
 
-            questions.forEach((item, index) => {
+            // 2. Rawakkan susunan soalan (Shuffle) menggunakan Math.random
+            allQuestions.sort(() => Math.random() - 0.5);
+
+            // 3. Pilih 10 soalan sahaja untuk dipaparkan dalam pusingan ini
+            // (Anda boleh tukar nombor 10 di bawah kepada 15 atau 20 jika mahu)
+            let selectedQuestions = allQuestions.slice(0, 25);
+
+            // 4. Paparkan soalan yang telah dirawak dan dipilih
+            selectedQuestions.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
                 div.innerHTML = `
@@ -797,7 +648,7 @@ puzzle: [
             alert("TIME'S UP! Check your answers below.");
         }
 
-        function finishGame() {
+        async function finishGame() {
             const inputs = document.querySelectorAll('.game-input');
             let score = 0;
             let total = inputs.length;
@@ -830,14 +681,12 @@ puzzle: [
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
             
-            // --- LOGIK TAMBAH COINS KE VIRTUAL SHOP ---
-            const coinsEarned = score * 5; 
+            const coinsEarned = score * 2; 
             if(coinsEarned > 0) {
-                loadLocalPlayerData();
-                localPlayerData.coins += coinsEarned;
-                saveLocalPlayerData();
+                await loadCloudPlayerData(); 
+                localPlayerData.coins += coinsEarned; 
+                await saveCloudPlayerData(); 
             }
-            // ------------------------------------------
 
             const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
             
