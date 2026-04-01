@@ -24,8 +24,7 @@
             <div class="space-y-4 max-w-sm mx-auto text-left">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Student Name</label>
-<input type="text" id="student-name" list="name-suggestions" oninput="this.value = this.value.toUpperCase(); autoFillClass()" autocomplete="off" class="w-full px-4 py-3 rounded-xl border-2 border-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="Enter your name...">
-                    
+                    <input type="text" id="student-name" list="name-suggestions" oninput="this.value = this.value.toUpperCase(); autoFillClass()" autocomplete="off" class="w-full px-4 py-3 rounded-xl border-2 border-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="Enter your name...">
                     <datalist id="name-suggestions"></datalist>
                 </div>
                 <div>
@@ -49,6 +48,9 @@
                     </button>
                 </div>
                 <div class="flex gap-2">
+                    <button onclick="openShop()" class="bg-green-400 hover:bg-green-500 text-indigo-900 px-4 py-2 rounded-full font-bold shadow transition">
+                        <i class="fas fa-store"></i> Shop
+                    </button>
                     <button onclick="showLeaderboard()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 px-4 py-2 rounded-full font-bold shadow transition">
                         <i class="fas fa-trophy"></i> Leaderboard
                     </button>
@@ -120,18 +122,44 @@
             </div>
             <div class="overflow-hidden rounded-2xl border border-gray-100 shadow-sm max-h-[60vh] overflow-y-auto custom-scroll">
                 <table class="w-full text-left bg-white">
-<thead class="bg-indigo-600 text-white sticky top-0 z-10">
+                    <thead class="bg-indigo-600 text-white sticky top-0 z-10">
                         <tr>
                             <th class="p-4">Rank</th>
                             <th class="p-4">Name</th>
                             <th class="p-4">Class</th>
                             <th class="p-4">Game</th>
                             <th class="p-4 text-center">Score</th>
-                            <th class="p-4 text-center">Total</th> </tr>
+                            <th class="p-4 text-center">Total</th> 
+                        </tr>
                     </thead>
                     <tbody id="leaderboard-body" class="text-gray-700">
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div id="shop-screen" class="hidden glass rounded-3xl shadow-2xl p-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b pb-4 gap-4">
+                <h2 class="text-3xl font-bold text-indigo-700"><i class="fas fa-store text-green-500"></i> Virtual Shop</h2>
+                <div class="flex items-center gap-4">
+                    <div class="bg-yellow-100 px-4 py-2 rounded-xl border border-yellow-300 shadow-inner">
+                        <span class="font-bold text-yellow-700 text-lg">
+                            <i class="fas fa-coins text-yellow-500"></i> <span id="coin-balance">0</span> Coins
+                        </span>
+                    </div>
+                    <button onclick="backToMenuFromShop()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-full font-bold transition">CLOSE</button>
+                </div>
+            </div>
+            
+            <p class="text-sm text-gray-500 mb-4 italic">Answer questions correctly to earn coins and buy these exclusive badges!</p>
+            
+            <div id="shop-items-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-h-[50vh] overflow-y-auto custom-scroll p-2">
+                </div>
+
+            <div class="mt-8 border-t pt-4">
+                <h3 class="font-bold text-lg text-indigo-700 mb-3"><i class="fas fa-backpack text-indigo-500"></i> My Inventory</h3>
+                <div id="inventory-container" class="flex flex-wrap gap-3">
+                    </div>
             </div>
         </div>
 
@@ -145,7 +173,29 @@
         let timeLeft;
         let studentInfo = { name: '', class: '' };
         let currentGameType = ''; 
-        let studentDatabase = []; // Memori untuk simpan nama dari Google Sheet
+        let studentDatabase = [];
+
+        // --- SISTEM VIRTUAL SHOP VARIABLES ---
+        let localPlayerData = { coins: 0, inventory: [] };
+const shopItems = [
+            // Lencana Digital (Digital Badges)
+            { id: 'badge_star', name: 'Star Player', price: 300, icon: 'fas fa-star text-yellow-400', desc: 'Sesuai untuk pemain bintang.' },
+            { id: 'badge_rocket', name: 'Speed Rocket', price: 350, icon: 'fas fa-rocket text-red-500', desc: 'Bukti anda berfikir pantas!' },
+            { id: 'badge_ninja', name: 'Word Ninja', price: 400, icon: 'fas fa-user-ninja text-gray-800', desc: 'Pakar meneka perkataan.' },
+            { id: 'badge_diamond', name: 'Rare Diamond', price: 500, icon: 'fas fa-gem text-blue-400', desc: 'Permata istimewa yang sangat mahal.' },
+            { id: 'badge_wizard', name: 'Grammar Wizard', price: 600, icon: 'fas fa-hat-wizard text-purple-500', desc: 'Ahli sihir bahasa Inggeris!' },
+            { id: 'badge_crown', name: 'King Crown', price: 800, icon: 'fas fa-crown text-yellow-500', desc: 'Mahkota untuk raja leaderboard.' },
+
+            // Item Tebusan Fizikal (Stationery Exchange)
+            { id: 'item_eraser', name: 'Eraser', price: 300, icon: 'fas fa-eraser text-pink-400', desc: 'Make a mistake? No problem! Wipe it away cleanly with this eraser.' },
+            { id: 'item_pencil', name: 'Pencil', price: 350, icon: 'fas fa-pencil-alt text-yellow-600', desc: 'A sharp pencil ready for your sketches, notes, and exams.' },
+            { id: 'item_sharpener', name: 'Sharpener', price: 400, icon: 'fas fa-wrench text-gray-500', desc: 'Keep your pencils sharp and your mind even sharper.' },
+            { id: 'item_pen', name: 'Ballpoint Pen', price: 450, icon: 'fas fa-pen text-blue-700', desc: 'A smooth and reliable writing pen for your daily homework tasks.' },
+            { id: 'item_book', name: 'Notebook', price: 600, icon: 'fas fa-book text-indigo-500', desc: 'A brand new notebook to write down all your brilliant ideas and notes.' },
+            { id: 'item_colorpencil', name: 'Color Pencils', price: 800, icon: 'fas fa-palette text-orange-500', desc: 'Bring your imagination to life with these vibrant color pencils.' },
+            { id: 'item_watercolor', name: 'Water Colors', price: 1000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Paint beautiful masterpieces with this premium water color set.' }
+        ];
+        // -------------------------------------
 
         // DATA SOALAN
         const gameData = {
@@ -334,20 +384,18 @@ puzzle: [
             ]
         };
  
-        // Muat turun profil dari Google Sheet apabila aplikasi dibuka
         window.onload = async () => {
             const datalist = document.getElementById('name-suggestions');
             const loadingText = document.getElementById('loading-status');
             const startBtn = document.getElementById('start-btn');
             
-            startBtn.disabled = true; // Kunci butang sementara data dimuat turun
+            startBtn.disabled = true; 
             startBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
                 const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
                 
-                // Saring data supaya tiada nama berulang
                 const uniqueStudents = [];
                 const checkDuplicate = new Map();
                 
@@ -355,15 +403,14 @@ puzzle: [
                     if(!checkDuplicate.has(item.name.toLowerCase())){
                         checkDuplicate.set(item.name.toLowerCase(), true);
                         uniqueStudents.push({
-    name: item.name.toUpperCase(), // Paksa nama menjadi HURUF BESAR
-    class: item.cls 
-});
+                            name: item.name.toUpperCase(), 
+                            class: item.cls 
+                        });
                     }
                 }
                 
                 studentDatabase = uniqueStudents;
                 
-                // Masukkan nama ke dalam dropdown
                 studentDatabase.forEach(profile => {
                     const option = document.createElement('option');
                     option.value = profile.name;
@@ -385,13 +432,11 @@ puzzle: [
             }
         };
 
-        // Fungsi ini dipanggil setiap kali pelajar menaip nama
         function autoFillClass() {
             const inputName = document.getElementById('student-name').value.trim().toLowerCase();
             const foundProfile = studentDatabase.find(p => p.name.toLowerCase() === inputName);
             
             if (foundProfile) {
-                // Jika nama dijumpai dalam rekod, isi kelas secara automatik
                 document.getElementById('student-class').value = foundProfile.class;
             }
         }
@@ -426,6 +471,99 @@ puzzle: [
             document.getElementById('menu-screen').classList.remove('hidden');
         }
 
+        // --- SISTEM VIRTUAL SHOP FUNCTIONS ---
+        function loadLocalPlayerData() {
+            const key = 'EduGames_' + studentInfo.name.toUpperCase() + "_" + studentInfo.class.toUpperCase();
+            const stored = localStorage.getItem(key);
+            if(stored) {
+                localPlayerData = JSON.parse(stored);
+            } else {
+                localPlayerData = { coins: 0, inventory: [] };
+            }
+        }
+
+        function saveLocalPlayerData() {
+            const key = 'EduGames_' + studentInfo.name.toUpperCase() + "_" + studentInfo.class.toUpperCase();
+            localStorage.setItem(key, JSON.stringify(localPlayerData));
+        }
+
+        function openShop() {
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('shop-screen').classList.remove('hidden');
+            loadLocalPlayerData();
+            renderShop();
+        }
+
+        function backToMenuFromShop() {
+            document.getElementById('shop-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+
+        function renderShop() {
+            document.getElementById('coin-balance').innerText = localPlayerData.coins;
+            const container = document.getElementById('shop-items-container');
+            container.innerHTML = '';
+
+            shopItems.forEach(item => {
+                const isOwned = localPlayerData.inventory.includes(item.id);
+                const canAfford = localPlayerData.coins >= item.price;
+                
+                let btnHtml = '';
+                if(isOwned) {
+                    btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed">Owned</button>`;
+                } else if(canAfford) {
+                    btnHtml = `<button onclick="buyItem('${item.id}')" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
+                } else {
+                    btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed">Need ${item.price} <i class="fas fa-coins"></i></button>`;
+                }
+
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 hover:border-indigo-300 transition shadow-sm text-center flex flex-col justify-between">
+                        <div>
+                            <div class="text-5xl mb-3"><i class="${item.icon}"></i></div>
+                            <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
+                            <p class="text-xs text-gray-500 mt-1">${item.desc}</p>
+                        </div>
+                        ${btnHtml}
+                    </div>
+                `;
+            });
+            renderInventory();
+        }
+
+        function buyItem(itemId) {
+            const item = shopItems.find(i => i.id === itemId);
+            if(localPlayerData.coins >= item.price && !localPlayerData.inventory.includes(itemId)) {
+                localPlayerData.coins -= item.price;
+                localPlayerData.inventory.push(itemId);
+                saveLocalPlayerData();
+                renderShop();
+                alert(`🎉 Congratulations! You bought [${item.name}]. It is now in your inventory!`);
+            }
+        }
+
+        function renderInventory() {
+            const container = document.getElementById('inventory-container');
+            container.innerHTML = '';
+            if(localPlayerData.inventory.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-400 italic">Your inventory is empty. Play more games to buy items!</p>';
+                return;
+            }
+
+            localPlayerData.inventory.forEach(itemId => {
+                const item = shopItems.find(i => i.id === itemId);
+                if(item) {
+                    container.innerHTML += `
+                        <div class="bg-indigo-50 px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-3 shadow-sm hover:scale-105 transition transform cursor-pointer" title="${item.desc}">
+                            <i class="${item.icon} text-xl"></i> 
+                            <span class="text-sm font-bold text-indigo-900">${item.name}</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+        // ---------------------------------------------
+
         function initGame(type) {
             currentGameType = type;
             document.getElementById('menu-screen').classList.add('hidden');
@@ -445,6 +583,11 @@ puzzle: [
             document.getElementById('game-title').innerText = title;
 
             const questions = gameData[type] || [];
+            if(questions.length === 0) {
+                container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila masukkan data di dalam kod (gameData).</p>";
+                return;
+            }
+
             questions.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
@@ -455,7 +598,7 @@ puzzle: [
                 container.appendChild(div);
             });
 
-            startTimer(180); // 3 minit
+            startTimer(180); 
         }
 
         function startTimer(seconds) {
@@ -523,8 +666,19 @@ puzzle: [
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
             
+            // --- LOGIK TAMBAH COINS KE VIRTUAL SHOP ---
+            const coinsEarned = score * 5; 
+            if(coinsEarned > 0) {
+                loadLocalPlayerData();
+                localPlayerData.coins += coinsEarned;
+                saveLocalPlayerData();
+            }
+            // ------------------------------------------
+
             const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
-            document.getElementById('praise-text').innerText = praise;
+            
+            const coinText = coinsEarned > 0 ? ` (+${coinsEarned} Coins! 💰)` : '';
+            document.getElementById('praise-text').innerText = praise + coinText;
 
             saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
         }
@@ -546,7 +700,7 @@ puzzle: [
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Ditukar ke text/plain untuk elak halangan CORS
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(data)
                 });
                 statusText.innerText = "✅ Saved to Leaderboard!";
@@ -558,7 +712,7 @@ puzzle: [
             }
         }
 
-async function showLeaderboard() {
+        async function showLeaderboard() {
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('game-arena').classList.add('hidden');
             document.getElementById('leaderboard-screen').classList.remove('hidden');
@@ -575,11 +729,9 @@ async function showLeaderboard() {
                     return;
                 }
 
-                // 1. KUMPULKAN DATA MENGIKUT NAMA PELAJAR
                 const studentData = {};
                 
                 scores.forEach(s => {
-                    // Gunakan gabungan Nama dan Kelas sebagai ID Unik
                     const key = s.name.toUpperCase() + "_" + s.cls.toUpperCase();
                     
                     if (!studentData[key]) {
@@ -590,13 +742,11 @@ async function showLeaderboard() {
                         };
                     }
                     
-                    // Jika pelajar main game yang sama banyak kali, ambil markah paling tinggi sahaja
                     if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
                         studentData[key].games[s.type] = { score: s.score, total: s.total };
                     }
                 });
 
-                // 2. KIRA JUMLAH KESELURUHAN (GRAND TOTAL)
                 const leaderboard = Object.values(studentData).map(student => {
                     let grandScore = 0;
                     let grandMax = 0;
@@ -608,18 +758,11 @@ async function showLeaderboard() {
                         gameList.push({ name: gameName, score: gameData.score, total: gameData.total });
                     }
                     
-                    return {
-                        ...student,
-                        gameList,
-                        grandScore,
-                        grandMax
-                    };
+                    return { ...student, gameList, grandScore, grandMax };
                 });
 
-                // 3. SUSUN MENGIKUT MARKAH TERTINGGI (RANKING)
                 leaderboard.sort((a, b) => b.grandScore - a.grandScore);
 
-                // 4. BINA PAPARAN JADUAL
                 body.innerHTML = "";
                 
                 leaderboard.slice(0, 50).forEach((student, index) => {
@@ -631,19 +774,15 @@ async function showLeaderboard() {
                     const gamesCount = student.gameList.length;
 
                     student.gameList.forEach((game, gIndex) => {
-                        // Semak jika ini baris pertama atau baris terakhir untuk pelajar tersebut
                         const isFirstRow = gIndex === 0;
                         const isLastRow = gIndex === (gamesCount - 1);
 
-                        // Hanya paparkan Rank, Nama, dan Kelas pada baris pertama
                         const rankText = isFirstRow ? rankIcon : '';
                         const nameText = isFirstRow ? student.name : '';
                         const classText = isFirstRow ? student.cls : '';
                         
-                        // Hanya paparkan Grand Total pada baris terakhir
                         const totalHtml = isLastRow ? `<span class="bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-md">${student.grandScore}/${student.grandMax}</span>` : '';
 
-                        // Tambahkan garisan tebal pada baris terakhir untuk memisahkan antara pelajar
                         const rowClass = isLastRow ? 'border-b-2 border-indigo-200' : 'border-b border-gray-50';
 
                         const row = `
