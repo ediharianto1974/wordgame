@@ -245,6 +245,7 @@
         let studentInfo = { name: '', class: '' };
         let currentGameType = ''; 
         let studentDatabase = [];
+        let localPlayerData = { coins: 0, inventory: [], avatars: {} };
 
         window.onload = async () => {
             const datalist = document.getElementById('name-suggestions');
@@ -490,12 +491,19 @@
                     const isOwned = localPlayerData.inventory.includes(item.id);
                     const canAfford = localPlayerData.coins >= item.price;
                     
+const isEdu = item.category === 'edu';
+                    
                     let btnHtml = '';
-                    if(isOwned) {
-                        btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed">Owned</button>`;
-                    } else if(canAfford) {
-                        btnHtml = `<button onclick="buyItem('${item.id}')" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
-                    } else {
+                    // Butang 'Owned' hanya untuk Badges yang sudah dimiliki
+                    if (isOwned && !isEdu) {
+                        btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-300">Owned</button>`;
+                    } 
+                    // Jika pelajar ada cukup syiling untuk beli (sekurang-kurangnya 1 unit)
+                    else if (canAfford) {
+                        btnHtml = `<button onclick="buyItem('${item.id}')" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow shadow-green-300">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
+                    } 
+                    // Jika syiling tak cukup
+                    else {
                         btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${item.price} <i class="fas fa-coins"></i></button>`;
                     }
 
@@ -536,15 +544,55 @@
             }
         }
 
-        async function buyItem(itemId) {
+async function buyItem(itemId) {
             const item = shopItems.find(i => i.id === itemId);
-            if(localPlayerData.coins >= item.price && !localPlayerData.inventory.includes(itemId)) {
-                localPlayerData.coins -= item.price;
-                localPlayerData.inventory.push(itemId);
+            const isEdu = item.category === 'edu'; // Semak jika ia item Edu Shop
+            const isOwned = localPlayerData.inventory.includes(itemId);
+
+            // Jika ia lencana (badge) dan sudah dimiliki, halang pembelian
+            if (!isEdu && isOwned) {
+                alert("You already owned this badge!");
+                return;
+            }
+
+            let quantity = 1;
+
+            // Jika ia item Edu Shop, keluarkan popup (prompt) tanya kuantiti
+            if (isEdu) {
+                const promptVal = prompt(`How many [${item.name}] you want to buy?\nPrice 1 unit: ${item.price} Coins\n\nPlease put the quantity:`, "1");
+                
+                // Jika pelajar tekan 'Cancel' atau biarkan kosong
+                if (promptVal === null || promptVal.trim() === "") return;
+                
+                // Tukar teks input kepada nombor
+                quantity = parseInt(promptVal);
+                
+                // Semak jika nombor yang dimasukkan tidak sah (contoh: ABC atau nombor negatif)
+                if (isNaN(quantity) || quantity <= 0) {
+                    alert("Please put the correct amount.");
+                    return;
+                }
+            }
+
+            // Kira jumlah harga (Harga Item x Kuantiti)
+            const totalPrice = item.price * quantity;
+
+            // Semak baki syiling
+            if (localPlayerData.coins >= totalPrice) {
+                // Tolak syiling
+                localPlayerData.coins -= totalPrice;
+                
+                // Masukkan item ke dalam inventori sebanyak kuantiti yang dibeli
+                for (let i = 0; i < quantity; i++) {
+                    localPlayerData.inventory.push(itemId);
+                }
+                
                 renderShop(); 
                 await saveCloudPlayerData(); 
                 
-                alert(`🎉 Congratulations! You bought [${item.name}]. It is now in your inventory!`);
+                alert(`🎉 Congratulation! You have bought ${quantity}x [${item.name}]. The items have been added to your inventory!`);
+            } else {
+                alert(`Sorry, your coins is not enough to buy ${quantity} unit.\nYou need ${totalPrice} Coins.`);
             }
         }
 
@@ -641,7 +689,7 @@ function initGame(type) {
                 container.appendChild(div);
             });
 
-            startTimer(90); 
+            startTimer(120); 
         }
 
         function startTimer(seconds) {
