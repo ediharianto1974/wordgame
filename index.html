@@ -842,25 +842,26 @@ function initGame(type) {
             }
         }
 
-        async function showLeaderboard() {
+async function showLeaderboard() {
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('game-arena').classList.add('hidden');
             document.getElementById('leaderboard-screen').classList.remove('hidden');
             
             const body = document.getElementById('leaderboard-body');
-            body.innerHTML = "<tr><td colspan='6' class='p-8 text-center text-indigo-500 font-bold animate-pulse'><i class='fas fa-spinner fa-spin mr-2'></i> Fetching live scores...</td></tr>";
+            body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-indigo-500 font-bold animate-pulse'><i class='fas fa-spinner fa-spin mr-2'></i> Fetching live scores...</td></tr>";
 
             try {
                 const response = await fetch(SCRIPT_URL);
                 const scores = await response.json();
                 
                 if(scores.length === 0) {
-                    body.innerHTML = "<tr><td colspan='6' class='p-8 text-center text-gray-400'>No records yet. Be the first to play!</td></tr>";
+                    body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-gray-400'>No records yet. Be the first to play!</td></tr>";
                     return;
                 }
 
                 const studentData = {};
                 
+                // MENGUMPUL DATA MARKAH DAN AVATAR
                 scores.forEach(s => {
                     const key = s.name.toUpperCase() + "_" + s.cls.toUpperCase();
                     
@@ -868,6 +869,7 @@ function initGame(type) {
                         studentData[key] = {
                             name: s.name.toUpperCase(),
                             cls: s.cls,
+                            activeAvatar: s.activeAvatar, // <--- INI KOD YANG DITAMBAH
                             games: {}
                         };
                     }
@@ -895,7 +897,7 @@ function initGame(type) {
 
                 body.innerHTML = "";
                 
-leaderboard.slice(0, 50).forEach((student, index) => {
+                leaderboard.slice(0, 50).forEach((student, index) => {
                     let rankIcon = `#${index+1}`;
                     if(index === 0) rankIcon = `🥇`;
                     if(index === 1) rankIcon = `🥈`;
@@ -911,7 +913,7 @@ leaderboard.slice(0, 50).forEach((student, index) => {
                         const nameText = isFirstRow ? student.name : '';
                         const classText = isFirstRow ? student.cls : '';
                         
-                        // KOD MELUKIS AVATAR 3D YANG HILANG SEBELUM INI
+                        // KOD MELUKIS AVATAR 3D
                         let avatarHtml = '';
                         if (isFirstRow) {
                             if (student.activeAvatar) {
