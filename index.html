@@ -923,9 +923,9 @@ async function showLeaderboard() {
                                             <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
                                             <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
                                         </div>
-                                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm max-w-[80px] truncate" title="${student.activeAvatar.name}">
-                                            ${student.activeAvatar.name}
-                                        </div>
+                                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto" title="${student.activeAvatar.name}">
+     ${student.activeAvatar.name}
+</div>
                                     </div>
                                 `;
                             } else {
