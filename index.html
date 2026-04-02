@@ -1091,14 +1091,14 @@ async function showLeaderboard() {
 
             let bonus = 0;
             if (myScore > targetScoreToBeat) {
-                bonus = 20; // Pilihan 2: Menang
-                alert(`🔥 TAHNIAH! Anda menewaskan rakan anda (${myScore} vs ${targetScoreToBeat}).\nAnda dapat BONUS +20 Coins!`);
+                bonus = 50; // Pilihan 2: Menang
+                alert(`🔥 CONGRATULATIONS! You beat your friend's record (${myScore} vs ${targetScoreToBeat}).\nYou get BONUS +50 Coins!`);
             } else if (myScore === targetScoreToBeat) {
-                bonus = 10; // Pilihan 2: Seri
-                alert(`🤝 HEBAT! Markah anda SERI dengan rekod rakan (${myScore} vs ${targetScoreToBeat}).\nAnda dapat BONUS Saguhati +10 Coins!`);
+                bonus = 25; // Pilihan 2: Seri
+                alert(`🤝 AWESOME! You tied with your friend's score (${myScore} vs ${targetScoreToBeat}).\nYou get Consolation BONUS +20 Coins!`);
             } else {
                 bonus = 0;  // Pilihan 2: Kalah
-                alert(`💦 ALAMAK! Anda gagal menewaskan rakan anda (${myScore} vs ${targetScoreToBeat}).\nUsaha lagi nanti! (Jangan risau, tiada syiling ditolak)`);
+                alert(`💦 OH NO! You failed to beat your friend's record (${myScore} vs ${targetScoreToBeat}).\nTry again! (Don't worry, no coins deducted from you account)`);
             }
 
             // Arahkan Google Sheets untuk tutup (Completed) kod cabaran ini
