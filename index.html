@@ -272,27 +272,91 @@
         let studentDatabase = [];
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
         // ==========================================
-        // 12-MONTH LIMITED TIME EVENT CALENDAR
+        // DYNAMIC LIMITED TIME EVENT CALENDAR
         // ==========================================
         const EVENT_CALENDAR = [
-            { month: 0,  name: "Back to School Kickoff! (2x Coins)", multiplier: 2 }, // Jan
-            { month: 1,  name: "Lunar Prosperity Week (2x Coins)", multiplier: 2 },   // Feb
-            { month: 2,  name: "Spring Break Flash Sale (Avatar Discounts!)", multiplier: 1 }, // Mac
-            { month: 3,  name: "Festive Avatar Rush (2x Coins)", multiplier: 2 },     // Apr
-            { month: 4,  name: "Teacher's Boss Challenge (2x Coins)", multiplier: 2 }, // Mei
-            { month: 5,  name: "Mid-Year Marathon (3x Coins)", multiplier: 3 },       // Jun
-            { month: 6,  name: "No-Risk Challenge Month (2x Coins)", multiplier: 2 }, // Jul
-            { month: 7,  name: "Merdeka Spirit Special (2x Coins)", multiplier: 2 },   // Ogo
-            { month: 8,  name: "Super Scholar Discount Month", multiplier: 1 },       // Sep
-            { month: 9,  name: "Spooky Spelling Week (2x Coins)", multiplier: 2 },    // Okt
-            { month: 10, name: "Final Exam Push! (3x Coins)", multiplier: 3 },        // Nov
-            { month: 11, name: "Year-End Grand Festival (2x Coins)", multiplier: 2 }  // Dis
+            { 
+                name: "Back to School Kickoff! (2x Coins)", 
+                startDate: "2026-01-10T00:00:00", 
+                endDate: "2026-01-14T23:59:59", 
+                multiplier: 2 
+            },
+            { 
+                name: "Lunar Prosperity Week (2x Coins)", 
+                startDate: "2026-02-15T00:00:00", 
+                endDate: "2026-02-17T23:59:59", 
+                multiplier: 2 
+            },
+            { 
+                name: "Spring Break Flash Sale (Avatar Discounts!)", 
+                startDate: "2026-03-01T00:00:00", 
+                endDate: "2026-03-01T23:59:59", // Berlangsung 1 hari sahaja
+                multiplier: 1 
+            },
+            { 
+                name: "Festive Avatar Rush (2x Coins)", 
+                startDate: "2026-04-02T00:00:00", 
+                endDate: "2026-04-03T23:59:59", 
+                multiplier: 2 
+            },
+            { 
+                name: "Teacher's Boss Challenge (2x Coins)", 
+                startDate: "2026-05-31T00:00:00", 
+                endDate: "2026-05-31T23:59:59", // Berlangsung 1 hari sahaja
+                multiplier: 2 
+            },
+            { 
+                name: "Mid-Year Marathon (3x Coins)", 
+                startDate: "2026-06-25T00:00:00", 
+                endDate: "2026-06-25T23:59:59", // Berlangsung 1 hari sahaja
+                multiplier: 3 
+            },
+            { 
+                name: "No-Risk Challenge Month (2x Coins)", 
+                startDate: "2026-07-01T00:00:00", 
+                endDate: "2026-07-02T23:59:59", 
+                multiplier: 2 
+            },
+            { 
+                name: "Merdeka Spirit Special (2x Coins)", 
+                startDate: "2026-08-30T00:00:00", 
+                endDate: "2026-08-31T23:59:59", 
+                multiplier: 2 
+            },
+            { 
+                name: "Super Scholar Discount Month", 
+                startDate: "2026-09-01T00:00:00", 
+                endDate: "2026-09-30T23:59:59", // Sepanjang bulan September
+                multiplier: 1 
+            },
+            { 
+                name: "Spooky Spelling Week (2x Coins)", 
+                startDate: "2026-10-15T00:00:00", 
+                endDate: "2026-10-16T23:59:59", 
+                multiplier: 2 
+            },
+            { 
+                name: "Final Exam Push! (3x Coins)", 
+                startDate: "2026-11-01T00:00:00", 
+                endDate: "2026-11-01T23:59:59", // Berlangsung 1 hari sahaja
+                multiplier: 3 
+            },
+            { 
+                name: "Year-End Grand Festival (2x Coins)", 
+                startDate: "2026-12-01T00:00:00", 
+                endDate: "2026-12-31T23:59:59", // Sepanjang bulan Disember
+                multiplier: 2 
+            }
         ];
 
-        // Fungsi penyemak bulan menggunakan tarikh semasa peranti
+        // Fungsi penyemak masa menggunakan TARIKH & MASA SEMASA
         function getCurrentEvent() {
-            const currentMonth = new Date().getMonth(); // Komputer baca bulan 0-11
-            return EVENT_CALENDAR.find(event => event.month === currentMonth);
+            const now = new Date(); // Sistem baca waktu pada komputer/telefon pelajar
+            return EVENT_CALENDAR.find(event => {
+                const start = new Date(event.startDate);
+                const end = new Date(event.endDate);
+                return now >= start && now <= end; // Sahkan jika 'sekarang' berada di antara Tarikh Mula dan Tarikh Tamat
+            });
         }
 
         window.onload = async () => {
