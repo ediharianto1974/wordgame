@@ -74,6 +74,10 @@
                     </div>
                 </div> 
                 <div class="flex gap-2">
+                    <button onclick="promptJoinChallenge()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-bold shadow transition flex items-center gap-2">
+                        <i class="fas fa-bolt"></i> Sertai Cabaran
+                    </button>
+
                     <button onclick="openShop()" class="bg-green-400 hover:bg-green-500 text-indigo-900 px-6 py-3 rounded-full font-bold shadow transition flex items-center gap-2">
                         <i class="fas fa-store"></i> Shop
                     </button>
@@ -186,6 +190,10 @@
                     <p id="save-status" class="text-xs text-gray-400 mb-4">Saving to Cloud...</p>
                     <button onclick="showLeaderboard()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 px-6 py-2 rounded-full font-bold shadow transition">
                         View Leaderboard
+                    </button>
+                    
+                    <button onclick="createChallenge(parseInt(document.getElementById('score-val').innerText), currentGameType)" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-2 px-6 rounded-full shadow-lg mt-4 ml-2 transition transform hover:scale-105">
+                        <i class="fas fa-bullhorn mr-2"></i> Cabar Rakan!
                     </button>
                 </div>
             </div>
@@ -824,6 +832,12 @@ function initGame(type) {
                 await saveCloudPlayerData(); 
             }
 
+            // --- KOD BAHARU UNTUK SEMAK CABARAN ---
+            let bonusCoins = checkChallengeReward(score); // Tanya hakim jumlah bonus
+            coinsEarned += bonusCoins; // Tambah bonus ke dalam jumlah syiling (jika ada)
+            localPlayerData.coins += bonusCoins; // Simpan ke dalam beg galas pemain
+            // --------------------------------------
+            
             const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
             
             const coinText = coinsEarned > 0 ? ` (+${coinsEarned} Coins! 💰)` : '';
