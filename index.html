@@ -975,6 +975,91 @@ async function showLeaderboard() {
                 body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
             }
         }
+
+        // ==========================================
+        // SISTEM MULTIPLAYER CABARAN (CHALLENGE)
+        // ==========================================
+        
+        // Pembolehubah (Variables) untuk pantau status cabaran
+        let isChallengeMode = false;
+        let activeChallengeCode = "";
+        let targetScoreToBeat = 0;
+
+        // 1. Fungsi jana kod rawak yang unik (Contoh: #C-A1B2)
+        function generateChallengeCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 4; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return '#C-' + result;
+        }
+
+        // 2. Fungsi untuk hantar maklumat cabaran ke Google Sheets
+        async function createChallenge(finalScore, gameType) {
+            const code = generateChallengeCode();
+            const payload = {
+                action: "createChallenge",
+                challengeCode: code,
+                challengerName: localPlayerData.name,
+                challengerClass: localPlayerData.class,
+                gameType: gameType,
+                challengerScore: finalScore
+            };
+
+            // Tunjuk popup memuat turun
+            alert("Sedang mencipta cabaran di pelayan awan...");
+
+            try {
+                // Hantar ke Code.gs
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify(payload)
+                });
+                
+                // Tunjuk kod kepada pelajar untuk dikongsi
+                alert(`🎉 CABARAN BERJAYA DICIPTA!\n\nBerikan kod ini kepada rakan anda:\n👉 ${code} 👈\n\nCabaran ini sah selama 24 jam.`);
+            } catch (e) {
+                alert("Maaf, ralat berlaku semasa mencipta cabaran. Sila semak internet anda.");
+            }
+        }
+
+        // 3. Fungsi untuk pelajar B (penerima) menyemak & menyertai cabaran
+        async function joinChallenge(code) {
+            alert("Mencari kod cabaran... Sila tunggu.");
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getChallenge&challengeCode=${encodeURIComponent(code)}`);
+                const data = await response.json();
+
+                // Jika kod salah, luput, atau dah dijawab
+                if (data.error) {
+                    alert("RALAT: " + data.error);
+                    return;
+                }
+
+                // Jika kod sah dan aktif, sistem akan sediakan mode cabaran!
+                isChallengeMode = true;
+                activeChallengeCode = code;
+                targetScoreToBeat = data.challengerScore;
+                
+                alert(`🔥 CABARAN DIJUMPAI! 🔥\n\nPencabar: ${data.challengerName} (${data.challengerClass})\nKategori Game: ${data.gameType.toUpperCase()}\nMarkah untuk ditewaskan: ${targetScoreToBeat}\n\nSemoga berjaya!`);
+                
+                // Terus buka game tersebut secara automatik!
+                showGame(data.gameType);
+
+            } catch (e) {
+                alert("Ralat menyambung ke pangkalan data. Sila cuba lagi.");
+            }
+        }
+
+        // 4. Fungsi untuk tutup/tanda cabaran selesai selepas pelajar B main
+        function completeChallengeInDB(code) {
+            const payload = {
+                action: "completeChallenge",
+                challengeCode: code
+            };
+            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); 
+        }
     </script>
 </body>
 </html>
