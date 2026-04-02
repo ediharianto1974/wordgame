@@ -824,22 +824,23 @@ function initGame(type) {
             document.getElementById('score-val').innerText = `${score}/${total}`;
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
-            
-            const coinsEarned = score * 2; 
+
+            // Tukar 'const' kepada 'let' supaya ia boleh diubah nilainya
+            let coinsEarned = score * 2; 
+
+            // --- SEMAK CABARAN TERLEBIH DAHULU SEBELUM SIMPAN KE CLOUD ---
+            let bonusCoins = checkChallengeReward(score); 
+            coinsEarned += bonusCoins; 
+            // --------------------------------------------------------------
+
+            // SEKARANG BARU SIMPAN KE GOOGLE SHEETS
             if(coinsEarned > 0) {
-                await loadCloudPlayerData(); 
-                localPlayerData.coins += coinsEarned; 
-                await saveCloudPlayerData(); 
+                await loadCloudPlayerData();
+                localPlayerData.coins += coinsEarned;
+                await saveCloudPlayerData();
             }
 
-            // --- KOD BAHARU UNTUK SEMAK CABARAN ---
-            let bonusCoins = checkChallengeReward(score); // Tanya hakim jumlah bonus
-            coinsEarned += bonusCoins; // Tambah bonus ke dalam jumlah syiling (jika ada)
-            localPlayerData.coins += bonusCoins; // Simpan ke dalam beg galas pemain
-            // --------------------------------------
-            
             const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
-            
             const coinText = coinsEarned > 0 ? ` (+${coinsEarned} Coins! 💰)` : '';
             document.getElementById('praise-text').innerText = praise + coinText;
 
