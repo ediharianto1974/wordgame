@@ -1211,16 +1211,21 @@ async function showLeaderboard() {
         function checkChallengeReward(myScore) {
             if (!isChallengeMode) return 0; // Jika main biasa, tiada bonus cabaran
 
+            // --- SEMAK MULTIPLIER LIMITED TIME EVENT ---
+            let currentEvent = getCurrentEvent();
+            let eventMultiplier = currentEvent ? currentEvent.multiplier : 1;
+            // -------------------------------------------
+
             let bonus = 0;
             if (myScore > targetScoreToBeat) {
-                bonus = 50; // Pilihan 2: Menang
-                alert(`🔥 CONGRATULATIONS! You beat your friend's record (${myScore} vs ${targetScoreToBeat}).\nYou get BONUS +50 Coins!`);
+                bonus = 50 * eventMultiplier; // Digandakan!
+                alert(`🔥 CONGRATULATIONS! You beat your friend's record (${myScore} vs ${targetScoreToBeat}).\nYou get BONUS +${bonus} Coins!`);
             } else if (myScore === targetScoreToBeat) {
-                bonus = 25; // Pilihan 2: Seri
-                alert(`🤝 AWESOME! You tied with your friend's score (${myScore} vs ${targetScoreToBeat}).\nYou get Consolation BONUS +20 Coins!`);
+                bonus = 25 * eventMultiplier; // Digandakan!
+                alert(`🤝 AWESOME! You tied with your friend's score (${myScore} vs ${targetScoreToBeat}).\nYou get Consolation BONUS +${bonus} Coins!`);
             } else {
-                bonus = 0;  // Pilihan 2: Kalah
-                alert(`💦 OH NO! You failed to beat your friend's record (${myScore} vs ${targetScoreToBeat}).\nTry again! (Don't worry, no coins deducted from you account)`);
+                bonus = 0;  // Kalah
+                alert(`💦 OH NO! You failed to beat your friend's record (${myScore} vs ${targetScoreToBeat}).\nTry again! (Don't worry, no coins deducted from your account)`);
             }
 
             // Arahkan Google Sheets untuk tutup (Completed) kod cabaran ini
@@ -1228,8 +1233,7 @@ async function showLeaderboard() {
 
             // Reset semula sistem kembali ke mod single-player biasa
             isChallengeMode = false;
-            activeChallengeCode = "";
-            targetScoreToBeat = 0;
+            activeChallengeCode = null;
 
             return bonus;
         }
