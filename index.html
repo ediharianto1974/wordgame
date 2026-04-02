@@ -1060,6 +1060,42 @@ async function showLeaderboard() {
             };
             fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); 
         }
+
+        // 5. Fungsi Popup untuk Butang Sertai Cabaran di Menu
+        function promptJoinChallenge() {
+            const code = prompt("Sila masukkan Kod Cabaran rakan anda (Contoh: #C-ABCD):");
+            if (code && code.trim() !== "") {
+                joinChallenge(code.trim().toUpperCase());
+            }
+        }
+
+        // 6. Fungsi "Hakim" untuk tentukan Bonus (Menang/Seri/Kalah)
+        // PENTING: Panggil fungsi ini apabila permainan tamat!
+        function checkChallengeReward(myScore) {
+            if (!isChallengeMode) return 0; // Jika main biasa, tiada bonus cabaran
+
+            let bonus = 0;
+            if (myScore > targetScoreToBeat) {
+                bonus = 20; // Pilihan 2: Menang
+                alert(`🔥 TAHNIAH! Anda menewaskan rakan anda (${myScore} vs ${targetScoreToBeat}).\nAnda dapat BONUS +20 Coins!`);
+            } else if (myScore === targetScoreToBeat) {
+                bonus = 10; // Pilihan 2: Seri
+                alert(`🤝 HEBAT! Markah anda SERI dengan rekod rakan (${myScore} vs ${targetScoreToBeat}).\nAnda dapat BONUS Saguhati +10 Coins!`);
+            } else {
+                bonus = 0;  // Pilihan 2: Kalah
+                alert(`💦 ALAMAK! Anda gagal menewaskan rakan anda (${myScore} vs ${targetScoreToBeat}).\nUsaha lagi nanti! (Jangan risau, tiada syiling ditolak)`);
+            }
+
+            // Arahkan Google Sheets untuk tutup (Completed) kod cabaran ini
+            completeChallengeInDB(activeChallengeCode);
+
+            // Reset semula sistem kembali ke mod single-player biasa
+            isChallengeMode = false;
+            activeChallengeCode = "";
+            targetScoreToBeat = 0;
+
+            return bonus;
+        }
     </script>
 </body>
 </html>
