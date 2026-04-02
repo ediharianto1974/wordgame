@@ -61,6 +61,9 @@
         </div>
 
         <div id="menu-screen" class="hidden animate-fade-in">
+            <div id="event-banner" class="hidden bg-gradient-to-r from-red-500 to-orange-500 text-white text-center p-3 rounded-xl shadow-lg mb-6 font-bold animate-pulse border-2 border-white">
+            <i class="fas fa-bullhorn mr-2"></i> <span id="event-text"></span>
+        </div>
             <div class="glass rounded-3xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
                 <div>
                     <div class="flex items-center gap-3">
@@ -268,6 +271,29 @@
         let currentGameType = ''; 
         let studentDatabase = [];
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
+        // ==========================================
+        // 12-MONTH LIMITED TIME EVENT CALENDAR
+        // ==========================================
+        const EVENT_CALENDAR = [
+            { month: 0,  name: "Back to School Kickoff! (2x Coins)", multiplier: 2 }, // Jan
+            { month: 1,  name: "Lunar Prosperity Week (2x Coins)", multiplier: 2 },   // Feb
+            { month: 2,  name: "Spring Break Flash Sale (Avatar Discounts!)", multiplier: 1 }, // Mac
+            { month: 3,  name: "Festive Avatar Rush (2x Coins)", multiplier: 2 },     // Apr
+            { month: 4,  name: "Teacher's Boss Challenge (2x Coins)", multiplier: 2 }, // Mei
+            { month: 5,  name: "Mid-Year Marathon (3x Coins)", multiplier: 3 },       // Jun
+            { month: 6,  name: "No-Risk Challenge Month (2x Coins)", multiplier: 2 }, // Jul
+            { month: 7,  name: "Merdeka Spirit Special (2x Coins)", multiplier: 2 },   // Ogo
+            { month: 8,  name: "Super Scholar Discount Month", multiplier: 1 },       // Sep
+            { month: 9,  name: "Spooky Spelling Week (2x Coins)", multiplier: 2 },    // Okt
+            { month: 10, name: "Final Exam Push! (3x Coins)", multiplier: 3 },        // Nov
+            { month: 11, name: "Year-End Grand Festival (2x Coins)", multiplier: 2 }  // Dis
+        ];
+
+        // Fungsi penyemak bulan menggunakan tarikh semasa peranti
+        function getCurrentEvent() {
+            const currentMonth = new Date().getMonth(); // Komputer baca bulan 0-11
+            return EVENT_CALENDAR.find(event => event.month === currentMonth);
+        }
 
         window.onload = async () => {
             const datalist = document.getElementById('name-suggestions');
@@ -409,6 +435,15 @@ async function startGameHub() {
                 if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
                 
                 updateDashboardAvatars();
+
+                // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
+            const currentEvent = getCurrentEvent();
+            if (currentEvent) {
+                document.getElementById('event-banner').classList.remove('hidden');
+                document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
+            } else {
+                document.getElementById('event-banner').classList.add('hidden');
+            }
 
                 startBtn.innerText = "START ADVENTURE";
                 startBtn.disabled = false;
@@ -907,8 +942,13 @@ function initGame(type) {
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
 
-            // Tukar 'const' kepada 'let' supaya ia boleh diubah nilainya
-            let coinsEarned = score * 2; 
+            // --- PENGIRAAN MARKAH + ACARA BULANAN ---
+            let baseCoins = score * 2; // Markah asas: 1 betul = 2 syiling
+            let currentEvent = getCurrentEvent();
+            let eventMultiplier = currentEvent ? currentEvent.multiplier : 1;
+            
+            let coinsEarned = baseCoins * eventMultiplier; 
+            // ---------------------------------------- 
 
             // --- SEMAK CABARAN TERLEBIH DAHULU SEBELUM SIMPAN KE CLOUD ---
             let bonusCoins = checkChallengeReward(score); 
