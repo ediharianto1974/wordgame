@@ -676,13 +676,17 @@ async function buyItem(itemId) {
             }
         }
 
-        // --- FUNGSI BAHARU UNTUK EQUIP AVATAR ---
-        async function equipAvatar(avatarKey, level) {
-            let displayData = avatars[avatarKey].levels[level - 1];
+// --- FUNGSI BAHARU UNTUK EQUIP AVATAR ---
+        async function equipAvatar(avatarKey) {
+            // 1. Dapatkan level tertinggi/terkini secara langsung dari beg galas (inventory)
+            let myLevel = localPlayerData.avatars[avatarKey] || 1; 
+            
+            // 2. Ambil data nama & ikon berdasarkan level tertinggi tersebut
+            let displayData = avatars[avatarKey].levels[myLevel - 1];
             
             localPlayerData.activeAvatar = {
                 key: avatarKey,
-                level: level,
+                level: myLevel,
                 name: displayData.name,
                 icon: displayData.icon
             };
@@ -690,7 +694,7 @@ async function buyItem(itemId) {
             renderInventory(); // Refresh paparan beg galas
             await saveCloudPlayerData(); // Simpan ke Cloud
             updateDashboardAvatars(); // Tukar gambar di menu
-            alert(`✅ Avatar bertukar! Anda kini menggunakan [${displayData.name} Lvl ${level}].`);
+            alert(`✅ Avatar bertukar! Anda kini menggunakan [${displayData.name} Lvl ${myLevel}].`);
         }
         
 function initGame(type) {
