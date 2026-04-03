@@ -1438,19 +1438,67 @@ function checkAchievements() {
         if (localPlayerData.achievements && localPlayerData.achievements.includes(ach.id)) return;
 
         let conditionMet = false;
-        switch (ach.id) {
-            case "ach_01": 
-                if (localPlayerData.totalScore >= 100) conditionMet = true; 
+        switch(ach.id) {
+            // --- Category 1: Leaderboard & Academics ---
+            case "ach_01": if (currentScore >= 100) conditionMet = true; break;
+            case "ach_02": if (currentScore >= 1000) conditionMet = true; break;
+            case "ach_03": if (currentScore >= 5000) conditionMet = true; break;
+            case "ach_04": if (currentScore >= 10000) conditionMet = true; break;
+            case "ach_05": if (localPlayerData.perfectScores && localPlayerData.perfectScores >= 5) conditionMet = true; break;
+
+            // --- Category 2: Challenge Mode ---
+            case "ach_06": if (localPlayerData.challengesSent && localPlayerData.challengesSent >= 1) conditionMet = true; break;
+            case "ach_07": if (localPlayerData.challengesWon && localPlayerData.challengesWon >= 1) conditionMet = true; break;
+            case "ach_08": if (localPlayerData.challengesWon && localPlayerData.challengesWon >= 10) conditionMet = true; break;
+            case "ach_09": if (localPlayerData.challengesTied && localPlayerData.challengesTied >= 1) conditionMet = true; break;
+
+            // --- Category 3: Economy & Wealth ---
+            case "ach_10": if (currentCoins >= 1000) conditionMet = true; break;
+            case "ach_11": if (localPlayerData.coinsSpent && localPlayerData.coinsSpent >= 5000) conditionMet = true; break; // Memerlukan pembolehubah coinsSpent
+            case "ach_12": if (localPlayerData.totalCoinsEarned && localPlayerData.totalCoinsEarned >= 20000) conditionMet = true; break; // Memerlukan pembolehubah totalCoinsEarned
+
+            // --- Category 4: Avatar Collection ---
+            case "ach_13": if (avatarCount >= 1) conditionMet = true; break;
+            case "ach_14": if (avatarCount >= 5) conditionMet = true; break;
+            case "ach_15": 
+                // Any avatar to Level 10
+                if (localPlayerData.avatars && Object.values(localPlayerData.avatars).some(lvl => lvl >= 10)) conditionMet = true; 
                 break;
-            case "ach_02": 
-                if (localPlayerData.totalScore >= 500) conditionMet = true; 
+            case "ach_16": 
+                // Cikgu boleh sesuaikan jika ada kategori animal/fantasy
+                if (avatarCount >= 10) conditionMet = true; 
                 break;
-            case "ach_03": 
-                if (localPlayerData.totalScore >= 1000) conditionMet = true; 
+
+            // --- Category 5: Dedication & Events ---
+            case "ach_17": if (typeof getCurrentEvent === 'function' && getCurrentEvent() !== null) conditionMet = true; break;
+            case "ach_18": if (new Date().getHours() >= 22) conditionMet = true; break;
+            case "ach_19": if (new Date().getHours() < 7) conditionMet = true; break;
+
+            // --- Category 6: Persistence & Streaks ---
+            case "ach_20": 
+                const day = new Date().getDay();
+                if (day === 0 || day === 6) conditionMet = true; 
                 break;
-            case "ach_39": 
-                conditionMet = true; // First Step - Sentiasa unlock masa login pertama
-                break;
+            case "ach_21": if (localPlayerData.loginStreak && localPlayerData.loginStreak >= 3) conditionMet = true; break;
+            case "ach_22": if (localPlayerData.loginStreak && localPlayerData.loginStreak >= 7) conditionMet = true; break;
+            case "ach_23": if (localPlayerData.gamesPlayedToday && localPlayerData.gamesPlayedToday >= 5) conditionMet = true; break;
+
+            // --- Category 7: Game Mastery ---
+            case "ach_24": if (localPlayerData.uniqueGamesPlayed && localPlayerData.uniqueGamesPlayed >= 12) conditionMet = true; break;
+            case "ach_25": if (localPlayerData.gamesOver50 && localPlayerData.gamesOver50 >= 12) conditionMet = true; break;
+            case "ach_26": if (localPlayerData.comebackWins && localPlayerData.comebackWins >= 1) conditionMet = true; break;
+            case "ach_27": if (localPlayerData.perfectScores && localPlayerData.perfectScores >= 3) conditionMet = true; break;
+
+            // --- Category 8: Social & Advanced Challenges ---
+            case "ach_28": if (localPlayerData.challengesSent && localPlayerData.challengesSent >= 10) conditionMet = true; break;
+            case "ach_29": if (localPlayerData.challengesCompleted && localPlayerData.challengesCompleted >= 50) conditionMet = true; break;
+            case "ach_30": if (localPlayerData.challengesLost && localPlayerData.challengesLost >= 5) conditionMet = true; break;
+            case "ach_31": if (localPlayerData.narrowWins && localPlayerData.narrowWins >= 1) conditionMet = true; break;
+            case "ach_32": if (localPlayerData.revengeWins && localPlayerData.revengeWins >= 1) conditionMet = true; break;
+
+            // --- Category 9: Advanced Inventory ---
+            case "ach_33": if (localPlayerData.shopVisits && localPlayerData.shopVisits >= 20) conditionMet = true; break;
+            case "ach_34": if (avatarCount >= 10) conditionMet = true; break;
             // Tambah case lain jika perlu di sini...
         }
 
