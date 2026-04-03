@@ -1570,6 +1570,8 @@ function renderAchievements() {
         const isUnlocked = localPlayerData.achievements && localPlayerData.achievements.includes(ach.id);
         const card = document.createElement('div');
         card.className = `p-4 rounded-xl border-2 transition-all ${isUnlocked ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200 bg-gray-100 opacity-60'}`;
+        
+        // PASTIKAN BAHAGIAN INI LENGKAP (Ada backtick pembuka dan penutup)
         card.innerHTML = `
             <div class="flex items-center gap-3">
                 <div class="text-3xl">${isUnlocked ? '🏆' : '🔒'}</div>
@@ -1580,6 +1582,7 @@ function renderAchievements() {
                 </div>
             </div>
         `;
+        
         grid.appendChild(card);
     });
 }
