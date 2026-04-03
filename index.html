@@ -216,9 +216,8 @@
                             <th class="p-1 md:p-2 text-center">Avatar</th> 
                             <th class="p-2 md:p-4">Name</th>
                             <th class="p-2 md:p-4">Class</th>
-                            <th class="p-2 md:p-4">Game</th>
-                            <th class="p-2 md:p-4 text-center">Score</th>
-                            <th class="p-2 md:p-4 text-center">Total</th> 
+                            <th class="p-2 md:p-4">Completed Games</th>
+                            <th class="p-2 md:p-4 text-center">Total Score</th> 
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body" class="text-gray-700">
@@ -582,27 +581,22 @@ async function loadCloudPlayerData() {
             }
         }
         
-        function updateDashboardAvatars() {
+function updateDashboardAvatars() {
             const container = document.getElementById('dashboard-avatars');
             if (!container) return; 
             
             container.innerHTML = ''; 
-            let hasAvatar = false;
 
-            if (localPlayerData && localPlayerData.avatars) {
-                for (const [key, level] of Object.entries(localPlayerData.avatars)) {
-                    if (level > 0 && avatars[key]) {
-                        hasAvatar = true;
-                        let displayData = avatars[key].levels[level - 1];
-                        container.innerHTML += `
-                            <div class="bg-indigo-100 p-2 rounded-full shadow-sm border-2 border-indigo-300 flex items-center justify-center hover:scale-110 transition cursor-pointer" title="${displayData.name} (Level ${level})">
-                                <i class="${displayData.icon} text-2xl"></i>
-                            </div>
-                        `;
-                    }
-                }
-            }
-            if (!hasAvatar) {
+            // HANYA PAPAR AVATAR JIKA ADA AVATAR YANG AKTIF (EQUIPPED)
+            if (localPlayerData && localPlayerData.activeAvatar) {
+                let activeInfo = localPlayerData.activeAvatar;
+                container.innerHTML = `
+                    <div class="bg-indigo-100 p-2 rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)] border-2 border-green-400 flex items-center justify-center hover:scale-110 transition cursor-pointer" title="${activeInfo.name} (Level ${activeInfo.level})">
+                        <i class="${activeInfo.icon} text-2xl text-green-600"></i>
+                    </div>
+                `;
+            } else {
+                // JIKA TIADA AVATAR DIPAKAI
                 container.innerHTML = `
                     <div class="bg-gray-100 p-2 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center" title="No Guardian Yet">
                         <i class="fas fa-question text-gray-400 text-xl"></i>
@@ -610,7 +604,7 @@ async function loadCloudPlayerData() {
                 `;
             }
         }
-
+        
         // --- FUNGSI TUKAR TAB KEDAI ---
         function switchShopTab(tabId) {
             document.querySelectorAll('.shop-tab-content').forEach(el => {
@@ -1124,55 +1118,45 @@ async function showLeaderboard() {
                     if(index === 1) rankIcon = `🥈`;
                     if(index === 2) rankIcon = `🥉`;
 
-                    const gamesCount = student.gameList.length;
-
-                    student.gameList.forEach((game, gIndex) => {
-                        const isFirstRow = gIndex === 0;
-                        const isLastRow = gIndex === (gamesCount - 1);
-
-                        const rankText = isFirstRow ? rankIcon : '';
-                        const nameText = isFirstRow ? student.name : '';
-                        const classText = isFirstRow ? student.cls : '';
-                        
-                        // KOD MELUKIS AVATAR 3D
-                        let avatarHtml = '';
-                        if (isFirstRow) {
-                            if (student.activeAvatar) {
-                                avatarHtml = `
-                                    <div class="flex flex-col items-center justify-center p-2">
-                                        <div class="avatar-3d-glow rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative">
-                                            <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
-                                            <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
-                                        </div>
-                                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto" title="${student.activeAvatar.name}">
-     ${student.activeAvatar.name}
-</div>
-                                    </div>
-                                `;
-                            } else {
-                                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
-                            }
-                        }
-
-                        const totalHtml = isLastRow ? `<span class="bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-md">${student.grandScore}/${student.grandMax}</span>` : '';
-                        const rowClass = isLastRow ? 'border-b-2 border-indigo-200' : 'border-b border-gray-50';
-
-                        // Teks totalMarkah juga perlu disesuaikan saiznya untuk telefon
-                        const totalHtmlRes = isLastRow ? `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore}/${student.grandMax}</span>` : '';
-
-                        const row = `
-                            <tr class="${rowClass} hover:bg-gray-50 transition">
-                                <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl">${rankText}</td>
-                                <td class="p-1 md:p-2 w-12 md:w-24">${avatarHtml}</td>
-                                <td class="p-2 md:p-4 font-black uppercase text-gray-800 text-xs md:text-lg">${nameText}</td>
-                                <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500">${classText}</td>
-                                <td class="p-2 md:p-4 text-[10px] md:text-xs uppercase font-bold text-indigo-400 whitespace-nowrap">${game.name}</td>
-                                <td class="p-2 md:p-4 text-center font-semibold text-gray-700 text-xs md:text-base">${game.score}/${game.total}</td>
-                                <td class="p-2 md:p-4 text-center">${totalHtmlRes}</td>
-                            </tr>
+                    // LUKIS AVATAR 3D
+                    let avatarHtml = '';
+                    if (student.activeAvatar) {
+                        avatarHtml = `
+                            <div class="flex flex-col items-center justify-center p-2">
+                                <div class="avatar-3d-glow rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative">
+                                    <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
+                                    <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
+                                </div>
+                                <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto" title="${student.activeAvatar.name}">
+                                    ${student.activeAvatar.name}
+                                </div>
+                            </div>
                         `;
-                        body.innerHTML += row;
-                    });
+                    } else {
+                        avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
+                    }
+
+                    // KUMPULKAN SEMUA GAME DALAM 1 SEL SEBAGAI "BADGES"
+                    let gamesBadgesHtml = student.gameList.map(game => {
+                        return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">
+                                    ${game.name}: <span class="text-green-600">${game.score}/${game.total}</span>
+                                </span>`;
+                    }).join('');
+
+                    const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore}/${student.grandMax}</span>`;
+
+                    // SATU BARIS SAHAJA UNTUK SETIAP PELAJAR
+                    const row = `
+                        <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
+                            <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl">${rankIcon}</td>
+                            <td class="p-1 md:p-2 w-12 md:w-24">${avatarHtml}</td>
+                            <td class="p-2 md:p-4 font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</td>
+                            <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500">${student.cls}</td>
+                            <td class="p-2 md:p-4 leading-tight">${gamesBadgesHtml}</td>
+                            <td class="p-2 md:p-4 text-center">${totalHtmlRes}</td>
+                        </tr>
+                    `;
+                    body.innerHTML += row;
                 });
                 
             } catch (error) {
