@@ -1883,37 +1883,15 @@ function saveEquippedTitle() {
         return;
     }
 
-    // 1. Cari data title ini dalam senarai achievementsData untuk tahu tier dia
-    const titleData = achievementsData.find(ach => ach.name === selectedTitleName);
-    const tier = titleData ? titleData.tier : 'common'; // Default ke common jika tak jumpa
-
-    // 2. Simpan dalam data pemain
+    // 1. Simpan dalam data pemain (local)
     localPlayerData.activeTitle = selectedTitleName;
-    localPlayerData.activeTitleTier = tier;
 
-    // 3. Kemaskini paparan di Dashboard dan Profil serentak
+    // 2. Kemaskini paparan di Dashboard dan Profil serentak
     applyTitleStyle(selectedTitleName);
     
+    // 3. Notifikasi dan Simpan ke Google Sheet (Cloud)
     alert(`Title Updated: ${selectedTitleName}`);
     saveCloudPlayerData(); 
-        
-        // Pakai class ikut Tier
-        if (tier === 'legendary') {
-            display.classList.add('title-legendary');
-            display.innerText = "🏆 " + selectedTitleName;
-        } else if (tier === 'epic') {
-            display.classList.add('title-epic', 'text-[10px]');
-            display.innerText = "✨ " + selectedTitleName;
-        } else if (tier === 'rare') {
-            display.classList.add('title-rare', 'text-[10px]');
-            display.innerText = "⭐ " + selectedTitleName;
-        } else {
-            display.classList.add('title-common', 'text-[10px]');
-        }
-    }
-
-    alert(`Title Updated: ${selectedTitleName}`);
-    saveCloudPlayerData(); // Simpan ke Google Sheet
 }
 
 function applyTitleStyle(titleName) {
@@ -1946,7 +1924,6 @@ function applyTitleStyle(titleName) {
 
     updateElement(displayHeader);
     updateElement(displayProfile);
-}
 }
 </script>
 </body>
