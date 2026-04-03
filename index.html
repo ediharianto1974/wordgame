@@ -291,6 +291,72 @@
         let currentGameType = ''; 
         let studentDatabase = [];
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
+
+// ==========================================
+// BUKU REKOD PENCAPAIAN (LENGKAP 40 ITEM)
+// ==========================================
+const achievementsData = [
+    // --- Category 1: Leaderboard & Academics ---
+    { id: "ach_01", name: "First Steps", description: "Collect a total score of 100.", coinReward: 20 },
+    { id: "ach_02", name: "Rising Star", description: "Collect a total score of 1000.", coinReward: 20 },
+    { id: "ach_03", name: "Prodigy", description: "Collect a total score of 5000.", coinReward: 20 },
+    { id: "ach_04", name: "Legendary Scholar", description: "Collect a total score of 10000.", coinReward: 20 },
+    { id: "ach_05", name: "Flawless Victory", description: "Get 5 perfect scores.", coinReward: 20 },
+
+    // --- Category 2: Challenge Mode ---
+    { id: "ach_06", name: "First Blood", description: "Send your first challenge.", coinReward: 20 },
+    { id: "ach_07", name: "Challenger", description: "Win 1 challenge.", coinReward: 20 },
+    { id: "ach_08", name: "Gladiator", description: "Win 10 challenges.", coinReward: 20 },
+    { id: "ach_09", name: "Equally Matched", description: "Tie in a challenge.", coinReward: 20 },
+
+    // --- Category 3: Economy & Wealth ---
+    { id: "ach_10", name: "Wealthy", description: "Accumulate 1000 coins.", coinReward: 20 },
+    { id: "ach_11", name: "Big Spender", description: "Spend 5000 coins in the shop.", coinReward: 20 },
+    { id: "ach_12", name: "Tycoon", description: "Earn a total of 20000 coins.", coinReward: 20 },
+
+    // --- Category 4: Avatar Collection ---
+    { id: "ach_13", name: "Collector", description: "Unlock your first avatar.", coinReward: 20 },
+    { id: "ach_14", name: "Fashionista", description: "Unlock 5 different avatars.", coinReward: 20 },
+    { id: "ach_15", name: "Max Level", description: "Upgrade an avatar to Level 10.", coinReward: 20 },
+    { id: "ach_16", name: "Zoo Keeper", description: "Unlock 10 avatars.", coinReward: 20 },
+
+    // --- Category 5: Dedication & Events ---
+    { id: "ach_17", name: "Event Participant", description: "Play during a special active event.", coinReward: 20 },
+    { id: "ach_18", name: "Night Owl", description: "Play the game after 10 PM.", coinReward: 20 },
+    { id: "ach_19", name: "Early Bird", description: "Play the game before 7 AM.", coinReward: 20 },
+
+    // --- Category 6: Persistence & Streaks ---
+    { id: "ach_20", name: "Weekend Warrior", description: "Play the game on a weekend.", coinReward: 20 },
+    { id: "ach_21", name: "Consistent", description: "Achieve a 3-day login streak.", coinReward: 20 },
+    { id: "ach_22", name: "Dedicated", description: "Achieve a 7-day login streak.", coinReward: 20 },
+    { id: "ach_23", name: "Marathon", description: "Play 5 games in a single day.", coinReward: 20 },
+
+    // --- Category 7: Game Mastery ---
+    { id: "ach_24", name: "Explorer", description: "Play 12 unique games.", coinReward: 20 },
+    { id: "ach_25", name: "High Scorer", description: "Score over 50 in 12 different games.", coinReward: 20 },
+    { id: "ach_26", name: "Comeback King", description: "Win a comeback game.", coinReward: 20 },
+    { id: "ach_27", name: "Perfectionist", description: "Achieve 3 perfect scores.", coinReward: 20 },
+
+    // --- Category 8: Social & Advanced Challenges ---
+    { id: "ach_28", name: "Social Butterfly", description: "Send 10 challenges to friends.", coinReward: 20 },
+    { id: "ach_29", name: "Veteran", description: "Complete 50 challenges.", coinReward: 20 },
+    { id: "ach_30", name: "Good Sport", description: "Lose 5 challenges.", coinReward: 20 },
+    { id: "ach_31", name: "Close Call", description: "Win a challenge by a very narrow margin.", coinReward: 20 },
+    { id: "ach_32", name: "Vengeance", description: "Win a revenge challenge.", coinReward: 20 },
+
+    // --- Category 9: Advanced Inventory ---
+    { id: "ach_33", name: "Window Shopper", description: "Visit the shop 20 times.", coinReward: 20 },
+    { id: "ach_34", name: "Avatar Master", description: "Collect all standard avatars.", coinReward: 20 },
+    { id: "ach_35", name: "Upgrade Fanatic", description: "Upgrade 5 avatars to Level 5.", coinReward: 20 },
+    { id: "ach_36", name: "Skin Enthusiast", description: "Unlock a rare avatar skin.", coinReward: 20 },
+
+    // --- Category 10: Special Events & Hidden ---
+    { id: "ach_37", name: "Merdeka!", description: "Log in and play on 31st August.", coinReward: 20 },
+    { id: "ach_38", name: "Happy Holidays", description: "Play during the month of December.", coinReward: 20 },
+    { id: "ach_39", name: "First Step", description: "Log in to the Game Hub for the first time.", coinReward: 20 },
+    { id: "ach_40", name: "Detective", description: "Find a hidden secret in the game hub.", coinReward: 20 }
+];
+        
        // ==========================================
         // DYNAMIC LIMITED TIME EVENT CALENDAR
         // ==========================================
