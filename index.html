@@ -510,8 +510,7 @@ async function startGameHub() {
                     studentInfo = { name: nameInput, class: classInput };
                     alert("Login Successful! Welcome back, " + nameInput + "!");
                 }
-            }
-
+            
             // --- PROCESS TO OPEN MAIN MENU ---
             document.getElementById('display-name').innerText = studentInfo.name;
             document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
@@ -567,7 +566,7 @@ async function startGameHub() {
                 // 👉 LETAKKAN DI SINI! SELEPAS LOG MASUK BERJAYA 👈
                 checkAchievements();
 
-            } catch (error)
+            } catch (error) {
                 console.error(error);
                 alert("System error. Please ensure your internet connection is stable and try again.");
                 startBtn.innerText = "START ADVENTURE";
