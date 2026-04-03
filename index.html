@@ -1271,119 +1271,136 @@ function initGame(type) {
         }
 
 async function showLeaderboard() {
-            document.getElementById('menu-screen').classList.add('hidden');
-            document.getElementById('game-arena').classList.add('hidden');
-            document.getElementById('leaderboard-screen').classList.remove('hidden');
-            
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-indigo-500 font-bold animate-pulse'><i class='fas fa-spinner fa-spin mr-2'></i> Fetching live scores...</td></tr>";
+    document.getElementById('menu-screen').classList.add('hidden');
+    document.getElementById('game-arena').classList.add('hidden');
+    document.getElementById('leaderboard-screen').classList.remove('hidden');
+    
+    const body = document.getElementById('leaderboard-body');
+    body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-indigo-500 font-bold animate-pulse'><i class='fas fa-spinner fa-spin mr-2'></i> Fetching live scores...</td></tr>";
 
-            try {
-                const response = await fetch(SCRIPT_URL);
-                const scores = await response.json();
-                
-                if(scores.length === 0) {
-                    body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-gray-400'>No records yet. Be the first to play!</td></tr>";
-                    return;
-                }
-
-                const studentData = {};
-                
-                // MENGUMPUL DATA MARKAH DAN AVATAR
-                scores.forEach(s => {
-                    const key = s.name.toUpperCase() + "_" + s.cls.toUpperCase();
-                    
-                    if (!studentData[key]) {
-                        studentData[key] = {
-                            name: s.name.toUpperCase(),
-                            cls: s.cls,
-                            activeAvatar: s.activeAvatar, // <--- INI KOD YANG DITAMBAH
-                            games: {}
-                        };
-                    }
-                    
-                    if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
-                        studentData[key].games[s.type] = { score: s.score, total: s.total };
-                    }
-                });
-
-                const leaderboard = Object.values(studentData).map(student => {
-                    let grandScore = 0;
-                    let grandMax = 0;
-                    const gameList = [];
-                    
-                    for (const [gameName, gameData] of Object.entries(student.games)) {
-                        grandScore += gameData.score;
-                        grandMax += gameData.total;
-                        gameList.push({ name: gameName, score: gameData.score, total: gameData.total });
-                    }
-                    
-                    return { ...student, gameList, grandScore, grandMax };
-                });
-
-                leaderboard.sort((a, b) => b.grandScore - a.grandScore);
-
-                body.innerHTML = "";
-                
-                leaderboard.slice(0, 50).forEach((student, index) => {
-		    let currentRank = index + 1;
-                    let rankIcon = `#${index+1}`;
-                    if(index === 0) rankIcon = `🥇`;
-                    if(index === 1) rankIcon = `🥈`;
-                    if(index === 2) rankIcon = `🥉`;
-
-			// 👉 PENGGERA ACHIEVEMENT LEADERBOARD DI SINI 👈
-                    // Jika nama di leaderboard sama dengan nama pemain yang sedang login
-                    if (localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
-                        checkLeaderboardAchievements(currentRank);
-                    }
-
-                    // LUKIS AVATAR 3D
-                    let avatarHtml = '';
-                    if (student.activeAvatar) {
-                        avatarHtml = `
-                            <div class="flex flex-col items-center justify-center p-2">
-                                <div class="avatar-3d-glow rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative">
-                                    <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
-                                    <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
-                                </div>
-                                <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto" title="${student.activeAvatar.name}">
-                                    ${student.activeAvatar.name}
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
-                    }
-
-                    // KUMPULKAN SEMUA GAME DALAM 1 SEL SEBAGAI "BADGES"
-                    let gamesBadgesHtml = student.gameList.map(game => {
-                        return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">
-                                    ${game.name}: <span class="text-green-600">${game.score}/${game.total}</span>
-                                </span>`;
-                    }).join('');
-
-                    const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore}/${student.grandMax}</span>`;
-
-                    // SATU BARIS SAHAJA UNTUK SETIAP PELAJAR (TANPA COMPLETED GAMES)
-                    const row = `
-                        <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
-                            <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl">${rankIcon}</td>
-                            <td class="p-1 md:p-2 w-12 md:w-24">${avatarHtml}</td>
-                            <td class="p-2 md:p-4 font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</td>
-                            <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500">${student.cls}</td>
-                            <td class="p-2 md:p-4 text-center">${totalHtmlRes}</td>
-                        </tr>
-                    `;
-                    body.innerHTML += row;
-                });
-                
-            } catch (error) {
-                console.error(error);
-                body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
-            }
+    try {
+        const response = await fetch(SCRIPT_URL);
+        const scores = await response.json();
+        
+        if(scores.length === 0) {
+            body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-gray-400'>No records yet. Be the first to play!</td></tr>";
+            return;
         }
 
+        const studentData = {};
+        
+        // MENGUMPUL DATA MARKAH, AVATAR, DAN TITLE
+        scores.forEach(s => {
+            const key = s.name.toUpperCase() + "_" + s.cls.toUpperCase();
+            
+            if (!studentData[key]) {
+                studentData[key] = {
+                    name: s.name.toUpperCase(),
+                    cls: s.cls,
+                    activeAvatar: s.activeAvatar, 
+                    activeTitle: s.activeTitle || "Novice", // 🚨 1. KUMPUL DATA TITLE DARI GOOGLE SHEETS
+                    games: {}
+                };
+            }
+            
+            if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
+                studentData[key].games[s.type] = { score: s.score, total: s.total };
+            }
+        });
+
+        const leaderboard = Object.values(studentData).map(student => {
+            let grandScore = 0;
+            let grandMax = 0;
+            const gameList = [];
+            
+            for (const [gameName, gameData] of Object.entries(student.games)) {
+                grandScore += gameData.score;
+                grandMax += gameData.total;
+                gameList.push({ name: gameName, score: gameData.score, total: gameData.total });
+            }
+            
+            return { ...student, gameList, grandScore, grandMax };
+        });
+
+        leaderboard.sort((a, b) => b.grandScore - a.grandScore);
+
+        body.innerHTML = "";
+        
+        leaderboard.slice(0, 50).forEach((student, index) => {
+            let currentRank = index + 1;
+            let rankIcon = `#${index+1}`;
+            if(index === 0) rankIcon = `🥇`;
+            if(index === 1) rankIcon = `🥈`;
+            if(index === 2) rankIcon = `🥉`;
+
+            // 👉 PENGGERA ACHIEVEMENT LEADERBOARD DI SINI 👈
+            if (localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
+                checkLeaderboardAchievements(currentRank);
+            }
+
+            // LUKIS AVATAR 3D
+            let avatarHtml = '';
+            if (student.activeAvatar) {
+                avatarHtml = `
+                    <div class="flex flex-col items-center justify-center p-2">
+                        <div class="avatar-3d-glow rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative">
+                            <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
+                            <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
+                        </div>
+                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto" title="${student.activeAvatar.name}">
+                            ${student.activeAvatar.name}
+                        </div>
+                    </div>
+                `;
+            } else {
+                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
+            }
+
+            // 🚨 2. TENTUKAN WARNA/CSS UNTUK TITLE MURID INI
+            const titleName = student.activeTitle;
+            const titleData = achievementsData.find(ach => ach.name === titleName);
+            const tier = titleData ? titleData.tier : 'common';
+            
+            let titleHTML = "";
+            if (tier === 'legendary') {
+                titleHTML = `<div class="title-legendary inline-block mt-1">🏆 ${titleName}</div>`;
+            } else if (tier === 'epic') {
+                titleHTML = `<div class="title-epic text-[10px] md:text-xs inline-block mt-1">✨ ${titleName}</div>`;
+            } else if (tier === 'rare') {
+                titleHTML = `<div class="title-rare text-[10px] md:text-xs inline-block mt-1">⭐ ${titleName}</div>`;
+            } else {
+                titleHTML = `<div class="title-common text-[10px] md:text-xs inline-block mt-1">${titleName}</div>`;
+            }
+
+            // KUMPULKAN SEMUA GAME DALAM 1 SEL SEBAGAI "BADGES"
+            let gamesBadgesHtml = student.gameList.map(game => {
+                return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">
+                            ${game.name}: <span class="text-green-600">${game.score}/${game.total}</span>
+                        </span>`;
+            }).join('');
+
+            const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore}/${student.grandMax}</span>`;
+
+            // 🚨 3. MASUKKAN TITLEHTML DI BAWAH NAMA MURID
+            const row = `
+                <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
+                    <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl text-center">${rankIcon}</td>
+                    <td class="p-1 md:p-2 w-12 md:w-24">${avatarHtml}</td>
+                    <td class="p-2 md:p-4">
+                        <div class="font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</div>
+                        ${titleHTML} </td>
+                    <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500 text-center">${student.cls}</td>
+                    <td class="p-2 md:p-4 text-center">${totalHtmlRes}</td>
+                </tr>
+            `;
+            body.innerHTML += row;
+        });
+        
+    } catch (error) {
+        console.error(error);
+        body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
+    }
+}
         // ==========================================
         // SISTEM MULTIPLAYER CABARAN (CHALLENGE)
         // ==========================================
