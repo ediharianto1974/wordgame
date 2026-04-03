@@ -639,7 +639,7 @@ async function startGameHub() {
             studentInfo = { name: nameInput, class: classInput };
             await saveCloudPlayerData(); 
         } 
-        // SITUATION C: Account Exists (Returning Student)
+// SITUATION C: Account Exists (Returning Student)
         else {
             // C1: Returning Student from BEFORE the PIN system
             if (data.hasPin === false) {
@@ -651,11 +651,12 @@ async function startGameHub() {
                     coins: data.coins || 0, inventory: data.inventory || [],
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
                     achievements: data.achievements || [],
-                    totalScore: data.totalScore || 0
+                    totalScore: data.totalScore || 0,
+                    activeTitle: data.activeTitle || "Novice" // 🚨 TAMBAH BARIS INI
                 };
                 studentInfo = { name: nameInput, class: classInput };
 
-		// Pakaikan style title terus ke dashboard
+                // Pakaikan style title terus ke dashboard
                 if (typeof applyTitleStyle === "function") {
                     applyTitleStyle(localPlayerData.activeTitle);
                 }
@@ -675,9 +676,16 @@ async function startGameHub() {
                     coins: data.coins || 0, inventory: data.inventory || [],
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
                     achievements: data.achievements || [],
-                    totalScore: data.totalScore || 0
+                    totalScore: data.totalScore || 0,
+                    activeTitle: data.activeTitle || "Novice" // 🚨 TAMBAH BARIS INI JUGA
                 };
                 studentInfo = { name: nameInput, class: classInput };
+
+                // 🚨 PANGGIL FUNGSI STYLE UNTUK PEMAIN C2 JUGA (Supaya title tak jadi warna kelabu bila login)
+                if (typeof applyTitleStyle === "function") {
+                    applyTitleStyle(localPlayerData.activeTitle);
+                }
+
                 alert("Login Successful! Welcome back, " + nameInput + "!");
             }
         } // <--- 🚨 INILAH KURUNGAN PENUTUP 'SITUATION C' YANG TERTINGGAL TADI 🚨
