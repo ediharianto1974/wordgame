@@ -1528,22 +1528,26 @@ function checkAchievements() {
 }
         
 function unlockAchievement(ach) {
+    if (!localPlayerData.achievements) localPlayerData.achievements = [];
+    
     // 1. Simpan ID pencapaian ke dalam profil pemain
     localPlayerData.achievements.push(ach.id);
     
     // 2. Berikan ganjaran syiling
-    localPlayerData.coins += ach.coinReward;
+    localPlayerData.coins = (Number(localPlayerData.coins) || 0) + ach.coinReward;
     
-    // 3. Kemaskini paparan syiling di menu atas (Gunakan ID UI Cikgu yang sebenar, contoh: 'coin-display')
+    // 3. Kemaskini paparan syiling di menu atas 
     const coinDisplay = document.getElementById('coin-display');
     if (coinDisplay) coinDisplay.innerText = localPlayerData.coins;
 
     // 4. Keluarkan pop-up meriah
-    alert(`🎉 ACHIEVEMENT UNLOCKED: ${ach.name}!\n\n${ach.description}\nReward: +${ach.coinReward} Coins & Title [${ach.titleReward}]`);
+    alert(`🎉 ACHIEVEMENT UNLOCKED: ${ach.name}!\n\n${ach.description}\nReward: +${ach.coinReward} Coins!`);
 
-    // 5. Simpan ke Database (Google Sheets)
-    // KITA AKAN BUAT FUNGSI INI SELEPAS INI
-    saveAchievementsToDB(); 
+    // 5. SAVE DATA KE GOOGLE SHEETS 
+    // Gantikan baris yang ralat tadi dengan kod di bawah ini:
+    if (typeof saveCloudPlayerData === "function") {
+        saveCloudPlayerData(); 
+    }
 }
     </script>
 </body>
