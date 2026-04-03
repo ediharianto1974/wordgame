@@ -634,12 +634,13 @@ async function startGameHub() {
             localPlayerData = { 
                 name: nameInput, class: classInput, passcode: autoPin,
                 coins: 0, inventory: [], avatars: {}, activeAvatar: null,
-                achievements: [], totalScore: 0
+                achievements: [], totalScore: 0,
+                activeTitle: "Novice" // 🚨 Title diletakkan untuk murid baru
             };
             studentInfo = { name: nameInput, class: classInput };
             await saveCloudPlayerData(); 
         } 
-// SITUATION C: Account Exists (Returning Student)
+        // SITUATION C: Account Exists (Returning Student)
         else {
             // C1: Returning Student from BEFORE the PIN system
             if (data.hasPin === false) {
@@ -652,7 +653,7 @@ async function startGameHub() {
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
                     achievements: data.achievements || [],
                     totalScore: data.totalScore || 0,
-                    activeTitle: data.activeTitle || "Novice" // 🚨 TAMBAH BARIS INI
+                    activeTitle: data.activeTitle || "Novice" 
                 };
                 studentInfo = { name: nameInput, class: classInput };
 
@@ -677,18 +678,18 @@ async function startGameHub() {
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
                     achievements: data.achievements || [],
                     totalScore: data.totalScore || 0,
-                    activeTitle: data.activeTitle || "Novice" // 🚨 TAMBAH BARIS INI JUGA
+                    activeTitle: data.activeTitle || "Novice" 
                 };
                 studentInfo = { name: nameInput, class: classInput };
 
-                // 🚨 PANGGIL FUNGSI STYLE UNTUK PEMAIN C2 JUGA (Supaya title tak jadi warna kelabu bila login)
+                // PANGGIL FUNGSI STYLE UNTUK PEMAIN C2 JUGA (Supaya title tak jadi warna kelabu bila login)
                 if (typeof applyTitleStyle === "function") {
                     applyTitleStyle(localPlayerData.activeTitle);
                 }
 
                 alert("Login Successful! Welcome back, " + nameInput + "!");
             }
-        } // <--- 🚨 INILAH KURUNGAN PENUTUP 'SITUATION C' YANG TERTINGGAL TADI 🚨
+        } // <--- Penutup lengkap untuk Situation C
 
         // --- PROCESS TO OPEN MAIN MENU ---
         document.getElementById('display-name').innerText = studentInfo.name;
@@ -698,22 +699,34 @@ async function startGameHub() {
 
         const avatarContainer = document.getElementById('dashboard-avatars');
         if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
-        updateDashboardAvatars();
+        
+        if (typeof updateDashboardAvatars === "function") {
+            updateDashboardAvatars();
+        }
 
         // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
-        const currentEvent = getCurrentEvent();
-        if (currentEvent) {
-            document.getElementById('event-banner').classList.remove('hidden');
-            document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
-        } else {
-            document.getElementById('event-banner').classList.add('hidden');
+        if (typeof getCurrentEvent === "function") {
+            const currentEvent = getCurrentEvent();
+            if (currentEvent) {
+                const eventBanner = document.getElementById('event-banner');
+                if (eventBanner) {
+                    eventBanner.classList.remove('hidden');
+                    document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
+                }
+            } else {
+                const eventBanner = document.getElementById('event-banner');
+                if (eventBanner) eventBanner.classList.add('hidden');
+            }
         }
 
         startBtn.innerText = "START ADVENTURE";
         startBtn.disabled = false;
 
         // 👉 PENGGERA ACHIEVEMENT 👈
-        checkAchievements();
+        // (Sistem akan semak secara "retroactive" sebaik sahaja paparan menu dibuka)
+        if (typeof checkAchievements === "function") {
+            checkAchievements();
+        }
 
     } catch (error) {
         console.error(error);
