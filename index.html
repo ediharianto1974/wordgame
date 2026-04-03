@@ -497,6 +497,9 @@ async function startGameHub() {
                             startBtn.innerText = "START ADVENTURE";
                             startBtn.disabled = false;
                             return;
+
+                            // --- SEMAK PENCAPAIAN LOG MASUK ---
+                        checkAchievements();
                         }
                         localPlayerData = {
                             name: nameInput, class: classInput, passcode: pinInput,
@@ -590,6 +593,8 @@ async function loadCloudPlayerData() {
                 inventory: localPlayerData.inventory,
                 avatars: localPlayerData.avatars,
                 activeAvatar: localPlayerData.activeAvatar 
+                // TAMBAH BARIS INI UNTUK HANTAR DATA PENCAPAIAN
+                achievements: localPlayerData.achievements
             };
             try {
                 await fetch(SCRIPT_URL, {
@@ -825,6 +830,9 @@ async function buyItem(itemId) {
                 await saveCloudPlayerData(); 
                 
                 alert(`🎉 Congratulation! You have bought ${quantity}x [${item.name}]. The items have been added to your inventory!`);
+
+                // --- SEMAK PENCAPAIAN LOG MASUK ---
+        checkAchievements();
             } else {
                 alert(`Sorry, your coins is not enough to buy ${quantity} unit.\nYou need ${totalPrice} Coins.`);
             }
@@ -1047,6 +1055,9 @@ function initGame(type) {
             document.getElementById('praise-text').innerText = praise + coinText;
 
             saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
+
+            // --- SEMAK PENCAPAIAN LOG MASUK ---
+        checkAchievements();
         }
 
         function showHint(inputElement, correctAns) {
@@ -1395,6 +1406,70 @@ function renderAchievements() {
     if (statsEl) {
         statsEl.innerText = `Unlocked: ${unlockedCount} / ${ACHIEVEMENTS_LIST.length}`;
     }
+}
+
+        // ==========================================
+// LOGIK PENCAPAIAN (ACHIEVEMENTS SYSTEM)
+// ==========================================
+
+function checkAchievements() {
+    // Pastikan pelajar dah login dan array achievements wujud
+    if (!localPlayerData) return;
+    if (!localPlayerData.achievements) localPlayerData.achievements = [];
+
+    // Semak setiap pencapaian dalam senarai
+    ACHIEVEMENTS_LIST.forEach(ach => {
+        // Jika pencapaian ini sudah di-unlock, abaikan (terus ke pencapaian seterusnya)
+        if (localPlayerData.achievements.includes(ach.id)) return;
+
+        let conditionMet = false;
+
+        // --- SYARAT UNTUK UNLOCK PENCAPAIAN ---
+        // (Nota: Pastikan nama pembolehubah seperti totalScore/coins sepadan dengan sistem Cikgu)
+        switch(ach.id) {
+            // Kategori 1: Markah Keseluruhan (Total Score)
+            case "ach_01": if (localPlayerData.totalScore >= 100) conditionMet = true; break;
+            case "ach_02": if (localPlayerData.totalScore >= 1000) conditionMet = true; break;
+            case "ach_03": if (localPlayerData.totalScore >= 5000) conditionMet = true; break;
+            
+            // Kategori 3: Ekonomi & Syiling
+            case "ach_10": if (localPlayerData.coins >= 1000) conditionMet = true; break;
+
+            // Kategori 4: Beli Avatar Pertama
+            case "ach_13": 
+                if (localPlayerData.inventory && localPlayerData.inventory.length >= 1) conditionMet = true; 
+                break;
+                
+            // Kategori 10: First Blood (Log masuk kali pertama)
+            case "ach_39": 
+                conditionMet = true; // Akan sentiasa unlock bila fungsi ini dipanggil lepas login
+                break;
+        }
+
+        // Jika syarat di atas dipenuhi, kita buka (unlock) pencapaian ini!
+        if (conditionMet) {
+            unlockAchievement(ach);
+        }
+    });
+}
+
+function unlockAchievement(ach) {
+    // 1. Simpan ID pencapaian ke dalam profil pemain
+    localPlayerData.achievements.push(ach.id);
+    
+    // 2. Berikan ganjaran syiling
+    localPlayerData.coins += ach.coinReward;
+    
+    // 3. Kemaskini paparan syiling di menu atas (Gunakan ID UI Cikgu yang sebenar, contoh: 'coin-display')
+    const coinDisplay = document.getElementById('coin-display');
+    if (coinDisplay) coinDisplay.innerText = localPlayerData.coins;
+
+    // 4. Keluarkan pop-up meriah
+    alert(`🎉 ACHIEVEMENT UNLOCKED: ${ach.name}!\n\n${ach.description}\nReward: +${ach.coinReward} Coins & Title [${ach.titleReward}]`);
+
+    // 5. Simpan ke Database (Google Sheets)
+    // KITA AKAN BUAT FUNGSI INI SELEPAS INI
+    saveAchievementsToDB(); 
 }
     </script>
 </body>
