@@ -1413,40 +1413,150 @@ function renderAchievements() {
 // ==========================================
 
 function checkAchievements() {
-    // Pastikan pelajar dah login dan array achievements wujud
     if (!localPlayerData) return;
     if (!localPlayerData.achievements) localPlayerData.achievements = [];
 
-    // Semak setiap pencapaian dalam senarai
     ACHIEVEMENTS_LIST.forEach(ach => {
-        // Jika pencapaian ini sudah di-unlock, abaikan (terus ke pencapaian seterusnya)
+        // Abaikan jika sudah di-unlock
         if (localPlayerData.achievements.includes(ach.id)) return;
 
         let conditionMet = false;
+        
+        // Data semasa pelajar
+        const currentCoins = Number(localPlayerData.coins) || 0;
+        const currentScore = Number(localPlayerData.totalScore) || 0;
+        const inventoryCount = localPlayerData.inventory ? localPlayerData.inventory.length : 0;
 
-        // --- SYARAT UNTUK UNLOCK PENCAPAIAN ---
-        // (Nota: Pastikan nama pembolehubah seperti totalScore/coins sepadan dengan sistem Cikgu)
         switch(ach.id) {
-            // Kategori 1: Markah Keseluruhan (Total Score)
-            case "ach_01": if (localPlayerData.totalScore >= 100) conditionMet = true; break;
-            case "ach_02": if (localPlayerData.totalScore >= 1000) conditionMet = true; break;
-            case "ach_03": if (localPlayerData.totalScore >= 5000) conditionMet = true; break;
-            
-            // Kategori 3: Ekonomi & Syiling
-            case "ach_10": if (localPlayerData.coins >= 1000) conditionMet = true; break;
-
-            // Kategori 4: Beli Avatar Pertama
-            case "ach_13": 
-                if (localPlayerData.inventory && localPlayerData.inventory.length >= 1) conditionMet = true; 
+            // ==========================================
+            // KATEGORI 1: MARKAH KESELURUHAN & AKADEMIK
+            // ==========================================
+            case "ach_01": if (currentScore >= 100) conditionMet = true; break;
+            case "ach_02": if (currentScore >= 1000) conditionMet = true; break;
+            case "ach_03": if (currentScore >= 5000) conditionMet = true; break;
+            case "ach_04": if (currentScore >= 10000) conditionMet = true; break;
+            case "ach_05": 
+                // Syarat: Get a Perfect Score in any 5 games
+                if (localPlayerData.perfectScores && localPlayerData.perfectScores >= 5) conditionMet = true; 
                 break;
-                
-            // Kategori 10: First Blood (Log masuk kali pertama)
+
+            // ==========================================
+            // KATEGORI 2: CABARAN (CHALLENGE MODE)
+            // ==========================================
+            case "ach_06": if (localPlayerData.challengesSent && localPlayerData.challengesSent >= 1) conditionMet = true; break;
+            case "ach_07": if (localPlayerData.challengesWon && localPlayerData.challengesWon >= 1) conditionMet = true; break;
+            case "ach_08": if (localPlayerData.challengesWon && localPlayerData.challengesWon >= 10) conditionMet = true; break;
+            case "ach_09": if (localPlayerData.challengesTied && localPlayerData.challengesTied >= 1) conditionMet = true; break;
+
+            // ==========================================
+            // KATEGORI 3: EKONOMI (COINS)
+            // ==========================================
+            case "ach_10": if (currentCoins >= 1000) conditionMet = true; break;
+            case "ach_11": if (currentCoins >= 5000) conditionMet = true; break;
+            case "ach_12": if (currentCoins >= 10000) conditionMet = true; break;
+
+            // ==========================================
+            // KATEGORI 4: KEDAI & INVENTORI
+            // ==========================================
+            case "ach_13": if (inventoryCount >= 1) conditionMet = true; break;
+            case "ach_14": 
+                // Beli 5 Badges
+                if (localPlayerData.inventory && localPlayerData.inventory.filter(id => id.includes('badge')).length >= 5) conditionMet = true; 
+                break;
+            case "ach_15": 
+                // Beli 5 Edu Items (Alat Tulis)
+                if (localPlayerData.inventory && localPlayerData.inventory.filter(id => id.includes('edu')).length >= 5) conditionMet = true; 
+                break;
+            case "ach_16": 
+                // Memiliki 5 jenis Avatar berbeza
+                if (localPlayerData.avatars && Object.keys(localPlayerData.avatars).length >= 5) conditionMet = true; 
+                break;
+
+            // ==========================================
+            // KATEGORI 5: MASA & ACARA
+            // ==========================================
+            case "ach_17": 
+                // Main semasa Limited Time Event
+                if (typeof getCurrentEvent === 'function' && getCurrentEvent() !== null) conditionMet = true;
+                break;
+            case "ach_18": 
+                // Night Owl (Main selepas 10 PM)
+                if (new Date().getHours() >= 22) conditionMet = true; 
+                break;
+            case "ach_19": 
+                // Early Bird (Main sebelum 7 AM)
+                if (new Date().getHours() < 7) conditionMet = true; 
+                break;
+
+            // ==========================================
+            // KATEGORI 6: KEKONSISTENAN (STREAKS)
+            // ==========================================
+            case "ach_20": 
+                // Weekend Warrior (Main hari Sabtu/Ahad)
+                const day = new Date().getDay();
+                if (day === 0 || day === 6) conditionMet = true; 
+                break;
+            case "ach_21": if (localPlayerData.loginStreak && localPlayerData.loginStreak >= 3) conditionMet = true; break;
+            case "ach_22": if (localPlayerData.loginStreak && localPlayerData.loginStreak >= 7) conditionMet = true; break;
+            case "ach_23": if (localPlayerData.gamesPlayedToday && localPlayerData.gamesPlayedToday >= 5) conditionMet = true; break;
+
+            // ==========================================
+            // KATEGORI 7: PENGUASAAN GAME
+            // ==========================================
+            case "ach_24": if (localPlayerData.scoreMissing && localPlayerData.scoreMissing >= 500) conditionMet = true; break;
+            case "ach_25": if (localPlayerData.scorePastTense && localPlayerData.scorePastTense >= 500) conditionMet = true; break;
+            case "ach_26": if (localPlayerData.scorePlural && localPlayerData.scorePlural >= 500) conditionMet = true; break;
+            case "ach_27": if (localPlayerData.scoreSpelling && localPlayerData.scoreSpelling >= 500) conditionMet = true; break;
+            case "ach_28": if (localPlayerData.scoreGuessing && localPlayerData.scoreGuessing >= 500) conditionMet = true; break;
+
+            // ==========================================
+            // KATEGORI 8: SOSIAL & KAWAN
+            // ==========================================
+            case "ach_29": if (localPlayerData.friendsAdded && localPlayerData.friendsAdded >= 1) conditionMet = true; break;
+            case "ach_30": if (localPlayerData.friendsAdded && localPlayerData.friendsAdded >= 5) conditionMet = true; break;
+            case "ach_31": if (localPlayerData.luckyWins && localPlayerData.luckyWins >= 1) conditionMet = true; break;
+            case "ach_32": if (localPlayerData.revengeWins && localPlayerData.revengeWins >= 1) conditionMet = true; break;
+
+            // ==========================================
+            // KATEGORI 9: AVATAR & INVENTORI LANJUTAN
+            // ==========================================
+            case "ach_33": if (localPlayerData.shopVisits && localPlayerData.shopVisits >= 20) conditionMet = true; break;
+            case "ach_34": 
+                // Kumpul 10 jenis avatar berbeza
+                if (localPlayerData.avatars && Object.keys(localPlayerData.avatars).length >= 10) conditionMet = true; 
+                break;
+            case "ach_35": 
+                // Elite Squad (3 Avatar berbeza capai Level 10)
+                if (localPlayerData.avatars) {
+                    const lv10Count = Object.values(localPlayerData.avatars).filter(lvl => lvl >= 10).length;
+                    if (lv10Count >= 3) conditionMet = true;
+                }
+                break;
+            case "ach_36": if (localPlayerData.avatarEquipStreak && localPlayerData.avatarEquipStreak >= 7) conditionMet = true; break;
+
+            // ==========================================
+            // KATEGORI 10: ACARA KHAS & RAHSIA
+            // ==========================================
+            case "ach_37": 
+                // Merdeka Scholar (Bermain pada 31 Ogos)
+                const mDate = new Date();
+                if (mDate.getDate() === 31 && mDate.getMonth() === 7) conditionMet = true; 
+                break;
+            case "ach_38": 
+                // Holiday Gamer (Bermain pada bulan Disember)
+                if (new Date().getMonth() === 11) conditionMet = true; 
+                break;
             case "ach_39": 
-                conditionMet = true; // Akan sentiasa unlock bila fungsi ini dipanggil lepas login
+                // First Blood (Sentiasa dapat bila log masuk kali pertama)
+                conditionMet = true; 
+                break;
+            case "ach_40": 
+                // Secret Finder
+                if (localPlayerData.secretsFound && localPlayerData.secretsFound >= 1) conditionMet = true; 
                 break;
         }
 
-        // Jika syarat di atas dipenuhi, kita buka (unlock) pencapaian ini!
+        // Buka kunci jika syarat ditepati
         if (conditionMet) {
             unlockAchievement(ach);
         }
