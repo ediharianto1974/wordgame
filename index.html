@@ -470,7 +470,7 @@ async function startGameHub() {
             localPlayerData = { 
                 name: nameInput, class: classInput, passcode: autoPin,
                 coins: 0, inventory: [], avatars: {}, activeAvatar: null,
-                achievements: [], totalScore: 0 // <--- Rekod baru ditambah
+                achievements: [], totalScore: 0
             };
             studentInfo = { name: nameInput, class: classInput };
             await saveCloudPlayerData(); 
@@ -486,8 +486,8 @@ async function startGameHub() {
                     name: nameInput, class: classInput, passcode: autoPin,
                     coins: data.coins || 0, inventory: data.inventory || [],
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
-                    achievements: data.achievements || [], // <--- Rekod ditarik
-                    totalScore: data.totalScore || 0       // <--- Rekod ditarik
+                    achievements: data.achievements || [],
+                    totalScore: data.totalScore || 0
                 };
                 studentInfo = { name: nameInput, class: classInput };
                 await saveCloudPlayerData(); 
@@ -505,8 +505,8 @@ async function startGameHub() {
                     name: nameInput, class: classInput, passcode: pinInput,
                     coins: data.coins || 0, inventory: data.inventory || [],
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
-                    achievements: data.achievements || [], // <--- Rekod ditarik
-                    totalScore: data.totalScore || 0       // <--- Rekod ditarik
+                    achievements: data.achievements || [],
+                    totalScore: data.totalScore || 0
                 };
                 studentInfo = { name: nameInput, class: classInput };
                 alert("Login Successful! Welcome back, " + nameInput + "!");
@@ -535,7 +535,7 @@ async function startGameHub() {
         startBtn.innerText = "START ADVENTURE";
         startBtn.disabled = false;
 
-        // 👉👉 SEMAK PENCAPAIAN SELEPAS SEMUA DATA BERJAYA DIBACA 👈👈
+        // 👉 PENGGERA ACHIEVEMENT 👈
         checkAchievements();
 
     } catch (error) {
