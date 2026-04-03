@@ -1321,9 +1321,12 @@ async function showLeaderboard() {
             return bonus;
         }
 
-        // --- FUNGSI ACHIEVEMENTS (VERSI KEBAL) ---
+      // ==========================================
+// FUNGSI PAPARAN ACHIEVEMENTS
+// ==========================================
+
 function showAchievementsScreen() {
-    // 1. Sembunyikan skrin lain dengan selamat (Hanya sembunyikan jika elemen itu wujud)
+    // 1. Sembunyikan skrin lain dengan selamat
     const screensToHide = ['main-menu', 'game-screen', 'leaderboard-screen', 'shop-screen'];
     screensToHide.forEach(id => {
         const screen = document.getElementById(id);
@@ -1331,8 +1334,8 @@ function showAchievementsScreen() {
             screen.classList.add('hidden');
         }
     });
-    
-    // 2. Paparkan skrin Achievements
+
+    // 2. Tunjukkan skrin Achievements
     const achScreen = document.getElementById('achievements-screen');
     if (achScreen) {
         achScreen.classList.remove('hidden');
@@ -1341,8 +1344,22 @@ function showAchievementsScreen() {
         return;
     }
 
-    // 3. Lukis data
+    // 3. Render / Lukis data pencapaian ke dalam skrin
     renderAchievements();
+}
+
+function closeAchievementsScreen() {
+    // 1. Sembunyikan skrin achievements
+    const achScreen = document.getElementById('achievements-screen');
+    if (achScreen) {
+        achScreen.classList.add('hidden');
+    }
+    
+    // 2. Tunjukkan menu utama semula
+    const mainMenu = document.getElementById('main-menu');
+    if (mainMenu) {
+        mainMenu.classList.remove('hidden');
+    }
 }
 
 function renderAchievements() {
@@ -1407,7 +1424,6 @@ function renderAchievements() {
         statsEl.innerText = `Unlocked: ${unlockedCount} / ${ACHIEVEMENTS_LIST.length}`;
     }
 }
-
         // ==========================================
 // LOGIK PENCAPAIAN (ACHIEVEMENTS SYSTEM)
 // ==========================================
