@@ -490,23 +490,55 @@ async function startGameHub() {
                         studentInfo = { name: nameInput, class: classInput };
                         await saveCloudPlayerData(); // Save new PIN to database
                     } 
-                    // C2: Returning Student who already has a PIN
-                    else {
-                        if (!pinInput) {
-                            alert("Please enter your PIN to continue!");
-                            startBtn.innerText = "START ADVENTURE";
-                            startBtn.disabled = false;
-                            return;
-                        }
-                        localPlayerData = {
-                            name: nameInput, class: classInput, passcode: pinInput,
-                            coins: data.coins || 0, inventory: data.inventory || [],
-                            avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null
-                        };
-                        studentInfo = { name: nameInput, class: classInput };
-                        alert("Login Successful! Welcome back, " + nameInput + "!");
+// C2: Returning Student who already has a PIN
+                else {
+                    if (!pinInput) {
+                        alert("Please enter your PIN to continue!");
+                        startBtn.innerText = "START ADVENTURE";
+                        startBtn.disabled = false;
+                        return; // Berhenti di sini jika tiada PIN
                     }
+                    
+                    // PENYELAMAT: Pastikan totalScore & achievements ditarik masuk!
+                    localPlayerData = {
+                        name: nameInput, class: classInput, passcode: pinInput,
+                        coins: data.coins || 0, inventory: data.inventory || [],
+                        avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
+                        achievements: data.achievements || [], // <--- Tambah ini
+                        totalScore: data.totalScore || 0       // <--- Tambah ini
+                    };
+                    studentInfo = { name: nameInput, class: classInput };
+                    alert("Login Successful! Welcome back, " + nameInput + "!");
                 }
+            }
+
+            // --- PROCESS TO OPEN MAIN MENU ---
+            document.getElementById('display-name').innerText = studentInfo.name;
+            document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+
+            const avatarContainer = document.getElementById('dashboard-avatars');
+            if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
+            updateDashboardAvatars();
+
+            // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
+            const currentEvent = getCurrentEvent();
+            if (currentEvent) {
+                document.getElementById('event-banner').classList.remove('hidden');
+                document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
+            } else {
+                document.getElementById('event-banner').classList.add('hidden');
+            }
+
+            startBtn.innerText = "START ADVENTURE";
+            startBtn.disabled = false;
+
+            // 👉👉 PENYELAMAT: LETAK PENGGERA DI SINI (Akhir Fungsi) 👈👈
+            checkAchievements();
+
+        } catch (error) {
+            console.error(error);
 
                 // --- PROCESS TO OPEN MAIN MENU ---
                 document.getElementById('display-name').innerText = studentInfo.name;
@@ -1327,7 +1359,7 @@ async function showLeaderboard() {
 
 function showAchievementsScreen() {
     // 1. Sembunyikan skrin lain dengan selamat
-    const screensToHide = ['main-menu', 'game-screen', 'leaderboard-screen', 'shop-screen'];
+    const screensToHide = ['menu-screen', 'game-screen', 'leaderboard-screen', 'shop-screen'];
     screensToHide.forEach(id => {
         const screen = document.getElementById(id);
         if (screen) {
