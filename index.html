@@ -436,141 +436,114 @@
             }
         
 async function startGameHub() {
-            const nameInput = document.getElementById('student-name').value.trim();
-            const classInput = document.getElementById('student-class').value.trim();
-            const pinInput = document.getElementById('student-pin').value.trim(); // Read PIN box
+    const nameInput = document.getElementById('student-name').value.trim();
+    const classInput = document.getElementById('student-class').value.trim();
+    const pinInput = document.getElementById('student-pin').value.trim(); 
 
-            if (!nameInput || !classInput) {
-                alert("Please enter your name and class first!");
-                return;
-            }
+    if (!nameInput || !classInput) {
+        alert("Please enter your name and class first!");
+        return;
+    }
 
-            const startBtn = document.getElementById('start-btn');
-            startBtn.innerText = "Loading data...";
-            startBtn.disabled = true;
+    const startBtn = document.getElementById('start-btn');
+    startBtn.innerText = "Loading data...";
+    startBtn.disabled = true;
 
-            try {
-                // Check data with Google Sheets
-                const response = await fetch(`${SCRIPT_URL}?action=getPlayer&name=${encodeURIComponent(nameInput)}&cls=${encodeURIComponent(classInput)}&passcode=${encodeURIComponent(pinInput)}`);
-                const data = await response.json();
+    try {
+        // Check data with Google Sheets
+        const response = await fetch(`${SCRIPT_URL}?action=getPlayer&name=${encodeURIComponent(nameInput)}&cls=${encodeURIComponent(classInput)}&passcode=${encodeURIComponent(pinInput)}`);
+        const data = await response.json();
 
-                // SITUATION A: Account exists but PIN is wrong!
-                if (data && data.error === "WrongPIN") {
-                    alert("OOPS! The PIN entered is INCORRECT.\n\nPlease enter your correct 4-digit PIN.\n(If you are a new student, please use a different Name that hasn't been taken).");
-                    startBtn.innerText = "START ADVENTURE";
-                    startBtn.disabled = false;
-                    return;
-                }
-
-                // SITUATION B: Account Does Not Exist (New Student)
-                if (!data) {
-                    const autoPin = Math.floor(1000 + Math.random() * 9000).toString();
-                    alert(`👋 WELCOME!\n\nThe system has registered you and generated a secret PIN:\n\n👉 YOUR PIN: ${autoPin} 👈\n\nPLEASE WRITE DOWN & REMEMBER THIS PIN! You will need it to log in next time.`);
-                    
-                    localPlayerData = { 
-                        name: nameInput, class: classInput, passcode: autoPin,
-                        coins: 0, inventory: [], avatars: {}, activeAvatar: null 
-                    };
-                    studentInfo = { name: nameInput, class: classInput };
-                    await saveCloudPlayerData(); 
-                } 
-                // SITUATION C: Account Exists (Returning Student)
-                else {
-                    // C1: Returning Student from BEFORE the PIN system
-                    if (data.hasPin === false) {
-                        const autoPin = Math.floor(1000 + Math.random() * 9000).toString();
-                        alert(`🚨 ANNOUNCEMENT FOR RETURNING STUDENTS 🚨\n\nThe system is now more secure! We have generated a special PIN for your account:\n\n👉 YOUR PIN: ${autoPin} 👈\n\nPLEASE WRITE IT DOWN NOW! You must use this PIN to log in next time.`);
-                        
-                        localPlayerData = {
-                            name: nameInput, class: classInput, passcode: autoPin,
-                            coins: data.coins || 0, inventory: data.inventory || [],
-                            avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null
-                        };
-                        studentInfo = { name: nameInput, class: classInput };
-                        await saveCloudPlayerData(); // Save new PIN to database
-                    } 
-// C2: Returning Student who already has a PIN
-                else {
-                    if (!pinInput) {
-                        alert("Please enter your PIN to continue!");
-                        startBtn.innerText = "START ADVENTURE";
-                        startBtn.disabled = false;
-                        return; // Berhenti di sini jika tiada PIN
-                    }
-                    
-                    // PENYELAMAT: Pastikan totalScore & achievements ditarik masuk!
-                    localPlayerData = {
-                        name: nameInput, class: classInput, passcode: pinInput,
-                        coins: data.coins || 0, inventory: data.inventory || [],
-                        avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
-                        achievements: data.achievements || [], // <--- Tambah ini
-                        totalScore: data.totalScore || 0       // <--- Tambah ini
-                    };
-                    studentInfo = { name: nameInput, class: classInput };
-                    alert("Login Successful! Welcome back, " + nameInput + "!");
-                }
-            
-            // --- PROCESS TO OPEN MAIN MENU ---
-            document.getElementById('display-name').innerText = studentInfo.name;
-            document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('menu-screen').classList.remove('hidden');
-
-            const avatarContainer = document.getElementById('dashboard-avatars');
-            if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
-            updateDashboardAvatars();
-
-            // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
-            const currentEvent = getCurrentEvent();
-            if (currentEvent) {
-                document.getElementById('event-banner').classList.remove('hidden');
-                document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
-            } else {
-                document.getElementById('event-banner').classList.add('hidden');
-            }
-
+        // SITUATION A: Account exists but PIN is wrong!
+        if (data && data.error === "WrongPIN") {
+            alert("OOPS! The PIN entered is INCORRECT.\n\nPlease enter your correct 4-digit PIN.\n(If you are a new student, please use a different Name that hasn't been taken).");
             startBtn.innerText = "START ADVENTURE";
             startBtn.disabled = false;
+            return;
+        }
 
-            // 👉👉 PENYELAMAT: LETAK PENGGERA DI SINI (Akhir Fungsi) 👈👈
-            checkAchievements();
-
-        } catch (error) {
-            console.error(error);
-
-                // --- PROCESS TO OPEN MAIN MENU ---
-                document.getElementById('display-name').innerText = studentInfo.name;
-                document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
+        // SITUATION B: Account Does Not Exist (New Student)
+        if (!data) {
+            const autoPin = Math.floor(1000 + Math.random() * 9000).toString();
+            alert(`👋 WELCOME!\n\nThe system has registered you and generated a secret PIN:\n\n👉 YOUR PIN: ${autoPin} 👈\n\nPLEASE WRITE DOWN & REMEMBER THIS PIN! You will need it to log in next time.`);
+            
+            localPlayerData = { 
+                name: nameInput, class: classInput, passcode: autoPin,
+                coins: 0, inventory: [], avatars: {}, activeAvatar: null,
+                achievements: [], totalScore: 0 // <--- Rekod baru ditambah
+            };
+            studentInfo = { name: nameInput, class: classInput };
+            await saveCloudPlayerData(); 
+        } 
+        // SITUATION C: Account Exists (Returning Student)
+        else {
+            // C1: Returning Student from BEFORE the PIN system
+            if (data.hasPin === false) {
+                const autoPin = Math.floor(1000 + Math.random() * 9000).toString();
+                alert(`🚨 ANNOUNCEMENT FOR RETURNING STUDENTS 🚨\n\nThe system is now more secure! We have generated a special PIN for your account:\n\n👉 YOUR PIN: ${autoPin} 👈\n\nPLEASE WRITE IT DOWN NOW! You must use this PIN to log in next time.`);
                 
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('menu-screen').classList.remove('hidden');
-
-                const avatarContainer = document.getElementById('dashboard-avatars');
-                if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
-                
-                updateDashboardAvatars();
-
-               // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
-                const currentEvent = getCurrentEvent();
-                if (currentEvent) {
-                    document.getElementById('event-banner').classList.remove('hidden');
-                    document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
-                } else {
-                    document.getElementById('event-banner').classList.add('hidden');
+                localPlayerData = {
+                    name: nameInput, class: classInput, passcode: autoPin,
+                    coins: data.coins || 0, inventory: data.inventory || [],
+                    avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
+                    achievements: data.achievements || [], // <--- Rekod ditarik
+                    totalScore: data.totalScore || 0       // <--- Rekod ditarik
+                };
+                studentInfo = { name: nameInput, class: classInput };
+                await saveCloudPlayerData(); 
+            } 
+            // C2: Returning Student who already has a PIN
+            else {
+                if (!pinInput) {
+                    alert("Please enter your PIN to continue!");
+                    startBtn.innerText = "START ADVENTURE";
+                    startBtn.disabled = false;
+                    return; 
                 }
-
-                startBtn.innerText = "START ADVENTURE";
-                startBtn.disabled = false;
-
-                // 👉 LETAKKAN DI SINI! SELEPAS LOG MASUK BERJAYA 👈
-                checkAchievements();
-
-            } catch (error) {
-                console.error(error);
-                alert("System error. Please ensure your internet connection is stable and try again.");
-                startBtn.innerText = "START ADVENTURE";
-                startBtn.disabled = false;
+                
+                localPlayerData = {
+                    name: nameInput, class: classInput, passcode: pinInput,
+                    coins: data.coins || 0, inventory: data.inventory || [],
+                    avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
+                    achievements: data.achievements || [], // <--- Rekod ditarik
+                    totalScore: data.totalScore || 0       // <--- Rekod ditarik
+                };
+                studentInfo = { name: nameInput, class: classInput };
+                alert("Login Successful! Welcome back, " + nameInput + "!");
             }
+        } // <--- KURUNGAN INI YANG HILANG SEBELUM INI
+
+        // --- PROCESS TO OPEN MAIN MENU ---
+        document.getElementById('display-name').innerText = studentInfo.name;
+        document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('menu-screen').classList.remove('hidden');
+
+        const avatarContainer = document.getElementById('dashboard-avatars');
+        if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
+        updateDashboardAvatars();
+
+        // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
+        const currentEvent = getCurrentEvent();
+        if (currentEvent) {
+            document.getElementById('event-banner').classList.remove('hidden');
+            document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
+        } else {
+            document.getElementById('event-banner').classList.add('hidden');
+        }
+
+        startBtn.innerText = "START ADVENTURE";
+        startBtn.disabled = false;
+
+        // 👉👉 SEMAK PENCAPAIAN SELEPAS SEMUA DATA BERJAYA DIBACA 👈👈
+        checkAchievements();
+
+    } catch (error) {
+        console.error(error);
+        alert("System error. Please ensure your internet connection is stable and try again.");
+        startBtn.innerText = "START ADVENTURE";
+        startBtn.disabled = false;
+    }
 }
         
         function logout() {
