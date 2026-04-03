@@ -1338,16 +1338,16 @@ function renderAchievements() {
     
     listContainer.innerHTML = ''; // Kosongkan sebelum lukis
 
-    // SAFEGUARD: Pastikan pelajar sudah log masuk
-    if (typeof currentUser === 'undefined' || !currentUser) {
+    // GUNA localPlayerData SEBAGAI RUJUKAN DATA PELAJAR
+    if (typeof localPlayerData === 'undefined' || !localPlayerData || !localPlayerData.name) {
         console.warn("User belum log masuk. Menggunakan data sementara untuk prebiu.");
-        // Data sementara untuk tujuan ujian/prebiu UI jika cikgu belum login
         var tempAchievements = []; 
     } else {
-        if (!currentUser.achievements) {
-            currentUser.achievements = []; // Array kosong jika belum ada
+        // Pastikan array achievements wujud dalam profil pelajar
+        if (!localPlayerData.achievements) {
+            localPlayerData.achievements = []; 
         }
-        var tempAchievements = currentUser.achievements;
+        var tempAchievements = localPlayerData.achievements;
     }
 
     let unlockedCount = 0;
