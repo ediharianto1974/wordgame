@@ -617,17 +617,16 @@ async function loadCloudPlayerData() {
 
         async function saveCloudPlayerData() {
             const payload = {
-                action: "updatePlayer",
-                name: studentInfo.name,
-                class: studentInfo.class,
-                passcode: localPlayerData.passcode || "", // <--- Sends PIN record to be saved
-                coins: localPlayerData.coins,
-                inventory: localPlayerData.inventory,
-                avatars: localPlayerData.avatars,
-                activeAvatar: localPlayerData.activeAvatar, 
-                // TAMBAH BARIS INI UNTUK HANTAR DATA PENCAPAIAN
-                achievements: localPlayerData.achievements
-            };
+        action: "updatePlayer",
+        name: studentInfo.name,
+        class: studentInfo.class,
+        passcode: localPlayerData.passcode || "", 
+        coins: localPlayerData.coins,
+        inventory: localPlayerData.inventory,
+        avatars: localPlayerData.avatars,
+        activeAvatar: localPlayerData.activeAvatar, // <--- Pastikan ada KOMA di sini!
+        achievements: localPlayerData.achievements  // <--- PASTIKAN BARIS INI ADA
+    };
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
