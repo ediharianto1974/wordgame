@@ -1307,6 +1307,93 @@ async function showLeaderboard() {
 
             return bonus;
         }
+
+        // --- FUNGSI ACHIEVEMENTS (VERSI KEBAL) ---
+function showAchievementsScreen() {
+    // 1. Sembunyikan skrin lain dengan selamat (Hanya sembunyikan jika elemen itu wujud)
+    const screensToHide = ['main-menu', 'game-screen', 'leaderboard-screen', 'shop-screen'];
+    screensToHide.forEach(id => {
+        const screen = document.getElementById(id);
+        if (screen) {
+            screen.classList.add('hidden');
+        }
+    });
+    
+    // 2. Paparkan skrin Achievements
+    const achScreen = document.getElementById('achievements-screen');
+    if (achScreen) {
+        achScreen.classList.remove('hidden');
+    } else {
+        alert("Ralat: ID 'achievements-screen' tidak dijumpai dalam HTML!");
+        return;
+    }
+
+    // 3. Lukis data
+    renderAchievements();
+}
+
+function renderAchievements() {
+    const listContainer = document.getElementById('achievements-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = ''; // Kosongkan sebelum lukis
+
+    // SAFEGUARD: Pastikan pelajar sudah log masuk
+    if (typeof currentUser === 'undefined' || !currentUser) {
+        console.warn("User belum log masuk. Menggunakan data sementara untuk prebiu.");
+        // Data sementara untuk tujuan ujian/prebiu UI jika cikgu belum login
+        var tempAchievements = []; 
+    } else {
+        if (!currentUser.achievements) {
+            currentUser.achievements = []; // Array kosong jika belum ada
+        }
+        var tempAchievements = currentUser.achievements;
+    }
+
+    let unlockedCount = 0;
+
+    // Pastikan ACHIEVEMENTS_LIST dari data.js berjaya dibaca
+    if (typeof ACHIEVEMENTS_LIST === 'undefined') {
+        alert("Ralat: Data ACHIEVEMENTS_LIST tidak dijumpai. Pastikan fail data.js telah disave.");
+        return;
+    }
+
+    ACHIEVEMENTS_LIST.forEach(ach => {
+        const isUnlocked = tempAchievements.includes(ach.id);
+        if (isUnlocked) unlockedCount++;
+
+        // Gaya (Style) berbeza bergantung kepada sama ada sudah unlock atau belum
+        const bgClass = isUnlocked ? 'bg-white border-l-4 border-green-500' : 'bg-gray-50 border-l-4 border-gray-300 opacity-80 grayscale';
+        const iconClass = isUnlocked ? 'fas fa-unlock text-green-500' : 'fas fa-lock text-gray-400';
+        const titleClass = isUnlocked ? 'text-gray-800' : 'text-gray-500';
+        const rewardText = isUnlocked ? `<span class="text-green-600 font-bold text-xs"><i class="fas fa-check-circle"></i> Claimed</span>` : `<span class="text-yellow-600 font-bold text-xs">+${ach.coinReward} Coins</span>`;
+
+        const card = `
+            <div class="${bgClass} rounded-xl shadow-sm p-4 flex items-start transition hover:shadow-md">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3 shrink-0">
+                    <i class="${iconClass} text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="${titleClass} font-bold text-sm md:text-base">${ach.name}</h3>
+                    <p class="text-xs text-gray-500 mt-1 mb-2 leading-tight">${ach.description}</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <span class="inline-block bg-indigo-50 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full font-semibold border border-indigo-100">
+                            Title: ${ach.titleReward}
+                        </span>
+                        ${rewardText}
+                    </div>
+                </div>
+            </div>
+        `;
+        listContainer.innerHTML += card;
+    });
+
+    // Kemaskini teks statistik di header (Jika wujud)
+    const statsEl = document.getElementById('achievements-stats');
+    if (statsEl) {
+        statsEl.innerText = `Unlocked: ${unlockedCount} / ${ACHIEVEMENTS_LIST.length}`;
+    }
+}
     </script>
 </body>
 </html>
