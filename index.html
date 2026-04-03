@@ -1649,18 +1649,46 @@ function renderAchievements() {
 // --- FUNGSI PENCAPAIAN (ACHIEVEMENTS) ---
 function checkAchievements() {
     if (!localPlayerData) return;
+    
+    // Pastikan senarai achievements wujud (elak ralat)
+    if (!localPlayerData.achievements) localPlayerData.achievements = [];
 
     // 👉 1. Definisi pembolehubah (Sangat Penting supaya sistem tidak ralat!)
-    const currentScore = localPlayerData.totalScore || 0;
-    const currentCoins = localPlayerData.coins || 0;
-    const avatarCount = localPlayerData.inventory ? localPlayerData.inventory.length : 0;
+    const currentScore = Number(localPlayerData.totalScore) || 0;
+    const currentCoins = Number(localPlayerData.coins) || 0;
+    
+    // --- KIRA JUMLAH AVATAR & LEVEL MAKSIMUM DENGAN SELAMAT ---
+    let avatarCount = localPlayerData.inventory ? localPlayerData.inventory.length : 0;
+    let maxAvatarLevel = 0;
 
+    if (localPlayerData.avatars) {
+        let avatarObj = localPlayerData.avatars;
+        
+        // JIKA BACA DARI GOOGLE SHEET SEBAGAI TEKS, TUKAR JADI OBJEK
+        if (typeof avatarObj === 'string') {
+            try { 
+                avatarObj = JSON.parse(avatarObj); 
+            } catch(e) { 
+                avatarObj = {}; 
+            }
+        }
+        
+        // Cari level avatar yang paling tinggi dalam senarai
+        const levels = Object.values(avatarObj).map(Number);
+        if (levels.length > 0) {
+            maxAvatarLevel = Math.max(...levels);
+        }
+    }
+    // -------------------------------------------------------------
+
+    // 👉 2. Semak setiap pencapaian
     achievementsData.forEach(ach => {
-        // Jika sudah ada dalam rekod, jangan proses lagi
-        if (localPlayerData.achievements && localPlayerData.achievements.includes(ach.id)) return;
-
+        // Abaikan yang dah unlock
+        if (localPlayerData.achievements.includes(ach.id)) return; 
+        
         let conditionMet = false;
-        switch(ach.id) {
+
+        switch (ach.id) {
             // --- Category 1: Leaderboard & Academics ---
             case "ach_01": if (currentScore >= 100) conditionMet = true; break;
             case "ach_02": if (currentScore >= 1000) conditionMet = true; break;
@@ -1682,9 +1710,7 @@ function checkAchievements() {
             // --- Category 4: Avatar Collection ---
             case "ach_13": if (avatarCount >= 1) conditionMet = true; break;
             case "ach_14": if (avatarCount >= 5) conditionMet = true; break;
-            case "ach_15": 
-                if (localPlayerData.avatars && Object.values(localPlayerData.avatars).some(lvl => lvl >= 10)) conditionMet = true; 
-                break;
+            case "ach_15": if (maxAvatarLevel >= 10) conditionMet = true; break;
             case "ach_16": if (avatarCount >= 10) conditionMet = true; break;
 
             // --- Category 5: Dedication & Events ---
