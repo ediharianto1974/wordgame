@@ -1649,39 +1649,46 @@ function renderAchievements() {
 // --- FUNGSI PENCAPAIAN (ACHIEVEMENTS) ---
 function checkAchievements() {
     if (!localPlayerData) return;
-    
-    // Pastikan senarai achievements wujud (elak ralat)
-    if (!localPlayerData.achievements) localPlayerData.achievements = [];
 
-    // 👉 1. Definisi pembolehubah (Sangat Penting supaya sistem tidak ralat!)
+    // 🚨 1. PEMBERSIHAN DATA DARI GOOGLE SHEETS (SANGAT PENTING!)
+    // Tukar format teks dari Sheet kepada Senarai/Array yang sah untuk elak ralat "push is not a function"
+    if (typeof localPlayerData.achievements === 'string') {
+        try { localPlayerData.achievements = JSON.parse(localPlayerData.achievements); } 
+        catch(e) { localPlayerData.achievements = []; }
+    }
+    if (!Array.isArray(localPlayerData.achievements)) localPlayerData.achievements = [];
+
+    if (typeof localPlayerData.inventory === 'string') {
+        try { localPlayerData.inventory = JSON.parse(localPlayerData.inventory); } 
+        catch(e) { localPlayerData.inventory = []; }
+    }
+    if (!Array.isArray(localPlayerData.inventory)) localPlayerData.inventory = [];
+
+    let avatarObj = localPlayerData.avatars || {};
+    if (typeof avatarObj === 'string') {
+        try { avatarObj = JSON.parse(avatarObj); } 
+        catch(e) { avatarObj = {}; }
+    }
+    localPlayerData.avatars = avatarObj; // Simpan semula objek yang telah dibersihkan
+
+    // 👉 2. Definisi pembolehubah (Sangat Penting supaya sistem tidak ralat!)
     const currentScore = Number(localPlayerData.totalScore) || 0;
     const currentCoins = Number(localPlayerData.coins) || 0;
-    
+
     // --- KIRA JUMLAH AVATAR & LEVEL MAKSIMUM DENGAN SELAMAT ---
-    let avatarCount = localPlayerData.inventory ? localPlayerData.inventory.length : 0;
+    // Lebih tepat mengira jumlah dari kekunci (keys) avatarObj berbanding inventory
+    let avatarCount = Object.keys(avatarObj).length;
     let maxAvatarLevel = 0;
 
-    if (localPlayerData.avatars) {
-        let avatarObj = localPlayerData.avatars;
-        
-        // JIKA BACA DARI GOOGLE SHEET SEBAGAI TEKS, TUKAR JADI OBJEK
-        if (typeof avatarObj === 'string') {
-            try { 
-                avatarObj = JSON.parse(avatarObj); 
-            } catch(e) { 
-                avatarObj = {}; 
-            }
-        }
-        
-        // Cari level avatar yang paling tinggi dalam senarai
-        const levels = Object.values(avatarObj).map(Number);
-        if (levels.length > 0) {
-            maxAvatarLevel = Math.max(...levels);
-        }
+    const levels = Object.values(avatarObj).map(Number);
+    if (levels.length > 0) {
+        maxAvatarLevel = Math.max(...levels);
     }
     // -------------------------------------------------------------
 
-    // 👉 2. Semak setiap pencapaian
+    let hasNewAchievement = false;
+
+    // 👉 3. Semak setiap pencapaian
     achievementsData.forEach(ach => {
         // Abaikan yang dah unlock
         if (localPlayerData.achievements.includes(ach.id)) return; 
@@ -1757,12 +1764,21 @@ function checkAchievements() {
             case "ach_40": if (localPlayerData.secretsFound && localPlayerData.secretsFound >= 1) conditionMet = true; break;
         }
 
+        // 👉 4. Panggil fungsi unlock dan rekodkan ada penambahan baru
         if (conditionMet) {
-            unlockAchievement(ach);
+            if (typeof unlockAchievement === 'function') {
+                unlockAchievement(ach);
+            }
+            hasNewAchievement = true;
         }
     });
-}
 
+    // 👉 5. SIMPAN KE CLOUD SECARA AUTOMATIK JIKA ADA ACHIEVEMENT BARU
+    if (hasNewAchievement && typeof saveCloudPlayerData === "function") {
+        saveCloudPlayerData();
+    }
+}
+		
 function unlockAchievement(ach) {
     if (!localPlayerData.achievements) localPlayerData.achievements = [];
     
