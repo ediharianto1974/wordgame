@@ -497,9 +497,6 @@ async function startGameHub() {
                             startBtn.innerText = "START ADVENTURE";
                             startBtn.disabled = false;
                             return;
-
-                            // --- SEMAK PENCAPAIAN LOG MASUK ---
-                        checkAchievements();
                         }
                         localPlayerData = {
                             name: nameInput, class: classInput, passcode: pinInput,
@@ -523,17 +520,20 @@ async function startGameHub() {
                 
                 updateDashboardAvatars();
 
-                // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
-            const currentEvent = getCurrentEvent();
-            if (currentEvent) {
-                document.getElementById('event-banner').classList.remove('hidden');
-                document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
-            } else {
-                document.getElementById('event-banner').classList.add('hidden');
-            }
+               // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
+                const currentEvent = getCurrentEvent();
+                if (currentEvent) {
+                    document.getElementById('event-banner').classList.remove('hidden');
+                    document.getElementById('event-text').innerText = "ACTIVE EVENT: " + currentEvent.name;
+                } else {
+                    document.getElementById('event-banner').classList.add('hidden');
+                }
 
                 startBtn.innerText = "START ADVENTURE";
                 startBtn.disabled = false;
+
+                // 👉 LETAKKAN DI SINI! SELEPAS LOG MASUK BERJAYA 👈
+                checkAchievements();
 
             } catch (error) {
                 console.error(error);
@@ -541,7 +541,7 @@ async function startGameHub() {
                 startBtn.innerText = "START ADVENTURE";
                 startBtn.disabled = false;
             }
-        }
+}
         
         function logout() {
             studentInfo = { name: '', class: '' };
