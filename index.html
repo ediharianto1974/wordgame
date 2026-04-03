@@ -1430,8 +1430,14 @@ function renderAchievements() {
 // LOGIK PENCAPAIAN (ACHIEVEMENTS SYSTEM)
 // ==========================================
 
+// --- FUNGSI PENCAPAIAN (ACHIEVEMENTS) ---
 function checkAchievements() {
     if (!localPlayerData) return;
+
+    // 👉 1. Definisi pembolehubah (Sangat Penting supaya sistem tidak ralat!)
+    const currentScore = localPlayerData.totalScore || 0;
+    const currentCoins = localPlayerData.coins || 0;
+    const avatarCount = localPlayerData.inventory ? localPlayerData.inventory.length : 0;
 
     achievementsData.forEach(ach => {
         // Jika sudah ada dalam rekod, jangan proses lagi
@@ -1454,20 +1460,16 @@ function checkAchievements() {
 
             // --- Category 3: Economy & Wealth ---
             case "ach_10": if (currentCoins >= 1000) conditionMet = true; break;
-            case "ach_11": if (localPlayerData.coinsSpent && localPlayerData.coinsSpent >= 5000) conditionMet = true; break; // Memerlukan pembolehubah coinsSpent
-            case "ach_12": if (localPlayerData.totalCoinsEarned && localPlayerData.totalCoinsEarned >= 20000) conditionMet = true; break; // Memerlukan pembolehubah totalCoinsEarned
+            case "ach_11": if (localPlayerData.coinsSpent && localPlayerData.coinsSpent >= 5000) conditionMet = true; break; 
+            case "ach_12": if (localPlayerData.totalCoinsEarned && localPlayerData.totalCoinsEarned >= 20000) conditionMet = true; break; 
 
             // --- Category 4: Avatar Collection ---
             case "ach_13": if (avatarCount >= 1) conditionMet = true; break;
             case "ach_14": if (avatarCount >= 5) conditionMet = true; break;
             case "ach_15": 
-                // Any avatar to Level 10
                 if (localPlayerData.avatars && Object.values(localPlayerData.avatars).some(lvl => lvl >= 10)) conditionMet = true; 
                 break;
-            case "ach_16": 
-                // Cikgu boleh sesuaikan jika ada kategori animal/fantasy
-                if (avatarCount >= 10) conditionMet = true; 
-                break;
+            case "ach_16": if (avatarCount >= 10) conditionMet = true; break;
 
             // --- Category 5: Dedication & Events ---
             case "ach_17": if (typeof getCurrentEvent === 'function' && getCurrentEvent() !== null) conditionMet = true; break;
@@ -1499,7 +1501,18 @@ function checkAchievements() {
             // --- Category 9: Advanced Inventory ---
             case "ach_33": if (localPlayerData.shopVisits && localPlayerData.shopVisits >= 20) conditionMet = true; break;
             case "ach_34": if (avatarCount >= 10) conditionMet = true; break;
-            // Tambah case lain jika perlu di sini...
+
+            // --- Category 10: Special Events & Hidden ---
+            case "ach_37": 
+                const mDate = new Date();
+                if (mDate.getDate() === 31 && mDate.getMonth() === 7) conditionMet = true; 
+                break;
+            case "ach_38": if (new Date().getMonth() === 11) conditionMet = true; break;
+            
+            // 👉 First Step Achievement - Sentiasa unlock masa login
+            case "ach_39": conditionMet = true; break; 
+            
+            case "ach_40": if (localPlayerData.secretsFound && localPlayerData.secretsFound >= 1) conditionMet = true; break;
         }
 
         if (conditionMet) {
@@ -1530,7 +1543,7 @@ function unlockAchievement(ach) {
     }
 }
 
-// FUNGSI PAPARAN SKRIN (PASTIKAN ID SESUAI DENGAN HTML CIKGU)
+// --- FUNGSI PAPARAN SKRIN ACHIEVEMENTS ---
 function showAchievementsScreen() {
     const menu = document.getElementById('menu-screen');
     const achScreen = document.getElementById('achievements-screen');
