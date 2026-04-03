@@ -35,6 +35,54 @@
             background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
             border: 2px solid #fbbf24;
         }
+
+/* 1. COMMON (Simple & Clean) */
+.title-common {
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    background: #f1f5f9;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+/* 2. RARE (Blue Glow) */
+.title-rare {
+    color: #1d4ed8;
+    border: 1px solid #3b82f6;
+    background: #eff6ff;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    padding: 1px 8px;
+    border-radius: 4px;
+}
+
+/* 3. EPIC (Purple Animated) */
+.title-epic {
+    background: linear-gradient(45deg, #7c3aed, #db2777);
+    color: white;
+    font-weight: bold;
+    padding: 2px 10px;
+    border-radius: 50px;
+    animation: pulseEpic 2s infinite;
+}
+@keyframes pulseEpic {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); box-shadow: 0 0 10px #7c3aed; }
+    100% { transform: scale(1); }
+}
+
+/* 4. LEGENDARY (Efek Wow yang kita buat tadi) */
+.title-legendary {
+    font-weight: 900;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #f59e0b, #ffffff, #f59e0b);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmer 3s linear infinite;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.6));
+}
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen p-4 md:p-8">
@@ -60,22 +108,30 @@
             </div>
         </div>
 
-        <div id="menu-screen" class="hidden animate-fade-in">
+<div id="menu-screen" class="hidden animate-fade-in">
             <div id="event-banner" class="hidden bg-gradient-to-r from-red-500 to-orange-500 text-white text-center p-3 rounded-xl shadow-lg mb-6 font-bold animate-pulse border-2 border-white">
-            <i class="fas fa-bullhorn mr-2"></i> <span id="event-text"></span>
-        </div>
+                <i class="fas fa-bullhorn mr-2"></i> <span id="event-text"></span>
+            </div>
+            
             <div class="glass rounded-3xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
                 <div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded-xl transition" onclick="openProfile()" title="Click to view Profile & Equip Title">
                         <div>
                             <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
+                            
+                            <div id="header-active-title" class="text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-0.5 rounded shadow-sm inline-block mb-1">
+                                Novice
+                            </div>
+                            
                             <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
-                            <button onclick="logout()" class="text-xs text-red-500 hover:text-red-700 underline mt-1 font-semibold transition">
-                                <i class="fas fa-sign-out-alt"></i> Not you? Change Player
-                            </button>
                         </div>
+                        
                         <div id="dashboard-avatars" class="flex items-center gap-2 ml-2"></div>
                     </div>
+
+                    <button onclick="logout()" class="text-xs text-red-500 hover:text-red-700 underline mt-1 ml-2 font-semibold transition">
+                        <i class="fas fa-sign-out-alt"></i> Not you? Change Player
+                    </button>
                 </div> 
                 <div class="grid grid-cols-2 md:flex gap-2 mt-4 md:mt-0 w-full md:w-auto">
                     <button onclick="promptJoinChallenge()" class="col-span-2 md:col-span-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-xl md:rounded-full text-sm md:text-base font-bold shadow transition flex justify-center items-center gap-2">
@@ -241,7 +297,7 @@
             </div>
 
             <div class="overflow-hidden rounded-2xl border border-gray-100 shadow-sm max-h-[60vh] overflow-y-auto custom-scroll bg-gray-50 p-2 md:p-4">
-                <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                <div id="achievements-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     </div>
             </div>
         </div>
@@ -279,11 +335,47 @@
 
     </div>
 
+<div id="profile-screen" class="hidden absolute inset-0 bg-gray-900/80 backdrop-blur-sm z-50 overflow-y-auto flex items-center justify-center">
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl max-w-md w-full mx-4 border-4 border-indigo-200 animate-fade-in">
+        
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h2 class="text-2xl font-bold text-indigo-700"><i class="fas fa-user-circle"></i> My Profile</h2>
+            <button onclick="closeProfile()" class="text-red-500 hover:bg-red-100 rounded-full w-8 h-8 flex items-center justify-center transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="text-center mb-6">
+            <div id="profile-avatar-display" class="text-6xl mb-3">🧑‍🎓</div>
+            <h3 id="profile-name" class="text-2xl font-bold text-gray-800">Nama Pelajar</h3>
+            
+            <div id="profile-active-title" class="mt-2 inline-block px-4 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-sm shadow-[0_0_10px_rgba(251,191,36,0.8)] animate-pulse">
+                Novice
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+            <h4 class="font-bold text-indigo-800 mb-2 text-sm"><i class="fas fa-tags"></i> Equip Title</h4>
+            <p class="text-xs text-gray-600 mb-3">Choose a title from your unlocked achievements:</p>
+            
+            <div class="flex gap-2">
+                <select id="title-selector" class="flex-1 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 shadow-sm">
+                    <option value="">-- Select a Title --</option>
+                    </select>
+                <button onclick="saveEquippedTitle()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition text-sm">
+                    Equip
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
     <script src="data.js"></script>
 
     <script>
         // URL GOOGLE APPS SCRIPT ANDA
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpiILYW_Intq-Snf3kmUJfNXzUIV6_pbBRxG1f18_TIfZFnYiD4VifnzIJsNAm11jG/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnvJgOBctKbixwLUy84dOlZOHtAS3sKJD3O_HXnzLlCak9MXuWOSX5FHiSDn9zWRtu/exec";
 
         let currentTimer;
         let timeLeft;
@@ -293,70 +385,75 @@
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
 
 // ==========================================
-// BUKU REKOD PENCAPAIAN (LENGKAP 40 ITEM)
+// BUKU REKOD PENCAPAIAN (WAJIB ADA DI ATAS)
 // ==========================================
 const achievementsData = [
     // --- Category 1: Leaderboard & Academics ---
-    { id: "ach_01", name: "First Steps", description: "Collect a total score of 100.", coinReward: 20 },
-    { id: "ach_02", name: "Rising Star", description: "Collect a total score of 1000.", coinReward: 20 },
-    { id: "ach_03", name: "Prodigy", description: "Collect a total score of 5000.", coinReward: 20 },
-    { id: "ach_04", name: "Legendary Scholar", description: "Collect a total score of 10000.", coinReward: 20 },
-    { id: "ach_05", name: "Flawless Victory", description: "Get 5 perfect scores.", coinReward: 20 },
+    { id: "ach_01", name: "First Steps", description: "Collect a total score of 100.", coinReward: 20, tier: "common" },
+    { id: "ach_02", name: "Rising Star", description: "Collect a total score of 1000.", coinReward: 20, tier: "rare" },
+    { id: "ach_03", name: "Prodigy", description: "Collect a total score of 5000.", coinReward: 20, tier: "epic" },
+    { id: "ach_04", name: "Legendary Scholar", description: "Collect a total score of 10000.", coinReward: 20 , tier: "lengendary" },
+    { id: "ach_05", name: "Flawless Victory", description: "Get 5 perfect scores.", coinReward: 20, tier: "lengendary" },
 
     // --- Category 2: Challenge Mode ---
-    { id: "ach_06", name: "First Blood", description: "Send your first challenge.", coinReward: 20 },
-    { id: "ach_07", name: "Challenger", description: "Win 1 challenge.", coinReward: 20 },
-    { id: "ach_08", name: "Gladiator", description: "Win 10 challenges.", coinReward: 20 },
-    { id: "ach_09", name: "Equally Matched", description: "Tie in a challenge.", coinReward: 20 },
+    { id: "ach_06", name: "First Blood", description: "Send your first challenge.", coinReward: 20, tier: "common" },
+    { id: "ach_07", name: "Challenger", description: "Win 1 challenge.", coinReward: 20, tier: "rare" },
+    { id: "ach_08", name: "Gladiator", description: "Win 10 challenges.", coinReward: 20, tier: "legendary" },
+    { id: "ach_09", name: "Equally Matched", description: "Tie in a challenge.", coinReward: 20, tier: "epic" },
 
     // --- Category 3: Economy & Wealth ---
-    { id: "ach_10", name: "Wealthy", description: "Accumulate 1000 coins.", coinReward: 20 },
-    { id: "ach_11", name: "Big Spender", description: "Spend 5000 coins in the shop.", coinReward: 20 },
-    { id: "ach_12", name: "Tycoon", description: "Earn a total of 20000 coins.", coinReward: 20 },
+    { id: "ach_10", name: "Wealthy", description: "Accumulate 1000 coins.", coinReward: 20, tier: "common" },
+    { id: "ach_11", name: "Big Spender", description: "Spend 5000 coins in the shop.", coinReward: 20, tier: "rare" },
+    { id: "ach_12", name: "Tycoon", description: "Earn a total of 20000 coins.", coinReward: 20, tier: "epic" },
 
     // --- Category 4: Avatar Collection ---
-    { id: "ach_13", name: "Collector", description: "Unlock your first avatar.", coinReward: 20 },
-    { id: "ach_14", name: "Fashionista", description: "Unlock 5 different avatars.", coinReward: 20 },
-    { id: "ach_15", name: "Max Level", description: "Upgrade an avatar to Level 10.", coinReward: 20 },
-    { id: "ach_16", name: "Zoo Keeper", description: "Unlock 10 avatars.", coinReward: 20 },
+    { id: "ach_13", name: "Collector", description: "Unlock your first avatar.", coinReward: 20, tier: "common" },
+    { id: "ach_14", name: "Fashionista", description: "Unlock 5 different avatars.", coinReward: 20, tier: "rare" },
+    { id: "ach_15", name: "Legendary Beast", description: "Upgrade an avatar to Level 10.", coinReward: 20, tier: "epic" },
+    { id: "ach_16", name: "King of the Beast", description: "Unlock 10 avatars.", coinReward: 20, tier: "legendary" },
 
     // --- Category 5: Dedication & Events ---
-    { id: "ach_17", name: "Event Participant", description: "Play during a special active event.", coinReward: 20 },
-    { id: "ach_18", name: "Night Owl", description: "Play the game after 10 PM.", coinReward: 20 },
-    { id: "ach_19", name: "Early Bird", description: "Play the game before 7 AM.", coinReward: 20 },
+    { id: "ach_17", name: "Event Participant", description: "Play during a special active event.", coinReward: 20, tier: "common" },
+    { id: "ach_18", name: "Night Owl", description: "Play the game after 10 PM.", coinReward: 20, tier: "common" },
+    { id: "ach_19", name: "Early Bird", description: "Play the game before 7 AM.", coinReward: 20, tier: "common" },
 
     // --- Category 6: Persistence & Streaks ---
-    { id: "ach_20", name: "Weekend Warrior", description: "Play the game on a weekend.", coinReward: 20 },
-    { id: "ach_21", name: "Consistent", description: "Achieve a 3-day login streak.", coinReward: 20 },
-    { id: "ach_22", name: "Dedicated", description: "Achieve a 7-day login streak.", coinReward: 20 },
-    { id: "ach_23", name: "Marathon", description: "Play 5 games in a single day.", coinReward: 20 },
+    { id: "ach_20", name: "Weekend Warrior", description: "Play the game on a weekend.", coinReward: 20, tier: "common" },
+    { id: "ach_21", name: "Consistent", description: "Achieve a 3-day login streak.", coinReward: 20, tier: "rare" },
+    { id: "ach_22", name: "Dedicated", description: "Achieve a 7-day login streak.", coinReward: 20, tier: "epic" },
+    { id: "ach_23", name: "Marathon", description: "Play 5 games in a single day.", coinReward: 20, tier: "epic" },
 
     // --- Category 7: Game Mastery ---
-    { id: "ach_24", name: "Explorer", description: "Play 12 unique games.", coinReward: 20 },
-    { id: "ach_25", name: "High Scorer", description: "Score over 50 in 12 different games.", coinReward: 20 },
-    { id: "ach_26", name: "Comeback King", description: "Win a comeback game.", coinReward: 20 },
-    { id: "ach_27", name: "Perfectionist", description: "Achieve 3 perfect scores.", coinReward: 20 },
+    { id: "ach_24", name: "Explorer", description: "Play 12 unique games.", coinReward: 20, tier: "epic" },
+    { id: "ach_25", name: "High Scorer", description: "Score over 50 in 12 different games.", coinReward: 20, tier: "epic" },
+    { id: "ach_26", name: "Comeback King", description: "Win a comeback game.", coinReward: 20, tier: "epic" },
+    { id: "ach_27", name: "Perfectionist", description: "Achieve 3 perfect scores.", coinReward: 20, tier: "epic" },
 
     // --- Category 8: Social & Advanced Challenges ---
-    { id: "ach_28", name: "Social Butterfly", description: "Send 10 challenges to friends.", coinReward: 20 },
-    { id: "ach_29", name: "Veteran", description: "Complete 50 challenges.", coinReward: 20 },
+    { id: "ach_28", name: "Social Butterfly", description: "Send 10 challenges to friends.", coinReward: 20, tier: "common" },
+    { id: "ach_29", name: "Veteran", description: "Complete 50 challenges.", coinReward: 20, tier: "rare" },
     { id: "ach_30", name: "Good Sport", description: "Lose 5 challenges.", coinReward: 20 },
-    { id: "ach_31", name: "Close Call", description: "Win a challenge by a very narrow margin.", coinReward: 20 },
-    { id: "ach_32", name: "Vengeance", description: "Win a revenge challenge.", coinReward: 20 },
+    { id: "ach_31", name: "Close Call", description: "Win a challenge by a very narrow margin.", coinReward: 20, tier: "epic" },
+    { id: "ach_32", name: "Vengeance", description: "Win a revenge challenge.", coinReward: 20, tier: "legendary" },
 
     // --- Category 9: Advanced Inventory ---
-    { id: "ach_33", name: "Window Shopper", description: "Visit the shop 20 times.", coinReward: 20 },
-    { id: "ach_34", name: "Avatar Master", description: "Collect all standard avatars.", coinReward: 20 },
-    { id: "ach_35", name: "Upgrade Fanatic", description: "Upgrade 5 avatars to Level 5.", coinReward: 20 },
-    { id: "ach_36", name: "Skin Enthusiast", description: "Unlock a rare avatar skin.", coinReward: 20 },
+    { id: "ach_33", name: "Window Shopper", description: "Visit the shop 20 times.", coinReward: 20, tier: "common" },
+    { id: "ach_34", name: "Avatar Master", description: "Collect all standard avatars.", coinReward: 20, tier: "legendary" },
+    { id: "ach_35", name: "Upgrade Fanatic", description: "Upgrade 5 avatars to Level 5.", coinReward: 20, tier: "epic" },
+    { id: "ach_36", name: "Skin Enthusiast", description: "Unlock a rare avatar skin.", coinReward: 20, tier: "legendary" },
 
     // --- Category 10: Special Events & Hidden ---
-    { id: "ach_37", name: "Merdeka!", description: "Log in and play on 31st August.", coinReward: 20 },
-    { id: "ach_38", name: "Happy Holidays", description: "Play during the month of December.", coinReward: 20 },
-    { id: "ach_39", name: "First Step", description: "Log in to the Game Hub for the first time.", coinReward: 20 },
-    { id: "ach_40", name: "Detective", description: "Find a hidden secret in the game hub.", coinReward: 20 }
+    { id: "ach_37", name: "Merdeka!", description: "Log in and play on 31st August.", coinReward: 20, tier: "legendary" },
+    { id: "ach_38", name: "Happy Holidays", description: "Play during the month of December.", coinReward: 20, tier: "epic" },
+    { id: "ach_39", name: "First Step", description: "Log in to the Game Hub for the first time.", coinReward: 20, tier: "common" },
+    { id: "ach_40", name: "Detective", description: "Find a hidden secret in the game hub.", coinReward: 20, tier: "legendary" },
+
+    // --- Category 11: Leaderboard Champions ---
+    { id: "ach_41", name: "Vanguard", description: "Reach Rank 3 in the Leaderboard.", coinReward: 50, tier: "rare" },
+    { id: "ach_42", name: "Titan God ", description: "Reach Rank 2 in the Leaderboard.", coinReward: 100, tier: "epic" },
+    { id: "ach_43", name: "Apex Leaderboard", description: "Reach Rank 1 in the Leaderboard.", coinReward: 200, tier: "legendary" }
 ];
-        
+
        // ==========================================
         // DYNAMIC LIMITED TIME EVENT CALENDAR
         // ==========================================
@@ -500,7 +597,7 @@ const achievementsData = [
             if (foundProfile) {
                 document.getElementById('student-class').value = foundProfile.class;
             }
-        }
+	}
         
 async function startGameHub() {
     const nameInput = document.getElementById('student-name').value.trim();
@@ -557,6 +654,11 @@ async function startGameHub() {
                     totalScore: data.totalScore || 0
                 };
                 studentInfo = { name: nameInput, class: classInput };
+
+		// Pakaikan style title terus ke dashboard
+                if (typeof applyTitleStyle === "function") {
+                    applyTitleStyle(localPlayerData.activeTitle);
+                }
                 await saveCloudPlayerData(); 
             } 
             // C2: Returning Student who already has a PIN
@@ -578,7 +680,7 @@ async function startGameHub() {
                 studentInfo = { name: nameInput, class: classInput };
                 alert("Login Successful! Welcome back, " + nameInput + "!");
             }
-        } // <--- KURUNGAN INI YANG HILANG SEBELUM INI
+        } // <--- 🚨 INILAH KURUNGAN PENUTUP 'SITUATION C' YANG TERTINGGAL TADI 🚨
 
         // --- PROCESS TO OPEN MAIN MENU ---
         document.getElementById('display-name').innerText = studentInfo.name;
@@ -653,18 +755,20 @@ async function loadCloudPlayerData() {
             }
         }
 
-        async function saveCloudPlayerData() {
+async function saveCloudPlayerData() {
             const payload = {
-        action: "updatePlayer",
-        name: studentInfo.name,
-        class: studentInfo.class,
-        passcode: localPlayerData.passcode || "", 
-        coins: localPlayerData.coins,
-        inventory: localPlayerData.inventory,
-        avatars: localPlayerData.avatars,
-        activeAvatar: localPlayerData.activeAvatar, // <--- Pastikan ada KOMA di sini!
-        achievements: localPlayerData.achievements  // <--- PASTIKAN BARIS INI ADA
-    };
+                action: "updatePlayer",
+                name: studentInfo.name,
+                class: studentInfo.class,
+                passcode: localPlayerData.passcode || "", 
+                coins: localPlayerData.coins,
+                inventory: localPlayerData.inventory,
+                avatars: localPlayerData.avatars,
+                activeAvatar: localPlayerData.activeAvatar,
+                achievements: localPlayerData.achievements,
+                activeTitle: localPlayerData.activeTitle // <--- 🚨 TAMBAH BARIS INI
+            };
+
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -1214,10 +1318,17 @@ async function showLeaderboard() {
                 body.innerHTML = "";
                 
                 leaderboard.slice(0, 50).forEach((student, index) => {
+		    let currentRank = index + 1;
                     let rankIcon = `#${index+1}`;
                     if(index === 0) rankIcon = `🥇`;
                     if(index === 1) rankIcon = `🥈`;
                     if(index === 2) rankIcon = `🥉`;
+
+			// 👉 PENGGERA ACHIEVEMENT LEADERBOARD DI SINI 👈
+                    // Jika nama di leaderboard sama dengan nama pemain yang sedang login
+                    if (localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
+                        checkLeaderboardAchievements(currentRank);
+                    }
 
                     // LUKIS AVATAR 3D
                     let avatarHtml = '';
@@ -1621,6 +1732,49 @@ function showAchievementsScreen() {
     }
 }
 
+// ==========================================
+// PENGGERA ACHIEVEMENT LEADERBOARD
+// ==========================================
+function checkLeaderboardAchievements(playerRank) {
+    if (!playerRank || !localPlayerData) return;
+
+    let newlyUnlocked = [];
+
+    // Jika dapat Top 3
+    if (playerRank <= 3 && !localPlayerData.achievements.includes("ach_41")) {
+        localPlayerData.achievements.push("ach_41");
+        localPlayerData.coins += 50; // Hadiah syiling
+        newlyUnlocked.push("Vanguard");
+    }
+    
+    // Jika dapat Top 2
+    if (playerRank <= 2 && !localPlayerData.achievements.includes("ach_42")) {
+        localPlayerData.achievements.push("ach_42");
+        localPlayerData.coins += 100;
+        newlyUnlocked.push("Titan God");
+    }
+    
+    // Jika dapat Rank 1
+    if (playerRank === 1 && !localPlayerData.achievements.includes("ach_43")) {
+        localPlayerData.achievements.push("ach_43");
+        localPlayerData.coins += 200;
+        newlyUnlocked.push("Apex Leaderboard 👑");
+    }
+
+    // Jika ada achievement baharu yang terbuka, keluarkan notifikasi
+    if (newlyUnlocked.length > 0) {
+        alert(`🏆 LEADERBOARD MILESTONE!\nYou unlocked new titles:\n- ${newlyUnlocked.join('\n- ')}`);
+        
+        // Kemaskini pop-up achievement jika ia sedang dibuka
+        renderAchievements(); 
+        
+        // WAJIB: Simpan ke pangkalan data Google Sheet
+        if (typeof saveCloudPlayerData === "function") {
+            saveCloudPlayerData();
+        }
+    }
+}
+
 function closeAchievementsScreen() {
     const menu = document.getElementById('menu-screen');
     const achScreen = document.getElementById('achievements-screen');
@@ -1629,7 +1783,7 @@ function closeAchievementsScreen() {
 }
 
 function renderAchievements() {
-    const grid = document.getElementById('achievements-grid');
+    const grid = document.getElementById('achievements-list');
     if (!grid) return;
     grid.innerHTML = '';
 
@@ -1652,6 +1806,133 @@ function renderAchievements() {
         
         grid.appendChild(card);
     });
+}
+
+// ==========================================
+// FUNGSI PROFIL & TITLE
+// ==========================================
+
+// 1. Buka Pop-up Profil
+function openProfile() {
+    const profileScreen = document.getElementById('profile-screen');
+    const menuScreen = document.getElementById('menu-screen'); // Tukar ikut ID menu Cikgu jika berbeza
+    
+    // Sembunyikan menu, tunjukkan profil
+    if (menuScreen) menuScreen.classList.add('hidden');
+    if (profileScreen) profileScreen.classList.remove('hidden');
+
+    // Kemaskini butiran profil
+    document.getElementById('profile-name').innerText = localPlayerData.name || "Student";
+    
+    // Paparkan Title Semasa
+    const activeTitle = localPlayerData.activeTitle || "Novice";
+    document.getElementById('profile-active-title').innerText = activeTitle;
+
+    // Muatkan pilihan Title dari Achievements
+    loadTitleOptions();
+}
+
+// 2. Tutup Pop-up Profil
+function closeProfile() {
+    const profileScreen = document.getElementById('profile-screen');
+    const menuScreen = document.getElementById('menu-screen');
+    
+    if (profileScreen) profileScreen.classList.add('hidden');
+    if (menuScreen) menuScreen.classList.remove('hidden');
+}
+
+// 3. Masukkan senarai Achievements ke dalam Dropdown
+function loadTitleOptions() {
+    const selector = document.getElementById('title-selector');
+    selector.innerHTML = '<option value="">-- Select a Title --</option>'; // Reset senarai
+
+    // Pastikan pelajar ada pencapaian
+    if (!localPlayerData.achievements || localPlayerData.achievements.length === 0) {
+        const option = document.createElement('option');
+        option.text = "No achievements unlocked yet";
+        option.disabled = true;
+        selector.add(option);
+        return;
+    }
+
+    // Tapis achievementsData, ambil yang pelajar dah unlock sahaja
+    achievementsData.forEach(ach => {
+        if (localPlayerData.achievements.includes(ach.id)) {
+            const option = document.createElement('option');
+            option.value = ach.name;
+            option.text = `🏆 ${ach.name}`;
+            selector.add(option);
+        }
+    });
+}
+
+function saveEquippedTitle() {
+    const selector = document.getElementById('title-selector');
+    const selectedTitleName = selector.value;
+
+    if (!selectedTitleName) {
+        alert("Please select a title first!");
+        return;
+    }
+
+    // 1. Cari data title ini dalam senarai achievementsData untuk tahu tier dia
+    const titleData = achievementsData.find(ach => ach.name === selectedTitleName);
+    const tier = titleData ? titleData.tier : 'common'; // Default ke common jika tak jumpa
+
+    // 2. Simpan dalam data pemain
+    localPlayerData.activeTitle = selectedTitleName;
+    localPlayerData.activeTitleTier = tier;
+
+    // 3. Kemaskini paparan di Dashboard
+    const display = document.getElementById('header-active-title');
+    if (display) {
+        display.innerText = selectedTitleName;
+        
+        // Buang semua class lama
+        display.className = ""; 
+        
+        // Pakai class ikut Tier
+        if (tier === 'legendary') {
+            display.classList.add('title-legendary');
+            display.innerText = "🏆 " + selectedTitleName;
+        } else if (tier === 'epic') {
+            display.classList.add('title-epic', 'text-[10px]');
+            display.innerText = "✨ " + selectedTitleName;
+        } else if (tier === 'rare') {
+            display.classList.add('title-rare', 'text-[10px]');
+            display.innerText = "⭐ " + selectedTitleName;
+        } else {
+            display.classList.add('title-common', 'text-[10px]');
+        }
+    }
+
+    alert(`Title Updated: ${selectedTitleName}`);
+    saveCloudPlayerData(); // Simpan ke Google Sheet
+}
+
+function applyTitleStyle(titleName) {
+    const display = document.getElementById('header-active-title');
+    if (!display) return;
+
+    // Cari data gred (tier) daripada achievementsData
+    const titleData = achievementsData.find(ach => ach.name === titleName);
+    const tier = titleData ? titleData.tier : 'common';
+
+    display.innerText = titleName;
+    display.className = ""; // Reset class lama
+
+    if (tier === 'legendary') {
+        display.classList.add('title-legendary-wow'); // Efek berkilat yang Cikgu suka tu
+        display.innerHTML = `🏆 ${titleName}`;
+    } else if (tier === 'epic') {
+        display.classList.add('title-epic', 'text-[10px]');
+        display.innerHTML = `✨ ${titleName}`;
+    } else if (tier === 'rare') {
+        display.classList.add('title-rare', 'text-[10px]');
+        display.innerHTML = `⭐ ${titleName}`;
+    } else {
+        display.classList.add('title-common', 'text-[10px]');
+    }
 }
 </script>
 </body>
