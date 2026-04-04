@@ -1460,14 +1460,45 @@ async function showLeaderboard() {
             // LUKIS AVATAR 3D
             let avatarHtml = '';
             if (student.activeAvatar) {
+                let active = student.activeAvatar;
+                let avatarKey = active.key || active.id || active.avatarKey;
+                let visualContent = '';
+                let isLegendaryImage = false;
+
+                // Rujuk kamus data.js untuk paksa baca gambar
+                const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
+
+                if (rawData && rawData[avatarKey]) {
+                    const levelInfo = rawData[avatarKey].levels[active.level - 1];
+                    if (levelInfo && levelInfo.img) {
+                        // JIKA ADA GAMBAR (Level 10)
+                        visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto" alt="${active.name}">`;
+                        isLegendaryImage = true;
+                    } else {
+                        // JIKA IKON BIASA
+                        visualContent = `<i class="${levelInfo.icon || active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
+                    }
+                } else {
+                    // Sandaran jika data.js tiada
+                    visualContent = active.img 
+                        ? `<img src="${active.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md legendary-avatar mx-auto">` 
+                        : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
+                    if (active.img) isLegendaryImage = true;
+                }
+
+                // Asingkan CSS: Buang bulatan jika ia gambar (supaya tak cacat/sempit)
+                let containerClass = isLegendaryImage 
+                    ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" // Tiada bulatan untuk imej
+                    : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; // Kekalkan bulatan untuk ikon
+
                 avatarHtml = `
                     <div class="flex flex-col items-center justify-center p-2">
-                        <div class="avatar-3d-glow rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative">
-                            <i class="${student.activeAvatar.icon} text-xl md:text-2xl text-yellow-600"></i>
-                            <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white">Lvl ${student.activeAvatar.level}</div>
+                        <div class="${containerClass}">
+                            ${visualContent}
+                            <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level}</div>
                         </div>
-                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto" title="${student.activeAvatar.name}">
-                            ${student.activeAvatar.name}
+                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto mt-1" title="${active.name}">
+                            ${active.name}
                         </div>
                     </div>
                 `;
