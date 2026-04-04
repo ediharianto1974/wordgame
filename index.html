@@ -502,7 +502,7 @@ function getPlayerLevelInfo(totalScore) {
 function updatePlayerLevelUI() {
     if (!localPlayerData) return;
     
-    let safeTotalScore = parseInt(localPlayerData.totalScore) || 0; 
+    let safeTotalScore = parseInt(localPlayerData.Total) || 0; 
     let playerStats = getPlayerLevelInfo(safeTotalScore);
     
     // Tarik elemen dari HTML yang kita buat tadi
