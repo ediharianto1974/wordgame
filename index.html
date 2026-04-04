@@ -796,7 +796,7 @@ async function startGameHub() {
                     coins: data.coins || 0, inventory: data.inventory || [],
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
                     achievements: data.achievements || [],
-                    totalScore: data.totalScore || 0,
+                    totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
                     activeTitle: data.activeTitle || "Novice" 
                 };
                 studentInfo = { name: nameInput, class: classInput };
@@ -821,7 +821,7 @@ async function startGameHub() {
                     coins: data.coins || 0, inventory: data.inventory || [],
                     avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
                     achievements: data.achievements || [],
-                    totalScore: data.totalScore || 0,
+                    totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
                     activeTitle: data.activeTitle || "Novice" 
                 };
                 studentInfo = { name: nameInput, class: classInput };
