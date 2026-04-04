@@ -403,227 +403,164 @@ missing: [
 // ==========================================
 const avatars = {
     dragon: {
-        id: 'avatar_dragon', maxLevel: 10, theme: 'Fire/Fantasy',
+        id: 'avatar_dragon', maxLevel: 10, theme: 'Grammar & Syntax',
         levels: [
-            { level: 1, name: 'Ignis Egg', price: 300, icon: 'fas fa-egg fa-pulse text-orange-200', desc: 'A warm mystic egg.' },
-            { level: 2, name: 'Cracking Egg', price: 300, icon: 'fas fa-egg fa-shake text-orange-300', desc: 'It is moving! Something is inside.' },
-            { level: 3, name: 'Hatchling', price: 300, icon: 'fas fa-dragon fa-bounce text-orange-400', desc: 'A tiny dragon just hatched!' },
-            { level: 4, name: 'Young Ignis', price: 300, icon: 'fas fa-dragon fa-fade text-orange-500', desc: 'Learning to breathe small sparks.' },
-            { level: 5, name: 'Teen Dragon', price: 300, icon: 'fas fa-dragon fa-beat text-red-400', desc: 'Growing wings and getting stronger.' },
-            { level: 6, name: 'Fierce Dragon', price: 300, icon: 'fas fa-dragon fa-shake text-red-500', desc: 'A strong dragon that flies high.' },
-            { level: 7, name: 'Armored Dragon', price: 300, icon: 'fas fa-dragon fa-bounce text-red-600', desc: 'Its scales are hard as steel.' },
-            { level: 8, name: 'Ancient Dragon', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-700', desc: 'A legendary creature from the old tales.' },
-            { level: 9, name: 'Mythic Dragon', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-800', desc: 'Almost reached its ultimate form!' },
-            // 👇 Kemaskini Level 10 di sini
+            { level: 1, name: 'Noun Egg', price: 300, icon: 'fas fa-egg fa-pulse text-orange-200', desc: 'A basic naming word waiting to hatch.' },
+            { level: 2, name: 'Verb Hatchling', price: 300, icon: 'fas fa-egg fa-shake text-orange-300', desc: 'It is moving! An action word is born.' },
+            { level: 3, name: 'Adjective Drake', price: 300, icon: 'fas fa-dragon fa-bounce text-orange-400', desc: 'Adding colorful descriptions to sentences.' },
+            { level: 4, name: 'Pronoun Flyer', price: 300, icon: 'fas fa-dragon fa-fade text-orange-500', desc: 'Replacing nouns and flying higher.' },
+            { level: 5, name: 'Adverb Dragon', price: 300, icon: 'fas fa-dragon fa-beat text-red-400', desc: 'Modifying actions with incredible speed.' },
+            { level: 6, name: 'Conjunction Beast', price: 300, icon: 'fas fa-dragon fa-shake text-red-500', desc: 'Connecting clauses and strong ideas.' },
+            { level: 7, name: 'Syntax Commander', price: 300, icon: 'fas fa-dragon fa-bounce text-red-600', desc: 'Mastering the order of words.' },
+            { level: 8, name: 'Sentence Ancient', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-700', desc: 'Crafting complex and flawless sentences.' },
+            { level: 9, name: 'Grammar Mythic', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-800', desc: 'The ultimate guardian of language rules.' },
             { 
                 level: 10, 
-                name: 'Supreme Inferno', 
+                name: 'Supreme Grammarian', 
                 price: 300, 
-                img: 'avatar_dragon.png', // <--- Gambar ditambah
+                img: 'avatar_dragon.png', 
                 icon: 'fas fa-dragon fa-beat legendary-avatar text-red-600 drop-shadow-lg text-2xl', 
-                desc: 'The God of Fire! Unstoppable!' 
+                desc: 'The God of Grammar! Unstoppable accuracy!' 
             }
         ]
     },
     owl: {
-        id: 'avatar_owl', maxLevel: 10, theme: 'Wisdom',
+        id: 'avatar_owl', maxLevel: 10, theme: 'Vocabulary & Spelling',
         levels: [
-            { level: 1, name: 'Athena Egg', price: 300, icon: 'fas fa-egg fa-pulse text-blue-200', desc: 'A glowing blue egg.' },
-            { level: 2, name: 'Vibrating Egg', price: 300, icon: 'fas fa-egg fa-shake text-blue-300', desc: 'It vibrates with magic.' },
-            { level: 3, name: 'Baby Owlet', price: 300, icon: 'fas fa-crow fa-bounce text-blue-400', desc: 'A cute little bird.' },
-            { level: 4, name: 'Young Owl', price: 300, icon: 'fas fa-crow fa-fade text-blue-500', desc: 'Starts reading small books.' },
-            { level: 5, name: 'Smart Owl', price: 300, icon: 'fas fa-crow fa-beat text-indigo-400', desc: 'Very smart and observant.' },
-            { level: 6, name: 'Wise Owl', price: 300, icon: 'fas fa-feather fa-shake text-indigo-500', desc: 'A master of vocabulary.' },
-            { level: 7, name: 'Magic Owl', price: 300, icon: 'fas fa-feather fa-bounce text-indigo-600', desc: 'Its feathers glow in the dark.' },
-            { level: 8, name: 'Ancient Owl', price: 300, icon: 'fas fa-feather-alt fa-beat text-indigo-700', desc: 'Knows all the secrets of the world.' },
-            { level: 9, name: 'Mythic Owl', price: 300, icon: 'fas fa-feather-alt fa-pulse text-indigo-800', desc: 'A creature of pure wisdom.' },
-            { 
-                level: 10, 
-                name: 'Supreme Mystic', 
-                price: 300, 
-                img: 'avatar_owl.png', // <--- Gambar ditambah
-                icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', 
-                desc: 'The Guardian of Knowledge!' 
-            }
+            { level: 1, name: 'Phonics Egg', price: 300, icon: 'fas fa-egg fa-pulse text-blue-200', desc: 'The foundation of sounds and letters.' },
+            { level: 2, name: 'Syllable Egg', price: 300, icon: 'fas fa-egg fa-shake text-blue-300', desc: 'Vibrating with word parts.' },
+            { level: 3, name: 'Vocab Owlet', price: 300, icon: 'fas fa-crow fa-bounce text-blue-400', desc: 'Learning its first new words.' },
+            { level: 4, name: 'Spelling Owl', price: 300, icon: 'fas fa-crow fa-fade text-blue-500', desc: 'Never makes a typo.' },
+            { level: 5, name: 'Lexicon Reader', price: 300, icon: 'fas fa-crow fa-beat text-indigo-400', desc: 'Expanding its personal dictionary.' },
+            { level: 6, name: 'Synonym Master', price: 300, icon: 'fas fa-feather fa-shake text-indigo-500', desc: 'Always knows another word for it.' },
+            { level: 7, name: 'Antonym Guardian', price: 300, icon: 'fas fa-feather fa-bounce text-indigo-600', desc: 'Master of opposites and contrasts.' },
+            { level: 8, name: 'Thesaurus Ancient', price: 300, icon: 'fas fa-feather-alt fa-beat text-indigo-700', desc: 'Holds thousands of brilliant words.' },
+            { level: 9, name: 'Etymology Mythic', price: 300, icon: 'fas fa-feather-alt fa-pulse text-indigo-800', desc: 'Knows the true origin of all languages.' },
+            { level: 10, name: 'Supreme Wordsmith', price: 300, icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', desc: 'The Guardian of the Ultimate Dictionary!' }
         ]
     },
     bot: {
-        id: 'avatar_bot', maxLevel: 10, theme: 'Sci-Fi',
+        id: 'avatar_bot', maxLevel: 10, theme: 'Punctuation & Mechanics',
         levels: [
-            { level: 1, name: 'Scrap Cube', price: 300, icon: 'fas fa-box fa-pulse text-gray-300', desc: 'A simple metal box.' },
-            { level: 2, name: 'Buzzing Cube', price: 300, icon: 'fas fa-box fa-shake text-gray-400', desc: 'Processing data...' },
-            { level: 3, name: 'Micro Bot', price: 300, icon: 'fas fa-microchip fa-bounce text-teal-300', desc: 'A tiny moving chip.' },
-            { level: 4, name: 'Mini Bot', price: 300, icon: 'fas fa-robot fa-fade text-teal-400', desc: 'Learning basic grammar.' },
-            { level: 5, name: 'Advanced Bot', price: 300, icon: 'fas fa-robot fa-beat text-teal-500', desc: 'Upgraded system memory.' },
-            { level: 6, name: 'Mecha Buddy', price: 300, icon: 'fas fa-robot fa-shake text-teal-600', desc: 'Your personal AI assistant.' },
-            { level: 7, name: 'Armored Mecha', price: 300, icon: 'fas fa-robot fa-bounce text-blue-500', desc: 'Equipped with heavy armor.' },
-            { level: 8, name: 'Ancient Cyborg', price: 300, icon: 'fas fa-user-astronaut fa-beat text-blue-600', desc: 'A machine from the future.' },
-            { level: 9, name: 'Mythic Cyborg', price: 300, icon: 'fas fa-user-astronaut fa-pulse text-purple-600', desc: 'Scanning the universe.' },
-            { 
-                level: 10, 
-                name: 'Galactic Titan', 
-                price: 300, 
-                img: 'avatar_bot.png', // <--- Gambar ditambah
-                icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', 
-                desc: 'The Ultimate Sci-Fi Guardian!' 
-            }
+            { level: 1, name: 'Comma Cube', price: 300, icon: 'fas fa-box fa-pulse text-gray-300', desc: 'A basic pause in the sentence.' },
+            { level: 2, name: 'Period Processor', price: 300, icon: 'fas fa-box fa-shake text-gray-400', desc: 'Ending sentences with certainty.' },
+            { level: 3, name: 'Hyphen Bot', price: 300, icon: 'fas fa-microchip fa-bounce text-teal-300', desc: 'Connecting compound words.' },
+            { level: 4, name: 'Apostrophe Mecha', price: 300, icon: 'fas fa-robot fa-fade text-teal-400', desc: 'Showing ownership and contractions.' },
+            { level: 5, name: 'Quotation Bot', price: 300, icon: 'fas fa-robot fa-beat text-teal-500', desc: 'Capturing exact dialogue safely.' },
+            { level: 6, name: 'Colon Cyborg', price: 300, icon: 'fas fa-robot fa-shake text-teal-600', desc: 'Introducing lists and explanations.' },
+            { level: 7, name: 'Semicolon Armor', price: 300, icon: 'fas fa-robot fa-bounce text-blue-500', desc: 'Linking independent clauses like a pro.' },
+            { level: 8, name: 'Exclamation Ancient', price: 300, icon: 'fas fa-user-astronaut fa-beat text-blue-600', desc: 'Expressing strong emotions!' },
+            { level: 9, name: 'Mechanics Mythic', price: 300, icon: 'fas fa-user-astronaut fa-pulse text-purple-600', desc: 'Scanning text for perfect formatting.' },
+            { level: 10, name: 'Supreme Editor', price: 300, icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', desc: 'The Flawless Proofreading Titan!' }
         ]
     },
     wolf: {
-        id: 'avatar_wolf', maxLevel: 10, theme: 'Ice/Forest',
+        id: 'avatar_wolf', maxLevel: 10, theme: 'Speaking & Fluency',
         levels: [
-            { level: 1, name: 'Frost Paw', price: 300, icon: 'fas fa-paw fa-pulse text-cyan-200', desc: 'A cold paw print.' },
-            { level: 2, name: 'Glowing Paw', price: 300, icon: 'fas fa-paw fa-shake text-cyan-300', desc: 'The ice is cracking.' },
-            { level: 3, name: 'Snow Pup', price: 300, icon: 'fas fa-dog fa-bounce text-cyan-400', desc: 'A playful snowy puppy.' },
-            { level: 4, name: 'Young Wolf', price: 300, icon: 'fas fa-dog fa-fade text-cyan-500', desc: 'Hunting for correct words.' },
-            { level: 5, name: 'Teen Wolf', price: 300, icon: 'fas fa-dog fa-beat text-blue-400', desc: 'Running through the snow.' },
-            { level: 6, name: 'Adult Snow Wolf', price: 300, icon: 'fas fa-dog fa-shake text-blue-500', desc: 'A loyal and strong companion.' },
-            { level: 7, name: 'Alpha Wolf', price: 300, icon: 'fas fa-dog fa-bounce text-blue-600', desc: 'The leader of the pack.' },
-            { level: 8, name: 'Ancient Wolf', price: 300, icon: 'fas fa-moon fa-beat text-blue-700', desc: 'Howling at the midnight moon.' },
-            { level: 9, name: 'Mythic Wolf', price: 300, icon: 'fas fa-moon fa-pulse text-blue-800', desc: 'Surrounded by a blizzard.' },
-            { 
-                level: 10, 
-                name: 'Supreme Fenrir', 
-                price: 300, 
-                img: 'avatar_wolf.png', // <--- Gambar ditambah
-                icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', 
-                desc: 'The Legendary Ice Beast!' 
-            }
+            { level: 1, name: 'Whisper Paw', price: 300, icon: 'fas fa-paw fa-pulse text-cyan-200', desc: 'Practicing quiet pronunciation.' },
+            { level: 2, name: 'Echo Paw', price: 300, icon: 'fas fa-paw fa-shake text-cyan-300', desc: 'Repeating native sounds perfectly.' },
+            { level: 3, name: 'Vocal Pup', price: 300, icon: 'fas fa-dog fa-bounce text-cyan-400', desc: 'Speaking short phrases with joy.' },
+            { level: 4, name: 'Chatter Wolf', price: 300, icon: 'fas fa-dog fa-fade text-cyan-500', desc: 'Engaging in small talk.' },
+            { level: 5, name: 'Dialogue Hunter', price: 300, icon: 'fas fa-dog fa-beat text-blue-400', desc: 'Mastering conversational English.' },
+            { level: 6, name: 'Fluency Alpha', price: 300, icon: 'fas fa-dog fa-shake text-blue-500', desc: 'Speaking smoothly without hesitation.' },
+            { level: 7, name: 'Accent Master', price: 300, icon: 'fas fa-dog fa-bounce text-blue-600', desc: 'Adapting to different English intonations.' },
+            { level: 8, name: 'Articulation Ancient', price: 300, icon: 'fas fa-moon fa-beat text-blue-700', desc: 'Clear and powerful speech delivery.' },
+            { level: 9, name: 'Eloquence Mythic', price: 300, icon: 'fas fa-moon fa-pulse text-blue-800', desc: 'Persuading the pack with words.' },
+            { level: 10, name: 'Supreme Orator', price: 300, icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', desc: 'The Legendary Voice of the Forest!' }
         ]
     },
     phoenix: {
-        id: 'avatar_phoenix', maxLevel: 10, theme: 'Rebirth',
+        id: 'avatar_phoenix', maxLevel: 10, theme: 'Writing & Composition',
         levels: [
-            { level: 1, name: 'Ash Feather', price: 300, icon: 'fas fa-fire fa-pulse text-yellow-300', desc: 'A feather found in the ashes.' },
-            { level: 2, name: 'Sparking Feather', price: 300, icon: 'fas fa-fire fa-shake text-yellow-400', desc: 'It generates heat.' },
-            { level: 3, name: 'Fire Chick', price: 300, icon: 'fas fa-dove fa-bounce text-orange-300', desc: 'A tiny bird of flame.' },
-            { level: 4, name: 'Young Fire Bird', price: 300, icon: 'fas fa-dove fa-fade text-orange-400', desc: 'Learning to fly.' },
-            { level: 5, name: 'Blazing Bird', price: 300, icon: 'fas fa-dove fa-beat text-orange-500', desc: 'Its wings are made of fire.' },
-            { level: 6, name: 'Adult Fire Bird', price: 300, icon: 'fas fa-dove fa-shake text-red-400', desc: 'Beautiful and dangerous.' },
-            { level: 7, name: 'Master Phoenix', price: 300, icon: 'fas fa-dove fa-bounce text-red-500', desc: 'The bird of rebirth.' },
-            { level: 8, name: 'Ancient Phoenix', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-600', desc: 'A legend from the volcanoes.' },
-            { level: 9, name: 'Mythic Phoenix', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-700', desc: 'Immortal flames.' },
-            { 
-                level: 10, 
-                name: 'Supreme Phoenix', 
-                price: 300, 
-                img: 'avatar_phoenix.png', // <--- Gambar ditambah
-                icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', 
-                desc: 'The Immortal Sun Bird!' 
-            }
+            { level: 1, name: 'Idea Feather', price: 300, icon: 'fas fa-fire fa-pulse text-yellow-300', desc: 'A tiny spark of a writing topic.' },
+            { level: 2, name: 'Drafting Feather', price: 300, icon: 'fas fa-fire fa-shake text-yellow-400', desc: 'Putting first thoughts on paper.' },
+            { level: 3, name: 'Outline Chick', price: 300, icon: 'fas fa-dove fa-bounce text-orange-300', desc: 'Organizing the essay structure.' },
+            { level: 4, name: 'Paragraph Bird', price: 300, icon: 'fas fa-dove fa-fade text-orange-400', desc: 'Writing strong topic sentences.' },
+            { level: 5, name: 'Essay Flier', price: 300, icon: 'fas fa-dove fa-beat text-orange-500', desc: 'Connecting paragraphs with transitions.' },
+            { level: 6, name: 'Revision Bird', price: 300, icon: 'fas fa-dove fa-shake text-red-400', desc: 'Improving and rewriting better drafts.' },
+            { level: 7, name: 'Article Master', price: 300, icon: 'fas fa-dove fa-bounce text-red-500', desc: 'Publishing captivating articles.' },
+            { level: 8, name: 'Manuscript Ancient', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-600', desc: 'A legend in creative writing.' },
+            { level: 9, name: 'Bestseller Mythic', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-700', desc: 'Words that live forever.' },
+            { level: 10, name: 'Supreme Author', price: 300, icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', desc: 'The Immortal Master of Stories!' }
         ]
     },
     leviathan: {
-        id: 'avatar_leviathan', maxLevel: 10, theme: 'Ocean',
+        id: 'avatar_leviathan', maxLevel: 10, theme: 'Reading & Comprehension',
         levels: [
-            { level: 1, name: 'Aqua Drop', price: 300, icon: 'fas fa-tint fa-pulse text-blue-200', desc: 'A magical water drop.' },
-            { level: 2, name: 'Bubbling Drop', price: 300, icon: 'fas fa-tint fa-shake text-blue-300', desc: 'The water is moving.' },
-            { level: 3, name: 'Baby Fish', price: 300, icon: 'fas fa-fish fa-bounce text-teal-300', desc: 'A tiny fish swimming.' },
-            { level: 4, name: 'Young Spirit', price: 300, icon: 'fas fa-fish fa-fade text-teal-400', desc: 'Exploring the dictionary.' },
-            { level: 5, name: 'River Spirit', price: 300, icon: 'fas fa-fish fa-beat text-teal-500', desc: 'A fast swimmer.' },
-            { level: 6, name: 'Ocean Spirit', price: 300, icon: 'fas fa-fish fa-shake text-teal-600', desc: 'Protector of the reefs.' },
-            { level: 7, name: 'Master Leviathan', price: 300, icon: 'fas fa-water fa-bounce text-blue-500', desc: 'Controlling the waves.' },
-            { level: 8, name: 'Ancient Leviathan', price: 300, icon: 'fas fa-water fa-beat text-blue-600', desc: 'A monster of the deep.' },
-            { level: 9, name: 'Mythic Leviathan', price: 300, icon: 'fas fa-water fa-pulse text-blue-700', desc: 'Creating whirlpools.' },
-            { 
-                level: 10, 
-                name: 'Supreme Ocean King', 
-                price: 300, 
-                img: 'avatar_leviathan.png', // <--- Gambar ditambah
-                icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', 
-                desc: 'Unstoppable wave of knowledge!' 
-            }
+            { level: 1, name: 'Context Drop', price: 300, icon: 'fas fa-tint fa-pulse text-blue-200', desc: 'Guessing meaning from context.' },
+            { level: 2, name: 'Skimming Drop', price: 300, icon: 'fas fa-tint fa-shake text-blue-300', desc: 'Reading fast to get the main idea.' },
+            { level: 3, name: 'Scanning Fish', price: 300, icon: 'fas fa-fish fa-bounce text-teal-300', desc: 'Looking closely for specific facts.' },
+            { level: 4, name: 'Inference Spirit', price: 300, icon: 'fas fa-fish fa-fade text-teal-400', desc: 'Reading between the lines.' },
+            { level: 5, name: 'Summary Swimmer', price: 300, icon: 'fas fa-fish fa-beat text-teal-500', desc: 'Condensing long texts easily.' },
+            { level: 6, name: 'Analysis Spirit', price: 300, icon: 'fas fa-fish fa-shake text-teal-600', desc: 'Breaking down complex paragraphs.' },
+            { level: 7, name: 'Comprehension Master', price: 300, icon: 'fas fa-water fa-bounce text-blue-500', desc: 'Understanding the deepest texts.' },
+            { level: 8, name: 'Literature Ancient', price: 300, icon: 'fas fa-water fa-beat text-blue-600', desc: 'Devouring classic novels.' },
+            { level: 9, name: 'Epic Mythic', price: 300, icon: 'fas fa-water fa-pulse text-blue-700', desc: 'Mastering poetry and prose.' },
+            { level: 10, name: 'Supreme Scholar', price: 300, icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', desc: 'An unstoppable wave of knowledge!' }
         ]
     },
     unicorn: {
-        id: 'avatar_unicorn', maxLevel: 10, theme: 'Light/Magic',
+        id: 'avatar_unicorn', maxLevel: 10, theme: 'Figurative Language',
         levels: [
-            { level: 1, name: 'Star Dust', price: 300, icon: 'fas fa-star fa-pulse text-pink-200', desc: 'Magical shining dust.' },
-            { level: 2, name: 'Glowing Dust', price: 300, icon: 'fas fa-star fa-shake text-pink-300', desc: 'Gathering light.' },
-            { level: 3, name: 'Baby Pony', price: 300, icon: 'fas fa-horse fa-bounce text-pink-400', desc: 'A cute little pony.' },
-            { level: 4, name: 'Young Pony', price: 300, icon: 'fas fa-horse fa-fade text-pink-500', desc: 'A tiny horn is growing.' },
-            { level: 5, name: 'Mystic Pony', price: 300, icon: 'fas fa-horse fa-beat text-purple-400', desc: 'Starts using magic.' },
-            { level: 6, name: 'Adult Unicorn', price: 300, icon: 'fas fa-horse fa-shake text-purple-500', desc: 'A beautiful magical creature.' },
-            { level: 7, name: 'Master Unicorn', price: 300, icon: 'fas fa-horse-head fa-bounce text-purple-600', desc: 'Running on rainbows.' },
-            { level: 8, name: 'Ancient Unicorn', price: 300, icon: 'fas fa-horse-head fa-beat text-purple-700', desc: 'A creature of pure light.' },
-            { level: 9, name: 'Mythic Unicorn', price: 300, icon: 'fas fa-horse-head fa-pulse text-pink-600', desc: 'Surrounded by stars.' },
-            { 
-                level: 10, 
-                name: 'Supreme Celestial', 
-                price: 300, 
-                img: 'avatar_unicorn.png', // <--- Gambar ditambah
-                icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', 
-                desc: 'The most beautiful magic!' 
-            }
+            { level: 1, name: 'Rhyme Dust', price: 300, icon: 'fas fa-star fa-pulse text-pink-200', desc: 'Words that sound magically alike.' },
+            { level: 2, name: 'Simile Dust', price: 300, icon: 'fas fa-star fa-shake text-pink-300', desc: 'As bright as a glowing star.' },
+            { level: 3, name: 'Metaphor Pony', price: 300, icon: 'fas fa-horse fa-bounce text-pink-400', desc: 'A pony that IS a star.' },
+            { level: 4, name: 'Personification Pony', price: 300, icon: 'fas fa-horse fa-fade text-pink-500', desc: 'Making non-human things alive.' },
+            { level: 5, name: 'Idiom Mystic', price: 300, icon: 'fas fa-horse fa-beat text-purple-400', desc: 'Raining cats and dogs!' },
+            { level: 6, name: 'Hyperbole Unicorn', price: 300, icon: 'fas fa-horse fa-shake text-purple-500', desc: 'The fastest creature in a million years.' },
+            { level: 7, name: 'Alliteration Master', price: 300, icon: 'fas fa-horse-head fa-bounce text-purple-600', desc: 'Creating cool consonant combos.' },
+            { level: 8, name: 'Poetic Ancient', price: 300, icon: 'fas fa-horse-head fa-beat text-purple-700', desc: 'Master of verses and stanzas.' },
+            { level: 9, name: 'Inspiration Mythic', price: 300, icon: 'fas fa-horse-head fa-pulse text-pink-600', desc: 'Sparking creative writing ideas.' },
+            { level: 10, name: 'Supreme Bard', price: 300, icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', desc: 'The most beautiful magic in literature!' }
         ]
     },
     golem: {
-        id: 'avatar_golem', maxLevel: 10, theme: 'Earth/Stone',
+        id: 'avatar_golem', maxLevel: 10, theme: 'Tenses & Structure',
         levels: [
-            { level: 1, name: 'Mud Pebble', price: 300, icon: 'fas fa-circle fa-pulse text-gray-400', desc: 'A heavy little stone.' },
-            { level: 2, name: 'Shaking Pebble', price: 300, icon: 'fas fa-circle fa-shake text-gray-500', desc: 'The stone is rolling.' },
-            { level: 3, name: 'Baby Rock', price: 300, icon: 'fas fa-cube fa-bounce text-gray-600', desc: 'A square rock.' },
-            { level: 4, name: 'Young Stone', price: 300, icon: 'fas fa-cube fa-fade text-gray-700', desc: 'Getting heavier.' },
-            { level: 5, name: 'Rock Guardian', price: 300, icon: 'fas fa-cubes fa-beat text-gray-800', desc: 'Multiple rocks combined.' },
-            { level: 6, name: 'Iron Golem', price: 300, icon: 'fas fa-cubes fa-shake text-gray-900', desc: 'Solid and unbreakable.' },
-            { level: 7, name: 'Master Golem', price: 300, icon: 'fas fa-mountain fa-bounce text-gray-600', desc: 'As big as a hill.' },
-            { level: 8, name: 'Ancient Golem', price: 300, icon: 'fas fa-mountain fa-beat text-gray-700', desc: 'Covered in ancient moss.' },
-            { level: 9, name: 'Mythic Golem', price: 300, icon: 'fas fa-mountain fa-pulse text-gray-800', desc: 'A walking mountain.' },
-            { 
-                level: 10, 
-                name: 'Supreme Obsidian', 
-                price: 300, 
-                img: 'avatar_golem.png', // <--- Gambar ditambah
-                icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', 
-                desc: 'The Earth Shaker!' 
-            }
+            { level: 1, name: 'Past Pebble', price: 300, icon: 'fas fa-circle fa-pulse text-gray-400', desc: 'Actions that already happened.' },
+            { level: 2, name: 'Present Pebble', price: 300, icon: 'fas fa-circle fa-shake text-gray-500', desc: 'Actions happening right now.' },
+            { level: 3, name: 'Future Rock', price: 300, icon: 'fas fa-cube fa-bounce text-gray-600', desc: 'Plans that will happen tomorrow.' },
+            { level: 4, name: 'Continuous Stone', price: 300, icon: 'fas fa-cube fa-fade text-gray-700', desc: 'Rolling with the -ing verbs.' },
+            { level: 5, name: 'Perfect Tense Guardian', price: 300, icon: 'fas fa-cubes fa-beat text-gray-800', desc: 'Has mastered the past participles.' },
+            { level: 6, name: 'Active Voice Iron', price: 300, icon: 'fas fa-cubes fa-shake text-gray-900', desc: 'Direct, clear, and unbreakable.' },
+            { level: 7, name: 'Passive Voice Golem', price: 300, icon: 'fas fa-mountain fa-bounce text-gray-600', desc: 'Actions are being done to it.' },
+            { level: 8, name: 'Conditional Ancient', price: 300, icon: 'fas fa-mountain fa-beat text-gray-700', desc: 'If you study, you will succeed.' },
+            { level: 9, name: 'Structure Mythic', price: 300, icon: 'fas fa-mountain fa-pulse text-gray-800', desc: 'A walking mountain of solid grammar.' },
+            { level: 10, name: 'Supreme Foundation', price: 300, icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', desc: 'The Unshakeable Earth Shaker!' }
         ]
     },
     fairy: {
-        id: 'avatar_fairy', maxLevel: 10, theme: 'Nature',
+        id: 'avatar_fairy', maxLevel: 10, theme: 'Listening & Communication',
         levels: [
-            { level: 1, name: 'Magic Seedling', price: 300, icon: 'fas fa-seedling fa-pulse text-green-300', desc: 'A tiny plant.' },
-            { level: 2, name: 'Sprouting Seed', price: 300, icon: 'fas fa-seedling fa-shake text-green-400', desc: 'Leaves are growing.' },
-            { level: 3, name: 'Baby Sprite', price: 300, icon: 'fas fa-leaf fa-bounce text-green-500', desc: 'A flying leaf.' },
-            { level: 4, name: 'Young Sprite', price: 300, icon: 'fas fa-leaf fa-fade text-green-600', desc: 'Playing in the wind.' },
-            { level: 5, name: 'Forest Sprite', price: 300, icon: 'fas fa-tree fa-beat text-green-700', desc: 'Planting new trees.' },
-            { level: 6, name: 'Adult Fairy', price: 300, icon: 'fas fa-tree fa-shake text-green-800', desc: 'Protector of the woods.' },
-            { level: 7, name: 'Master Fairy', price: 300, icon: 'fas fa-tree fa-bounce text-teal-600', desc: 'Controlling the vines.' },
-            { level: 8, name: 'Ancient Fairy', price: 300, icon: 'fas fa-tree fa-beat text-teal-700', desc: 'As old as the forest.' },
-            { level: 9, name: 'Mythic Fairy', price: 300, icon: 'fas fa-tree fa-pulse text-teal-800', desc: 'Glowing with nature magic.' },
-            { 
-                level: 10, 
-                name: 'Supreme Sylph', 
-                price: 300, 
-                img: 'avatar_fairy.png', // <--- Gambar ditambah
-                icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', 
-                desc: 'The Queen of Nature!' 
-            }
+            { level: 1, name: 'Sound Seedling', price: 300, icon: 'fas fa-seedling fa-pulse text-green-300', desc: 'Catching the first English sounds.' },
+            { level: 2, name: 'Tune Sprout', price: 300, icon: 'fas fa-seedling fa-shake text-green-400', desc: 'Listening to the rhythm of sentences.' },
+            { level: 3, name: 'Audio Sprite', price: 300, icon: 'fas fa-leaf fa-bounce text-green-500', desc: 'Understanding short instructions.' },
+            { level: 4, name: 'Podcast Sprite', price: 300, icon: 'fas fa-leaf fa-fade text-green-600', desc: 'Enjoying English stories in the wind.' },
+            { level: 5, name: 'Conversation Fairy', price: 300, icon: 'fas fa-tree fa-beat text-green-700', desc: 'Planting ideas through dialogue.' },
+            { level: 6, name: 'Active Listener', price: 300, icon: 'fas fa-tree fa-shake text-green-800', desc: 'Paying close attention to details.' },
+            { level: 7, name: 'Nuance Master', price: 300, icon: 'fas fa-tree fa-bounce text-teal-600', desc: 'Understanding tone and emotion.' },
+            { level: 8, name: 'Interpreter Ancient', price: 300, icon: 'fas fa-tree fa-beat text-teal-700', desc: 'Translating thoughts seamlessly.' },
+            { level: 9, name: 'Polyglot Mythic', price: 300, icon: 'fas fa-tree fa-pulse text-teal-800', desc: 'Glowing with communication magic.' },
+            { level: 10, name: 'Supreme Communicator', price: 300, icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', desc: 'The Queen of Global Connections!' }
         ]
     },
     lion: {
-        id: 'avatar_lion', maxLevel: 10, theme: 'Thunder/Electric',
+        id: 'avatar_lion', maxLevel: 10, theme: 'Debate & Persuasion',
         levels: [
-            { level: 1, name: 'Spark Kitten', price: 300, icon: 'fas fa-bolt fa-pulse text-yellow-200', desc: 'A tiny static shock.' },
-            { level: 2, name: 'Static Kitten', price: 300, icon: 'fas fa-bolt fa-shake text-yellow-300', desc: 'Gathering electricity.' },
-            { level: 3, name: 'Baby Volt Cat', price: 300, icon: 'fas fa-cat fa-bounce text-yellow-400', desc: 'A fast little feline.' },
-            { level: 4, name: 'Young Volt Cat', price: 300, icon: 'fas fa-cat fa-fade text-yellow-500', desc: 'Running with sparks.' },
-            { level: 5, name: 'Teen Volt Cat', price: 300, icon: 'fas fa-cat fa-beat text-orange-400', desc: 'Faster than lightning.' },
-            { level: 6, name: 'Thunder Cat', price: 300, icon: 'fas fa-cat fa-shake text-orange-500', desc: 'Roaring with thunder.' },
-            { level: 7, name: 'Master Lion', price: 300, icon: 'fas fa-crown fa-bounce text-yellow-500', desc: 'The king of the storm.' },
-            { level: 8, name: 'Ancient Lion', price: 300, icon: 'fas fa-crown fa-beat text-yellow-600', desc: 'A legend of the sky.' },
-            { level: 9, name: 'Mythic Lion', price: 300, icon: 'fas fa-crown fa-pulse text-orange-600', desc: 'Summoning lightning bolts.' },
-            { 
-                level: 10, 
-                name: 'Supreme Thunder God', 
-                price: 300, 
-                img: 'avatar_lion.png', // <--- Gambar ditambah
-                icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', 
-                desc: 'The Absolute King of Storms!' 
-            }
+            { level: 1, name: 'Claim Kitten', price: 300, icon: 'fas fa-bolt fa-pulse text-yellow-200', desc: 'Making a tiny but valid point.' },
+            { level: 2, name: 'Reason Kitten', price: 300, icon: 'fas fa-bolt fa-shake text-yellow-300', desc: 'Backing up claims with "because".' },
+            { level: 3, name: 'Logic Cub', price: 300, icon: 'fas fa-cat fa-bounce text-yellow-400', desc: 'Thinking fast and making sense.' },
+            { level: 4, name: 'Evidence Volt Cat', price: 300, icon: 'fas fa-cat fa-fade text-yellow-500', desc: 'Running with facts and statistics.' },
+            { level: 5, name: 'Argument Cat', price: 300, icon: 'fas fa-cat fa-beat text-orange-400', desc: 'Building strong, shocking cases.' },
+            { level: 6, name: 'Rebuttal Lion', price: 300, icon: 'fas fa-cat fa-shake text-orange-500', desc: 'Countering opposing views with thunder.' },
+            { level: 7, name: 'Persuasion Master', price: 300, icon: 'fas fa-crown fa-bounce text-yellow-500', desc: 'Convincing the crowd easily.' },
+            { level: 8, name: 'Rhetoric Ancient', price: 300, icon: 'fas fa-crown fa-beat text-yellow-600', desc: 'A legendary speaker of the sky.' },
+            { level: 9, name: 'Debate Mythic', price: 300, icon: 'fas fa-crown fa-pulse text-orange-600', desc: 'Summoning lightning-fast responses.' },
+            { level: 10, name: 'Supreme Statesman', price: 300, icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', desc: 'The Absolute King of the Stage!' }
         ]
     }
 };
+
 // ==========================================
 // 3. DATA ITEM KEDAI (BADGE & EDU ITEMS)
 // ==========================================
