@@ -402,7 +402,7 @@ missing: [
 // 2. DATA AVATAR / GUARDIANS (10 JENIS & 10 LEVEL)
 // ==========================================
 const avatars = {
-dragon: {
+    dragon: {
         id: 'avatar_dragon', maxLevel: 10, theme: 'Fire/Fantasy',
         levels: [
             { level: 1, name: 'Ignis Egg', price: 300, icon: 'fas fa-egg fa-pulse text-orange-200', desc: 'A warm mystic egg.' },
@@ -419,7 +419,7 @@ dragon: {
                 level: 10, 
                 name: 'Supreme Inferno', 
                 price: 300, 
-                img: 'avatar_dragon.png', // <--- Tambah gambar di sini
+                img: 'avatar_dragon.png', // <--- Gambar ditambah
                 icon: 'fas fa-dragon fa-beat legendary-avatar text-red-600 drop-shadow-lg text-2xl', 
                 desc: 'The God of Fire! Unstoppable!' 
             }
@@ -437,7 +437,14 @@ dragon: {
             { level: 7, name: 'Magic Owl', price: 300, icon: 'fas fa-feather fa-bounce text-indigo-600', desc: 'Its feathers glow in the dark.' },
             { level: 8, name: 'Ancient Owl', price: 300, icon: 'fas fa-feather-alt fa-beat text-indigo-700', desc: 'Knows all the secrets of the world.' },
             { level: 9, name: 'Mythic Owl', price: 300, icon: 'fas fa-feather-alt fa-pulse text-indigo-800', desc: 'A creature of pure wisdom.' },
-            { level: 10, name: 'Supreme Mystic', price: 300, icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', desc: 'The Guardian of Knowledge!' }
+            { 
+                level: 10, 
+                name: 'Supreme Mystic', 
+                price: 300, 
+                img: 'avatar_owl.png', // <--- Gambar ditambah
+                icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', 
+                desc: 'The Guardian of Knowledge!' 
+            }
         ]
     },
     bot: {
@@ -452,7 +459,14 @@ dragon: {
             { level: 7, name: 'Armored Mecha', price: 300, icon: 'fas fa-robot fa-bounce text-blue-500', desc: 'Equipped with heavy armor.' },
             { level: 8, name: 'Ancient Cyborg', price: 300, icon: 'fas fa-user-astronaut fa-beat text-blue-600', desc: 'A machine from the future.' },
             { level: 9, name: 'Mythic Cyborg', price: 300, icon: 'fas fa-user-astronaut fa-pulse text-purple-600', desc: 'Scanning the universe.' },
-            { level: 10, name: 'Galactic Titan', price: 300, icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', desc: 'The Ultimate Sci-Fi Guardian!' }
+            { 
+                level: 10, 
+                name: 'Galactic Titan', 
+                price: 300, 
+                img: 'avatar_bot.png', // <--- Gambar ditambah
+                icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', 
+                desc: 'The Ultimate Sci-Fi Guardian!' 
+            }
         ]
     },
     wolf: {
@@ -467,7 +481,14 @@ dragon: {
             { level: 7, name: 'Alpha Wolf', price: 300, icon: 'fas fa-dog fa-bounce text-blue-600', desc: 'The leader of the pack.' },
             { level: 8, name: 'Ancient Wolf', price: 300, icon: 'fas fa-moon fa-beat text-blue-700', desc: 'Howling at the midnight moon.' },
             { level: 9, name: 'Mythic Wolf', price: 300, icon: 'fas fa-moon fa-pulse text-blue-800', desc: 'Surrounded by a blizzard.' },
-            { level: 10, name: 'Supreme Fenrir', price: 300, icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', desc: 'The Legendary Ice Beast!' }
+            { 
+                level: 10, 
+                name: 'Supreme Fenrir', 
+                price: 300, 
+                img: 'avatar_wolf.png', // <--- Gambar ditambah
+                icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', 
+                desc: 'The Legendary Ice Beast!' 
+            }
         ]
     },
     phoenix: {
@@ -482,7 +503,14 @@ dragon: {
             { level: 7, name: 'Master Phoenix', price: 300, icon: 'fas fa-dove fa-bounce text-red-500', desc: 'The bird of rebirth.' },
             { level: 8, name: 'Ancient Phoenix', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-600', desc: 'A legend from the volcanoes.' },
             { level: 9, name: 'Mythic Phoenix', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-700', desc: 'Immortal flames.' },
-            { level: 10, name: 'Supreme Phoenix', price: 300, icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', desc: 'The Immortal Sun Bird!' }
+            { 
+                level: 10, 
+                name: 'Supreme Phoenix', 
+                price: 300, 
+                img: 'avatar_phoenix.png', // <--- Gambar ditambah
+                icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', 
+                desc: 'The Immortal Sun Bird!' 
+            }
         ]
     },
     leviathan: {
@@ -497,7 +525,14 @@ dragon: {
             { level: 7, name: 'Master Leviathan', price: 300, icon: 'fas fa-water fa-bounce text-blue-500', desc: 'Controlling the waves.' },
             { level: 8, name: 'Ancient Leviathan', price: 300, icon: 'fas fa-water fa-beat text-blue-600', desc: 'A monster of the deep.' },
             { level: 9, name: 'Mythic Leviathan', price: 300, icon: 'fas fa-water fa-pulse text-blue-700', desc: 'Creating whirlpools.' },
-            { level: 10, name: 'Supreme Ocean King', price: 300, icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', desc: 'Unstoppable wave of knowledge!' }
+            { 
+                level: 10, 
+                name: 'Supreme Ocean King', 
+                price: 300, 
+                img: 'avatar_leviathan.png', // <--- Gambar ditambah
+                icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', 
+                desc: 'Unstoppable wave of knowledge!' 
+            }
         ]
     },
     unicorn: {
@@ -512,7 +547,14 @@ dragon: {
             { level: 7, name: 'Master Unicorn', price: 300, icon: 'fas fa-horse-head fa-bounce text-purple-600', desc: 'Running on rainbows.' },
             { level: 8, name: 'Ancient Unicorn', price: 300, icon: 'fas fa-horse-head fa-beat text-purple-700', desc: 'A creature of pure light.' },
             { level: 9, name: 'Mythic Unicorn', price: 300, icon: 'fas fa-horse-head fa-pulse text-pink-600', desc: 'Surrounded by stars.' },
-            { level: 10, name: 'Supreme Celestial', price: 300, icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', desc: 'The most beautiful magic!' }
+            { 
+                level: 10, 
+                name: 'Supreme Celestial', 
+                price: 300, 
+                img: 'avatar_unicorn.png', // <--- Gambar ditambah
+                icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', 
+                desc: 'The most beautiful magic!' 
+            }
         ]
     },
     golem: {
@@ -527,7 +569,14 @@ dragon: {
             { level: 7, name: 'Master Golem', price: 300, icon: 'fas fa-mountain fa-bounce text-gray-600', desc: 'As big as a hill.' },
             { level: 8, name: 'Ancient Golem', price: 300, icon: 'fas fa-mountain fa-beat text-gray-700', desc: 'Covered in ancient moss.' },
             { level: 9, name: 'Mythic Golem', price: 300, icon: 'fas fa-mountain fa-pulse text-gray-800', desc: 'A walking mountain.' },
-            { level: 10, name: 'Supreme Obsidian', price: 300, icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', desc: 'The Earth Shaker!' }
+            { 
+                level: 10, 
+                name: 'Supreme Obsidian', 
+                price: 300, 
+                img: 'avatar_golem.png', // <--- Gambar ditambah
+                icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', 
+                desc: 'The Earth Shaker!' 
+            }
         ]
     },
     fairy: {
@@ -542,7 +591,14 @@ dragon: {
             { level: 7, name: 'Master Fairy', price: 300, icon: 'fas fa-tree fa-bounce text-teal-600', desc: 'Controlling the vines.' },
             { level: 8, name: 'Ancient Fairy', price: 300, icon: 'fas fa-tree fa-beat text-teal-700', desc: 'As old as the forest.' },
             { level: 9, name: 'Mythic Fairy', price: 300, icon: 'fas fa-tree fa-pulse text-teal-800', desc: 'Glowing with nature magic.' },
-            { level: 10, name: 'Supreme Sylph', price: 300, icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', desc: 'The Queen of Nature!' }
+            { 
+                level: 10, 
+                name: 'Supreme Sylph', 
+                price: 300, 
+                img: 'avatar_fairy.png', // <--- Gambar ditambah
+                icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', 
+                desc: 'The Queen of Nature!' 
+            }
         ]
     },
     lion: {
@@ -557,11 +613,17 @@ dragon: {
             { level: 7, name: 'Master Lion', price: 300, icon: 'fas fa-crown fa-bounce text-yellow-500', desc: 'The king of the storm.' },
             { level: 8, name: 'Ancient Lion', price: 300, icon: 'fas fa-crown fa-beat text-yellow-600', desc: 'A legend of the sky.' },
             { level: 9, name: 'Mythic Lion', price: 300, icon: 'fas fa-crown fa-pulse text-orange-600', desc: 'Summoning lightning bolts.' },
-            { level: 10, name: 'Supreme Thunder God', price: 300, icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', desc: 'The Absolute King of Storms!' }
+            { 
+                level: 10, 
+                name: 'Supreme Thunder God', 
+                price: 300, 
+                img: 'avatar_lion.png', // <--- Gambar ditambah
+                icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', 
+                desc: 'The Absolute King of Storms!' 
+            }
         ]
     }
 };
-
 // ==========================================
 // 3. DATA ITEM KEDAI (BADGE & EDU ITEMS)
 // ==========================================
