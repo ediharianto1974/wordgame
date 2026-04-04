@@ -436,7 +436,14 @@ const avatars = {
             { level: 7, name: 'Antonym Guardian', price: 300, icon: 'fas fa-feather fa-bounce text-indigo-600', desc: 'Master of opposites and contrasts.' },
             { level: 8, name: 'Thesaurus Ancient', price: 300, icon: 'fas fa-feather-alt fa-beat text-indigo-700', desc: 'Holds thousands of brilliant words.' },
             { level: 9, name: 'Etymology Mythic', price: 300, icon: 'fas fa-feather-alt fa-pulse text-indigo-800', desc: 'Knows the true origin of all languages.' },
-            { level: 10, name: 'Supreme Wordsmith', price: 300, icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', desc: 'The Guardian of the Ultimate Dictionary!' }
+            { 
+                level: 10, 
+                name: 'Supreme Wordsmith', 
+                price: 300, 
+                img: 'avatar_owl.png',
+                icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', 
+                desc: 'The Guardian of the Ultimate Dictionary!' 
+            }
         ]
     },
     bot: {
@@ -451,7 +458,14 @@ const avatars = {
             { level: 7, name: 'Semicolon Armor', price: 300, icon: 'fas fa-robot fa-bounce text-blue-500', desc: 'Linking independent clauses like a pro.' },
             { level: 8, name: 'Exclamation Ancient', price: 300, icon: 'fas fa-user-astronaut fa-beat text-blue-600', desc: 'Expressing strong emotions!' },
             { level: 9, name: 'Mechanics Mythic', price: 300, icon: 'fas fa-user-astronaut fa-pulse text-purple-600', desc: 'Scanning text for perfect formatting.' },
-            { level: 10, name: 'Supreme Editor', price: 300, icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', desc: 'The Flawless Proofreading Titan!' }
+            { 
+                level: 10, 
+                name: 'Supreme Editor', 
+                price: 300, 
+                img: 'avatar_bot.png',
+                icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', 
+                desc: 'The Flawless Proofreading Titan!' 
+            }
         ]
     },
     wolf: {
@@ -466,7 +480,14 @@ const avatars = {
             { level: 7, name: 'Accent Master', price: 300, icon: 'fas fa-dog fa-bounce text-blue-600', desc: 'Adapting to different English intonations.' },
             { level: 8, name: 'Articulation Ancient', price: 300, icon: 'fas fa-moon fa-beat text-blue-700', desc: 'Clear and powerful speech delivery.' },
             { level: 9, name: 'Eloquence Mythic', price: 300, icon: 'fas fa-moon fa-pulse text-blue-800', desc: 'Persuading the pack with words.' },
-            { level: 10, name: 'Supreme Orator', price: 300, icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', desc: 'The Legendary Voice of the Forest!' }
+            { 
+                level: 10, 
+                name: 'Supreme Orator', 
+                price: 300, 
+                img: 'avatar_wolf.png',
+                icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', 
+                desc: 'The Legendary Voice of the Forest!' 
+            }
         ]
     },
     phoenix: {
@@ -481,7 +502,14 @@ const avatars = {
             { level: 7, name: 'Article Master', price: 300, icon: 'fas fa-dove fa-bounce text-red-500', desc: 'Publishing captivating articles.' },
             { level: 8, name: 'Manuscript Ancient', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-600', desc: 'A legend in creative writing.' },
             { level: 9, name: 'Bestseller Mythic', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-700', desc: 'Words that live forever.' },
-            { level: 10, name: 'Supreme Author', price: 300, icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', desc: 'The Immortal Master of Stories!' }
+            { 
+                level: 10, 
+                name: 'Supreme Author', 
+                price: 300, 
+                img: 'avatar_phoenix.png',
+                icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', 
+                desc: 'The Immortal Master of Stories!' 
+            }
         ]
     },
     leviathan: {
@@ -496,7 +524,14 @@ const avatars = {
             { level: 7, name: 'Comprehension Master', price: 300, icon: 'fas fa-water fa-bounce text-blue-500', desc: 'Understanding the deepest texts.' },
             { level: 8, name: 'Literature Ancient', price: 300, icon: 'fas fa-water fa-beat text-blue-600', desc: 'Devouring classic novels.' },
             { level: 9, name: 'Epic Mythic', price: 300, icon: 'fas fa-water fa-pulse text-blue-700', desc: 'Mastering poetry and prose.' },
-            { level: 10, name: 'Supreme Scholar', price: 300, icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', desc: 'An unstoppable wave of knowledge!' }
+            { 
+                level: 10, 
+                name: 'Supreme Scholar', 
+                price: 300, 
+                img: 'avatar_leviathan.png',
+                icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', 
+                desc: 'An unstoppable wave of knowledge!' 
+            }
         ]
     },
     unicorn: {
@@ -511,7 +546,14 @@ const avatars = {
             { level: 7, name: 'Alliteration Master', price: 300, icon: 'fas fa-horse-head fa-bounce text-purple-600', desc: 'Creating cool consonant combos.' },
             { level: 8, name: 'Poetic Ancient', price: 300, icon: 'fas fa-horse-head fa-beat text-purple-700', desc: 'Master of verses and stanzas.' },
             { level: 9, name: 'Inspiration Mythic', price: 300, icon: 'fas fa-horse-head fa-pulse text-pink-600', desc: 'Sparking creative writing ideas.' },
-            { level: 10, name: 'Supreme Bard', price: 300, icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', desc: 'The most beautiful magic in literature!' }
+            { 
+                level: 10, 
+                name: 'Supreme Bard', 
+                price: 300, 
+                img: 'avatar_unicorn.png',
+                icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', 
+                desc: 'The most beautiful magic in literature!' 
+            }
         ]
     },
     golem: {
@@ -526,7 +568,14 @@ const avatars = {
             { level: 7, name: 'Passive Voice Golem', price: 300, icon: 'fas fa-mountain fa-bounce text-gray-600', desc: 'Actions are being done to it.' },
             { level: 8, name: 'Conditional Ancient', price: 300, icon: 'fas fa-mountain fa-beat text-gray-700', desc: 'If you study, you will succeed.' },
             { level: 9, name: 'Structure Mythic', price: 300, icon: 'fas fa-mountain fa-pulse text-gray-800', desc: 'A walking mountain of solid grammar.' },
-            { level: 10, name: 'Supreme Foundation', price: 300, icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', desc: 'The Unshakeable Earth Shaker!' }
+            { 
+                level: 10, 
+                name: 'Supreme Foundation', 
+                price: 300, 
+                img: 'avatar_golem.png',
+                icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', 
+                desc: 'The Unshakeable Earth Shaker!' 
+            }
         ]
     },
     fairy: {
@@ -541,7 +590,14 @@ const avatars = {
             { level: 7, name: 'Nuance Master', price: 300, icon: 'fas fa-tree fa-bounce text-teal-600', desc: 'Understanding tone and emotion.' },
             { level: 8, name: 'Interpreter Ancient', price: 300, icon: 'fas fa-tree fa-beat text-teal-700', desc: 'Translating thoughts seamlessly.' },
             { level: 9, name: 'Polyglot Mythic', price: 300, icon: 'fas fa-tree fa-pulse text-teal-800', desc: 'Glowing with communication magic.' },
-            { level: 10, name: 'Supreme Communicator', price: 300, icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', desc: 'The Queen of Global Connections!' }
+            { 
+                level: 10, 
+                name: 'Supreme Communicator', 
+                price: 300, 
+                img: 'avatar_fairy.png',
+                icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', 
+                desc: 'The Queen of Global Connections!' 
+            }
         ]
     },
     lion: {
@@ -556,11 +612,17 @@ const avatars = {
             { level: 7, name: 'Persuasion Master', price: 300, icon: 'fas fa-crown fa-bounce text-yellow-500', desc: 'Convincing the crowd easily.' },
             { level: 8, name: 'Rhetoric Ancient', price: 300, icon: 'fas fa-crown fa-beat text-yellow-600', desc: 'A legendary speaker of the sky.' },
             { level: 9, name: 'Debate Mythic', price: 300, icon: 'fas fa-crown fa-pulse text-orange-600', desc: 'Summoning lightning-fast responses.' },
-            { level: 10, name: 'Supreme Statesman', price: 300, icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', desc: 'The Absolute King of the Stage!' }
+            { 
+                level: 10, 
+                name: 'Supreme Statesman', 
+                price: 300, 
+                img: 'avatar_lion.png',
+                icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', 
+                desc: 'The Absolute King of the Stage!' 
+            }
         ]
     }
 };
-
 // ==========================================
 // 3. DATA ITEM KEDAI (BADGE & EDU ITEMS)
 // ==========================================
