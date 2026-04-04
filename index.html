@@ -849,32 +849,37 @@ function updateDashboardAvatars() {
     
     container.innerHTML = ''; 
 
-    // 1. Semak jika ada avatar yang sedang dipakai
+    // 1. Semak jika ada data profil murid dan ada avatar yang sedang dipakai
     if (localPlayerData && localPlayerData.activeAvatar) {
         let active = localPlayerData.activeAvatar;
         
-        // 🚨 LOGIK PEMULIHAN (FIX): 
-        // Walaupun dalam data simpanan (activeAvatar) tiada 'img', 
-        // kita paksa sistem semak dalam data.js menggunakan key/id avatar tersebut.
-        const avatarKey = active.key || active.id; // Guna key atau id
+        // DAPATKAN KEY/ID (Contoh: 'dragon')
+        // Kita guna 'key' atau 'id' atau 'avatarKey' - ikut mana yang ada dalam data murid
+        const avatarKey = active.key || active.id || active.avatarKey; 
+        
         let visualContent = "";
 
-        // Cari data mentah daripada data.js (avatars)
-        if (avatars && avatars[avatarKey]) {
-            const levelData = avatars[avatarKey].levels[active.level - 1];
+        // 🚨 FUNGSI PAKSA BACA DARI data.js (Bukan dari Google Sheet)
+        // Kita cari dalam variable 'avatars' (atau 'avatarsData' ikut nama dalam data.js cikgu)
+        const rawData = (typeof avatars !== 'undefined') ? avatars : avatarsData;
+
+        if (rawData && rawData[avatarKey]) {
+            // Ambil info level secara spesifik dari data.js
+            const levelInfo = rawData[avatarKey].levels[active.level - 1];
             
-            // Jika level ini ada properti 'img' (dragon.png)
-            if (levelData && levelData.img) {
-                visualContent = `<img src="${levelData.img}" class="w-9 h-9 object-contain drop-shadow-sm" alt="Master">`;
+            // Jika dalam data.js ada 'img', kita PAKSA guna img tersebut
+            if (levelInfo && levelInfo.img) {
+                visualContent = `<img src="${levelInfo.img}" class="w-10 h-10 object-contain drop-shadow-md mx-auto" alt="Master Avatar">`;
             } else {
-                // Jika tiada (level 1-9), guna icon FontAwesome
+                // Jika tiada 'img' (level 1-9), guna icon FontAwesome asal
                 visualContent = `<i class="${active.icon} text-2xl text-green-600"></i>`;
             }
         } else {
-            // Backup jika data.js gagal dibaca
+            // Jika data.js tidak dapat dikesan, guna ikon sebagai sandaran (backup)
             visualContent = `<i class="${active.icon} text-2xl text-green-600"></i>`;
         }
 
+        // 2. Bina HTML paparan
         container.innerHTML = `
             <div class="bg-indigo-100 p-2 rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)] border-2 border-green-400 flex items-center justify-center hover:scale-110 transition cursor-pointer" 
                  title="${active.name} (Level ${active.level})"
@@ -883,9 +888,10 @@ function updateDashboardAvatars() {
             </div>
         `;
     } else {
-        // Paparan jika tiada avatar
+        // 3. Paparan jika tiada avatar dipakai (Guardian)
         container.innerHTML = `
-            <div class="bg-gray-100 p-2 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer" 
+            <div class="bg-gray-100 p-2 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition" 
+                 title="No Guardian Equipped"
                  onclick="openInventoryModal()">
                 <i class="fas fa-question text-gray-400 text-xl"></i>
             </div>
