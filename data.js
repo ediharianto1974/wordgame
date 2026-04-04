@@ -402,7 +402,7 @@ missing: [
 // 2. DATA AVATAR / GUARDIANS (10 JENIS & 10 LEVEL)
 // ==========================================
 const avatars = {
-    dragon: {
+dragon: {
         id: 'avatar_dragon', maxLevel: 10, theme: 'Fire/Fantasy',
         levels: [
             { level: 1, name: 'Ignis Egg', price: 300, icon: 'fas fa-egg fa-pulse text-orange-200', desc: 'A warm mystic egg.' },
@@ -414,7 +414,15 @@ const avatars = {
             { level: 7, name: 'Armored Dragon', price: 300, icon: 'fas fa-dragon fa-bounce text-red-600', desc: 'Its scales are hard as steel.' },
             { level: 8, name: 'Ancient Dragon', price: 300, icon: 'fas fa-fire-alt fa-beat text-red-700', desc: 'A legendary creature from the old tales.' },
             { level: 9, name: 'Mythic Dragon', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-800', desc: 'Almost reached its ultimate form!' },
-            { level: 10, name: 'Supreme Inferno', price: 300, icon: 'fas fa-dragon fa-beat legendary-avatar text-red-600 drop-shadow-lg text-2xl', desc: 'The God of Fire! Unstoppable!' }
+            // 👇 Kemaskini Level 10 di sini
+            { 
+                level: 10, 
+                name: 'Supreme Inferno', 
+                price: 300, 
+                img: 'avatar_dragon.png', // <--- Tambah gambar di sini
+                icon: 'fas fa-dragon fa-beat legendary-avatar text-red-600 drop-shadow-lg text-2xl', 
+                desc: 'The God of Fire! Unstoppable!' 
+            }
         ]
     },
     owl: {
