@@ -416,7 +416,7 @@ const avatars = {
             { level: 9, name: 'Grammar Mythic', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-800', desc: 'The ultimate guardian of language rules.' },
             { 
                 level: 10, 
-                name: 'Supreme Grammarian', 
+                name: 'Lexical Librarian', 
                 price: 300, 
                 img: 'avatar_dragon.png', 
                 icon: 'fas fa-dragon fa-beat legendary-avatar text-red-600 drop-shadow-lg text-2xl', 
@@ -438,7 +438,7 @@ const avatars = {
             { level: 9, name: 'Etymology Mythic', price: 300, icon: 'fas fa-feather-alt fa-pulse text-indigo-800', desc: 'Knows the true origin of all languages.' },
             { 
                 level: 10, 
-                name: 'Supreme Wordsmith', 
+                name: 'Quantum Poet', 
                 price: 300, 
                 img: 'avatar_owl.png',
                 icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', 
@@ -460,7 +460,7 @@ const avatars = {
             { level: 9, name: 'Mechanics Mythic', price: 300, icon: 'fas fa-user-astronaut fa-pulse text-purple-600', desc: 'Scanning text for perfect formatting.' },
             { 
                 level: 10, 
-                name: 'Supreme Editor', 
+                name: 'Holographic Linguist', 
                 price: 300, 
                 img: 'avatar_bot.png',
                 icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', 
@@ -482,7 +482,7 @@ const avatars = {
             { level: 9, name: 'Eloquence Mythic', price: 300, icon: 'fas fa-moon fa-pulse text-blue-800', desc: 'Persuading the pack with words.' },
             { 
                 level: 10, 
-                name: 'Supreme Orator', 
+                name: 'Aetheric Scribe', 
                 price: 300, 
                 img: 'avatar_wolf.png',
                 icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', 
@@ -504,7 +504,7 @@ const avatars = {
             { level: 9, name: 'Bestseller Mythic', price: 300, icon: 'fas fa-fire-alt fa-pulse text-red-700', desc: 'Words that live forever.' },
             { 
                 level: 10, 
-                name: 'Supreme Author', 
+                name: 'Data Arcanist', 
                 price: 300, 
                 img: 'avatar_phoenix.png',
                 icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', 
@@ -526,7 +526,7 @@ const avatars = {
             { level: 9, name: 'Epic Mythic', price: 300, icon: 'fas fa-water fa-pulse text-blue-700', desc: 'Mastering poetry and prose.' },
             { 
                 level: 10, 
-                name: 'Supreme Scholar', 
+                name: 'Nanotech Bard', 
                 price: 300, 
                 img: 'avatar_leviathan.png',
                 icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', 
@@ -548,7 +548,7 @@ const avatars = {
             { level: 9, name: 'Inspiration Mythic', price: 300, icon: 'fas fa-horse-head fa-pulse text-pink-600', desc: 'Sparking creative writing ideas.' },
             { 
                 level: 10, 
-                name: 'Supreme Bard', 
+                name: 'Cosmic Narrator', 
                 price: 300, 
                 img: 'avatar_unicorn.png',
                 icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', 
@@ -570,7 +570,7 @@ const avatars = {
             { level: 9, name: 'Structure Mythic', price: 300, icon: 'fas fa-mountain fa-pulse text-gray-800', desc: 'A walking mountain of solid grammar.' },
             { 
                 level: 10, 
-                name: 'Supreme Foundation', 
+                name: 'Cyber Etymologist', 
                 price: 300, 
                 img: 'avatar_golem.png',
                 icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', 
@@ -592,7 +592,7 @@ const avatars = {
             { level: 9, name: 'Polyglot Mythic', price: 300, icon: 'fas fa-tree fa-pulse text-teal-800', desc: 'Glowing with communication magic.' },
             { 
                 level: 10, 
-                name: 'Supreme Communicator', 
+                name: 'Bionic Botanis & Grammarian ', 
                 price: 300, 
                 img: 'avatar_fairy.png',
                 icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', 
@@ -614,7 +614,7 @@ const avatars = {
             { level: 9, name: 'Debate Mythic', price: 300, icon: 'fas fa-crown fa-pulse text-orange-600', desc: 'Summoning lightning-fast responses.' },
             { 
                 level: 10, 
-                name: 'Supreme Statesman', 
+                name: 'Aether Historian', 
                 price: 300, 
                 img: 'avatar_lion.png',
                 icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', 
