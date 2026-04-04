@@ -849,35 +849,43 @@ function updateDashboardAvatars() {
     
     container.innerHTML = ''; 
 
-    // HANYA PAPAR AVATAR JIKA ADA AVATAR YANG AKTIF (EQUIPPED)
+    // 1. Semak jika ada avatar yang sedang dipakai
     if (localPlayerData && localPlayerData.activeAvatar) {
-        let activeInfo = localPlayerData.activeAvatar;
+        let active = localPlayerData.activeAvatar;
         
-        // --- 🚨 LOGIK BARU: SEMAK GAMBAR MASTER 🚨 ---
+        // 🚨 LOGIK PEMULIHAN (FIX): 
+        // Walaupun dalam data simpanan (activeAvatar) tiada 'img', 
+        // kita paksa sistem semak dalam data.js menggunakan key/id avatar tersebut.
+        const avatarKey = active.key || active.id; // Guna key atau id
         let visualContent = "";
-        
-        // Kita semak: Jika level adalah 10 DAN ada data gambar (img) dalam level tersebut
-        if (activeInfo.img) {
-            // Guna gambar PNG (Master Rank)
-            visualContent = `<img src="${activeInfo.img}" class="w-8 h-8 object-contain drop-shadow-md" alt="${activeInfo.name}">`;
+
+        // Cari data mentah daripada data.js (avatars)
+        if (avatars && avatars[avatarKey]) {
+            const levelData = avatars[avatarKey].levels[active.level - 1];
+            
+            // Jika level ini ada properti 'img' (dragon.png)
+            if (levelData && levelData.img) {
+                visualContent = `<img src="${levelData.img}" class="w-9 h-9 object-contain drop-shadow-sm" alt="Master">`;
+            } else {
+                // Jika tiada (level 1-9), guna icon FontAwesome
+                visualContent = `<i class="${active.icon} text-2xl text-green-600"></i>`;
+            }
         } else {
-            // Jika tiada gambar (level 1-9), guna ikon FontAwesome macam biasa
-            visualContent = `<i class="${activeInfo.icon} text-2xl text-green-600"></i>`;
+            // Backup jika data.js gagal dibaca
+            visualContent = `<i class="${active.icon} text-2xl text-green-600"></i>`;
         }
-        // --------------------------------------------
 
         container.innerHTML = `
             <div class="bg-indigo-100 p-2 rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)] border-2 border-green-400 flex items-center justify-center hover:scale-110 transition cursor-pointer" 
-                 title="${activeInfo.name} (Level ${activeInfo.level})"
-                 onclick="openInventoryModal()"> 
+                 title="${active.name} (Level ${active.level})"
+                 onclick="openInventoryModal()">
                 ${visualContent}
             </div>
         `;
     } else {
-        // JIKA TIADA AVATAR DIPAKAI
+        // Paparan jika tiada avatar
         container.innerHTML = `
             <div class="bg-gray-100 p-2 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer" 
-                 title="No Guardian Yet"
                  onclick="openInventoryModal()">
                 <i class="fas fa-question text-gray-400 text-xl"></i>
             </div>
