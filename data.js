@@ -739,3 +739,19 @@ const ACHIEVEMENTS_LIST = [
     { id: "ach_39", name: "First Arrival", description: "Log in to the Game Hub for the first time.", titleReward: "The Freshman", coinReward: 20 },
     { id: "ach_40", name: "Secret Finder", description: "??? (Discover the hidden secret in the Game Hub)", titleReward: "The Context Detective", coinReward: 20 }
 ];
+
+// ==========================================
+// 3. DATA LEVEL & PANGKAT (1 - 100)
+// ==========================================
+const levelRanks = [
+    { minLevel: 1,  maxLevel: 10, title: "Novice",       icon: "🌱" },
+    { minLevel: 11, maxLevel: 20, title: "Apprentice",   icon: "📘" },
+    { minLevel: 21, maxLevel: 30, title: "Explorer",     icon: "🔍" },
+    { minLevel: 31, maxLevel: 40, title: "Defender",     icon: "🛡️" },
+    { minLevel: 41, maxLevel: 50, title: "Scholar",      icon: "📜" },
+    { minLevel: 51, maxLevel: 60, title: "Mystic",       icon: "🧙‍♂️" },
+    { minLevel: 61, maxLevel: 70, title: "Champion",     icon: "⚔️" },
+    { minLevel: 71, maxLevel: 80, title: "Wordsmith",    icon: "🖋️" },
+    { minLevel: 81, maxLevel: 90, title: "Grandmaster",  icon: "👑" },
+    { minLevel: 91, maxLevel: 100, title: "Legend",      icon: "🌟" }
+];
