@@ -182,18 +182,22 @@
                 <i class="fas fa-bullhorn mr-2"></i> <span id="event-text"></span>
             </div>
             
-            <div class="glass rounded-3xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
-                <div>
-                    <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded-xl transition" onclick="openProfile()" title="Click to view Profile & Equip Title">
-                        <div>
-                            <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
-                            
-                            <div id="header-active-title" class="text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-0.5 rounded shadow-sm inline-block mb-1">
-                                Novice
-                            </div>
-                            
-                            <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
-                        </div>
+<div class="glass rounded-3xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
+    <div>
+        <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded-xl transition" onclick="openProfile()" title="Click to view Profile & Equip Title">
+            <div>
+                <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
+                
+                <div id="header-active-title" class="text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-0.5 rounded shadow-sm inline-block mb-1">
+                    Novice
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
+                    <span class="text-gray-400 text-xs">|</span>
+                    <span id="dashboard-level" class="text-sm font-bold text-emerald-600 drop-shadow-sm"></span>
+                </div>
+            </div>
                         
                         <div id="dashboard-avatars" class="flex items-center gap-2 ml-2"></div>
                     </div>
@@ -452,6 +456,38 @@
         let currentGameType = ''; 
         let studentDatabase = [];
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
+
+// ==========================================
+// PENGIRAAN LEVEL PEMAIN (TOTAL SCORE)
+// ==========================================
+function getPlayerLevelInfo(totalScore) {
+    // Formula Level: Skor 0=Lv1, 100=Lv2, 400=Lv3...
+    let calculatedLevel = Math.floor(Math.sqrt(totalScore / 100)) + 1;
+    if (calculatedLevel > 100) calculatedLevel = 100;
+
+    // Pastikan levelRanks sudah ada di dalam data.js
+    let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Novice", icon: "🌱"};
+
+    return {
+        level: calculatedLevel,
+        title: currentRank.title,
+        icon: currentRank.icon
+    };
+}
+
+function updatePlayerLevelUI() {
+    if (!localPlayerData) return;
+    
+    // Ambil Total Score, jika tiada jadikan 0
+    let safeTotalScore = parseInt(localPlayerData.totalScore) || 0; 
+    let playerStats = getPlayerLevelInfo(safeTotalScore);
+    
+    // Tembak masuk ke dalam HTML
+    let levelElement = document.getElementById('dashboard-level');
+    if (levelElement) {
+        levelElement.innerText = `${playerStats.icon} Lv.${playerStats.level} ${playerStats.title}`;
+    }
+}
 
 // ==========================================
 // BUKU REKOD PENCAPAIAN (WAJIB ADA DI ATAS)
@@ -762,6 +798,7 @@ async function startGameHub() {
         // --- PROCESS TO OPEN MAIN MENU ---
         document.getElementById('display-name').innerText = studentInfo.name;
         document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
+		updatePlayerLevelUI();
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('menu-screen').classList.remove('hidden');
 
