@@ -760,7 +760,7 @@ async function startGameHub() {
 
     try {
         // Check data with Google Sheets
-        const response = await fetch(`${SCRIPT_URL}?action=getPlayer&name=${encodeURIComponent(nameInput)}&cls=${encodeURIComponent(classInput)}&passcode=${encodeURIComponent(pinInput)}`);
+        const response = await fetch(`${SCRIPT_URL}?action=getPlayer&name=${encodeURIComponent(nameInput)}&cls=${encodeURIComponent(classInput)}&passcode=${encodeURIComponent(pinInput)}&t=${new Date().getTime()}`, { cache: "no-store" });
         const data = await response.json();
 
         // SITUATION A: Account exists but PIN is wrong!
@@ -902,7 +902,7 @@ async function startGameHub() {
         // --- SISTEM CLOUD DATABASE & DASHBOARD AVATAR ---
 async function loadCloudPlayerData() {
             // URL now carries the passcode info
-            const url = SCRIPT_URL + `?action=getPlayer&name=${encodeURIComponent(studentInfo.name)}&cls=${encodeURIComponent(studentInfo.class)}&passcode=${encodeURIComponent(localPlayerData.passcode || '')}`;
+            const url = SCRIPT_URL + `?action=getPlayer&name=${encodeURIComponent(studentInfo.name)}&cls=${encodeURIComponent(studentInfo.class)}&passcode=${encodeURIComponent(localPlayerData.passcode || '')}&t=${new Date().getTime()}`;
             try {
                 const response = await fetch(url);
                 const data = await response.json();
