@@ -1411,22 +1411,38 @@ async function showLeaderboard() {
                 avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
             }
 
-            // 🚨 2. TENTUKAN WARNA/CSS UNTUK TITLE MURID INI
+           // 🚨 2. TENTUKAN WARNA/CSS UNTUK TITLE MURID INI
             const titleName = student.activeTitle;
             const titleData = achievementsData.find(ach => ach.name === titleName);
             const tier = titleData ? titleData.tier : 'common';
+            const achId = titleData ? titleData.id : ''; // Ambil ID untuk semakan CSS unik
             
             let titleHTML = "";
-            if (tier === 'legendary') {
+
+            // --- SEMAK ID SPESIFIK DULU (UNTUK CSS UNIK) ---
+            if (achId === 'ach_16') {
+                titleHTML = `<div class="title-king inline-block mt-1">👑 ${titleName}</div>`;
+            } 
+            else if (achId === 'ach_15') {
+                titleHTML = `<div class="title-legendary-beast inline-block mt-1">👾 ${titleName}</div>`;
+            }
+            else if (achId === 'ach_08') {
+                titleHTML = `<div class="title-master inline-block mt-1">🔥 ${titleName}</div>`;
+            }
+            // --- JIKA TIADA ID KHAS, GUNA LOGIK TIER BIASA ---
+            else if (tier === 'legendary') {
                 titleHTML = `<div class="title-legendary inline-block mt-1">🏆 ${titleName}</div>`;
-            } else if (tier === 'epic') {
+            } 
+            else if (tier === 'epic') {
                 titleHTML = `<div class="title-epic text-[10px] md:text-xs inline-block mt-1">✨ ${titleName}</div>`;
-            } else if (tier === 'rare') {
+            } 
+            else if (tier === 'rare') {
                 titleHTML = `<div class="title-rare text-[10px] md:text-xs inline-block mt-1">⭐ ${titleName}</div>`;
-            } else {
+            } 
+            else {
                 titleHTML = `<div class="title-common text-[10px] md:text-xs inline-block mt-1">${titleName}</div>`;
             }
-
+			
             // KUMPULKAN SEMUA GAME DALAM 1 SEL SEBAGAI "BADGES"
             let gamesBadgesHtml = student.gameList.map(game => {
                 return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">
