@@ -185,19 +185,26 @@
 <div class="glass rounded-3xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
     <div>
         <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded-xl transition" onclick="openProfile()" title="Click to view Profile & Equip Title">
-            <div>
-                <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
-                
-                <div id="header-active-title" class="text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-0.5 rounded shadow-sm inline-block mb-1">
-                    Novice
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <p class="text-sm text-indigo-500" id="display-class">Class: -</p>
-                    <span class="text-gray-400 text-xs">|</span>
-                    <span id="dashboard-level" class="text-sm font-bold text-emerald-600 drop-shadow-sm"></span>
-                </div>
+    <div class="w-full">
+        <h2 class="text-xl font-bold text-indigo-800" id="display-name">Hi, Student!</h2>
+        
+        <div id="header-active-title" class="text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-0.5 rounded shadow-sm inline-block mb-1">
+            Novice
+        </div>
+        
+        <p class="text-sm text-indigo-500 mb-2" id="display-class">Class: -</p>
+
+        <div class="mt-2 w-full max-w-[200px]">
+            <div class="flex justify-between items-end mb-1 gap-4">
+                <span id="dashboard-level" class="text-sm font-bold text-emerald-600 drop-shadow-sm"></span>
+                <span id="dashboard-xp-text" class="text-[10px] font-medium text-gray-400">0 / 0 XP</span>
             </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="dashboard-progress-bar" class="bg-current h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+</div>
                         
                         <div id="dashboard-avatars" class="flex items-center gap-2 ml-2"></div>
                     </div>
@@ -461,18 +468,35 @@
 // PENGIRAAN LEVEL PEMAIN (TOTAL SCORE)
 // ==========================================
 function getPlayerLevelInfo(totalScore) {
-    // Formula Level: Skor 0=Lv1, 100=Lv2, 400=Lv3...
-    let calculatedLevel = Math.floor(Math.sqrt(totalScore / 100)) + 1;
+    let score = parseInt(totalScore) || 0;
+    
+    // Formula Level: Skor 0=Lv1, 100=Lv2, 400=Lv3, 900=Lv4...
+    let calculatedLevel = Math.floor(Math.sqrt(score / 100)) + 1;
     if (calculatedLevel > 100) calculatedLevel = 100;
 
-    // Pastikan levelRanks sudah ada di dalam data.js
-    let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Novice", icon: "🌱"};
+    // Cari pangkat dari data.js
+    let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Novice", icon: "🌱", colorClass: "text-green-500"};
+
+    // PENGIRAAN PROGRESS BAR (XP)
+    let currentLevelBaseXP = Math.pow(calculatedLevel - 1, 2) * 100;
+    let nextLevelBaseXP = Math.pow(calculatedLevel, 2) * 100;
+    
+    let xpInCurrentLevel = score - currentLevelBaseXP; // XP yang dah dikumpul dalam level ini
+    let xpNeededForNextLevel = nextLevelBaseXP - currentLevelBaseXP; // Jumlah XP yang perlu untuk naik ke level seterusnya
+    
+    // Kira Peratus Lebar Bar (0% hingga 100%)
+    let percentage = 100;
+    if (calculatedLevel < 100) {
+        percentage = Math.max(0, Math.min(100, (xpInCurrentLevel / xpNeededForNextLevel) * 100));
+    }
 
     return {
         level: calculatedLevel,
         title: currentRank.title,
-        icon: currentRank.icon
-		colorClass: currentRank.colorClass
+        icon: currentRank.icon,
+        colorClass: currentRank.colorClass || "text-green-500", // Pastikan warna dihantar
+        xpText: `${xpInCurrentLevel} / ${xpNeededForNextLevel} XP`, // Teks untuk hujung bar
+        percentage: percentage // Nombor peratusan untuk gerakkan lebar bar
     };
 }
 
@@ -482,13 +506,27 @@ function updatePlayerLevelUI() {
     let safeTotalScore = parseInt(localPlayerData.totalScore) || 0; 
     let playerStats = getPlayerLevelInfo(safeTotalScore);
     
+    // Tarik elemen dari HTML yang kita buat tadi
     let levelElement = document.getElementById('dashboard-level');
+    let progressBar = document.getElementById('dashboard-progress-bar');
+    let xpTextElement = document.getElementById('dashboard-xp-text');
+
+    // 1. Update Teks & Warna Level
     if (levelElement) {
-        // Tulis teks
         levelElement.innerText = `${playerStats.icon} Lv.${playerStats.level} ${playerStats.title}`;
-        
-        // Padam warna lama dan masukkan warna baharu mengikut level!
-        levelElement.className = `text-sm font-bold ${playerStats.colorClass}`;
+        levelElement.className = `text-sm font-bold ${playerStats.colorClass}`; 
+    }
+    
+    // 2. Update Lebar & Warna Progress Bar
+    if (progressBar) {
+        progressBar.style.width = `${playerStats.percentage}%`; // Gerakkan bar mengikut peratusan XP!
+        // bg-current bermaksud bar akan sentiasa ikut warna teks level
+        progressBar.className = `bg-current h-2 rounded-full transition-all duration-1000 ${playerStats.colorClass}`; 
+    }
+    
+    // 3. Update Teks Baki XP (Contoh: "45 / 300 XP")
+    if (xpTextElement) {
+        xpTextElement.innerText = playerStats.xpText; 
     }
 }
 
