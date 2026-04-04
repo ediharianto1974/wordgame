@@ -1750,6 +1750,19 @@ function checkAchievements() {
             // --- Category 9: Advanced Inventory ---
             case "ach_33": if (localPlayerData.shopVisits && localPlayerData.shopVisits >= 20) conditionMet = true; break;
             case "ach_34": if (avatarCount >= 10) conditionMet = true; break;
+			case "ach_35": 
+                // Sistem akan menapis (filter) senarai level untuk mencari yang bernilai 5 ke atas
+                const avatarsLevel5OrMore = levels.filter(lvl => lvl >= 5).length;
+                if (avatarsLevel5OrMore >= 5) conditionMet = true; 
+                break;
+                
+            case "ach_36": 
+                // ANDAIAN 1: Jika Cikgu ada menyimpan rekod skin dalam 'localPlayerData'
+                if (localPlayerData.skinsUnlocked && localPlayerData.skinsUnlocked >= 1) conditionMet = true; 
+                
+                // ANDAIAN 2: Jika skin direkodkan dalam 'inventory' (Google Sheet) dan namanya ada perkataan "skin"
+                // if (localPlayerData.inventory && localPlayerData.inventory.some(item => item.toLowerCase().includes("skin"))) conditionMet = true;
+                break;
 
             // --- Category 10: Special Events & Hidden ---
             case "ach_37": 
