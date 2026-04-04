@@ -964,18 +964,28 @@ function updateDashboardAvatars() {
                     }
                 }
 
-                avatarsContainer.innerHTML += `
-                    <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition shadow-sm text-center flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs font-bold text-indigo-400 uppercase mb-1 tracking-wider">${avatar.theme}</div>
-                            <div class="text-5xl mb-3 mt-2 flex justify-center h-16 items-center"><i class="${displayData.icon}"></i></div>
-                            <h3 class="font-bold text-gray-800 text-lg">${displayData.name}</h3>
-                            <p class="text-[10px] font-bold text-indigo-600 mb-2">Current: Level ${currentLevel}/${avatar.maxLevel}</p>
-                            <p class="text-xs text-gray-600 mt-1">${displayData.desc}</p>
-                        </div>
-                        ${btnHtml}
-                    </div>
-                `;
+                // 1. Tentukan visual yang hendak dipaparkan (Imej atau Ikon)
+const avatarVisual = displayData.img 
+    ? `<img src="${displayData.img}" class="h-16 w-auto object-contain mx-auto drop-shadow-xl" alt="${displayData.name}">` 
+    : `<i class="${displayData.icon}"></i>`;
+
+// 2. Masukkan ke dalam HTML
+avatarsContainer.innerHTML += `
+    <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition shadow-sm text-center flex flex-col justify-between">
+        <div>
+            <div class="text-xs font-bold text-indigo-400 uppercase mb-1 tracking-wider">${avatar.theme}</div>
+            
+            <div class="text-5xl mb-3 mt-2 flex justify-center h-16 items-center">
+                ${avatarVisual}
+            </div>
+
+            <h3 class="font-bold text-gray-800 text-lg">${displayData.name}</h3>
+            <p class="text-[10px] font-bold text-indigo-600 mb-2">Current: Level ${currentLevel}/${avatar.maxLevel}</p>
+            <p class="text-xs text-gray-600 mt-1">${displayData.desc}</p>
+        </div>
+        ${btnHtml}
+    </div>
+`;
             }
 
             if (typeof shopItems !== 'undefined') {
@@ -1039,6 +1049,7 @@ const isEdu = item.category === 'edu';
                     localPlayerData.activeAvatar.level = level;
                     localPlayerData.activeAvatar.name = displayData.name;
                     localPlayerData.activeAvatar.icon = displayData.icon;
+					localPlayerData.activeAvatar.img = displayData.img || null;
                 }
                 
                 // 3. Muat semula paparan dan simpan ke Cloud (Google Sheets)
