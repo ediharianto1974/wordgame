@@ -1155,7 +1155,8 @@ async function buyItem(itemId) {
                 key: avatarKey,
                 level: myLevel,
                 name: displayData.name,
-                icon: displayData.icon
+                icon: displayData.icon,
+				img: selectedLevelData.img || null
             };
             
             renderInventory(); // Refresh paparan beg galas
