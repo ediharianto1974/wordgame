@@ -502,10 +502,12 @@ function getPlayerLevelInfo(totalScore) {
 function updatePlayerLevelUI() {
     if (!localPlayerData) return;
     
-    let safeTotalScore = parseInt(localPlayerData.Total) || 0; 
+    // KITA TANGKAP SEMUA KEMUNGKINAN NAMA PEMBOLEHUBAH!
+    let safeTotalScore = parseInt(localPlayerData.totalScore) || parseInt(localPlayerData.Total) || parseInt(localPlayerData.coins) || 0; 
+    
     let playerStats = getPlayerLevelInfo(safeTotalScore);
     
-    // Tarik elemen dari HTML yang kita buat tadi
+    // Tarik elemen dari HTML
     let levelElement = document.getElementById('dashboard-level');
     let progressBar = document.getElementById('dashboard-progress-bar');
     let xpTextElement = document.getElementById('dashboard-xp-text');
@@ -518,17 +520,16 @@ function updatePlayerLevelUI() {
     
     // 2. Update Lebar & Warna Progress Bar
     if (progressBar) {
-        progressBar.style.width = `${playerStats.percentage}%`; // Gerakkan bar mengikut peratusan XP!
-        // bg-current bermaksud bar akan sentiasa ikut warna teks level
+        progressBar.style.width = `${playerStats.percentage}%`; // Gerakkan bar!
         progressBar.className = `bg-current h-2 rounded-full transition-all duration-1000 ${playerStats.colorClass}`; 
     }
     
-    // 3. Update Teks Baki XP (Contoh: "45 / 300 XP")
+    // 3. Update Teks Baki XP
     if (xpTextElement) {
         xpTextElement.innerText = playerStats.xpText; 
     }
 }
-
+		
 // ==========================================
 // BUKU REKOD PENCAPAIAN (WAJIB ADA DI ATAS)
 // ==========================================
