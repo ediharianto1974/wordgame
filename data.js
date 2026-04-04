@@ -744,14 +744,14 @@ const ACHIEVEMENTS_LIST = [
 // 3. DATA LEVEL & PANGKAT (1 - 100)
 // ==========================================
 const levelRanks = [
-    { minLevel: 1,  maxLevel: 10, title: "Novice",       icon: "🌱" },
-    { minLevel: 11, maxLevel: 20, title: "Apprentice",   icon: "📘" },
-    { minLevel: 21, maxLevel: 30, title: "Explorer",     icon: "🔍" },
-    { minLevel: 31, maxLevel: 40, title: "Defender",     icon: "🛡️" },
-    { minLevel: 41, maxLevel: 50, title: "Scholar",      icon: "📜" },
-    { minLevel: 51, maxLevel: 60, title: "Mystic",       icon: "🧙‍♂️" },
-    { minLevel: 61, maxLevel: 70, title: "Champion",     icon: "⚔️" },
-    { minLevel: 71, maxLevel: 80, title: "Wordsmith",    icon: "🖋️" },
-    { minLevel: 81, maxLevel: 90, title: "Grandmaster",  icon: "👑" },
-    { minLevel: 91, maxLevel: 100, title: "Legend",      icon: "🌟" }
+    { minLevel: 1,  maxLevel: 10, title: "Novice",       icon: "🌱", colorClass: "text-green-500" },
+    { minLevel: 11, maxLevel: 20, title: "Apprentice",   icon: "📘", colorClass: "text-blue-500" },
+    { minLevel: 21, maxLevel: 30, title: "Explorer",     icon: "🔍", colorClass: "text-teal-500" },
+    { minLevel: 31, maxLevel: 40, title: "Defender",     icon: "🛡️", colorClass: "text-indigo-500" },
+    { minLevel: 41, maxLevel: 50, title: "Scholar",      icon: "📜", colorClass: "text-purple-500" },
+    { minLevel: 51, maxLevel: 60, title: "Mystic",       icon: "🧙‍♂️", colorClass: "text-fuchsia-500" },
+    { minLevel: 61, maxLevel: 70, title: "Champion",     icon: "⚔️", colorClass: "text-red-500" },
+    { minLevel: 71, maxLevel: 80, title: "Wordsmith",    icon: "🖋️", colorClass: "text-orange-500" },
+    { minLevel: 81, maxLevel: 90, title: "Grandmaster",  icon: "👑", colorClass: "text-yellow-400 drop-shadow-md" },
+    { minLevel: 91, maxLevel: 100, title: "Legend",      icon: "🌟", colorClass: "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] animate-pulse" } // Level paling tinggi siap ada glow & pulse!
 ];
