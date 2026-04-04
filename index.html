@@ -472,20 +472,23 @@ function getPlayerLevelInfo(totalScore) {
         level: calculatedLevel,
         title: currentRank.title,
         icon: currentRank.icon
+		colorClass: currentRank.colorClass
     };
 }
 
 function updatePlayerLevelUI() {
     if (!localPlayerData) return;
     
-    // Ambil Total Score, jika tiada jadikan 0
     let safeTotalScore = parseInt(localPlayerData.totalScore) || 0; 
     let playerStats = getPlayerLevelInfo(safeTotalScore);
     
-    // Tembak masuk ke dalam HTML
     let levelElement = document.getElementById('dashboard-level');
     if (levelElement) {
+        // Tulis teks
         levelElement.innerText = `${playerStats.icon} Lv.${playerStats.level} ${playerStats.title}`;
+        
+        // Padam warna lama dan masukkan warna baharu mengikut level!
+        levelElement.className = `text-sm font-bold ${playerStats.colorClass}`;
     }
 }
 
