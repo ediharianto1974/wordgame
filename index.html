@@ -763,6 +763,12 @@ async function startGameHub() {
         const response = await fetch(`${SCRIPT_URL}?action=getPlayer&name=${encodeURIComponent(nameInput)}&cls=${encodeURIComponent(classInput)}&passcode=${encodeURIComponent(pinInput)}&t=${new Date().getTime()}`, { cache: "no-store" });
         const data = await response.json();
 
+		const data = await response.json();
+
+// --- KOD X-RAY MULA ---
+alert("X-RAY DATA DARI SHEET:\n" + JSON.stringify(data));
+// --- KOD X-RAY TAMAT ---
+
         // SITUATION A: Account exists but PIN is wrong!
         if (data && data.error === "WrongPIN") {
             alert("OOPS! The PIN entered is INCORRECT.\n\nPlease enter your correct 4-digit PIN.\n(If you are a new student, please use a different Name that hasn't been taken).");
