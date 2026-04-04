@@ -618,62 +618,62 @@ const shopItems = [
 // ==========================================
 const ACHIEVEMENTS_LIST = [
     // --- Category 1: Leaderboard & Academics ---
-    { id: "ach_01", name: "First Steps", description: "Collect 100 Total Score.", titleReward: "The Beginner", coinReward: 20 },
-    { id: "ach_02", name: "Brainiac", description: "Collect 1,000 Total Score.", titleReward: "The Scholar", coinReward: 20 },
-    { id: "ach_03", name: "Walking Dictionary", description: "Collect 5,000 Total Score.", titleReward: "The Genius", coinReward: 20 },
-    { id: "ach_04", name: "Einstein's Heir", description: "Collect 10,000 Total Score.", titleReward: "The Mastermind", coinReward: 20 },
-    { id: "ach_05", name: "Flawless Victory", description: "Get a Perfect Score in any 5 games.", titleReward: "The Perfectionist", coinReward: 20 },
+    { id: "ach_01", name: "First Steps", description: "Collect 100 Total Score.", titleReward: "The Alphabet Apprentice", coinReward: 20 },
+    { id: "ach_02", name: "Brainiac", description: "Collect 1,000 Total Score.", titleReward: "The Grammar Scholar", coinReward: 20 },
+    { id: "ach_03", name: "Walking Dictionary", description: "Collect 5,000 Total Score.", titleReward: "The Vocabulary Virtuoso", coinReward: 20 },
+    { id: "ach_04", name: "Einstein's Heir", description: "Collect 10,000 Total Score.", titleReward: "The Literary Mastermind", coinReward: 20 },
+    { id: "ach_05", name: "Flawless English", description: "Get a Perfect Score in any 5 games.", titleReward: "The Perfect Proofreader", coinReward: 20 },
 
     // --- Category 2: Challenge Mode ---
-    { id: "ach_06", name: "Brave Soul", description: "Send your first challenge to a friend.", titleReward: "The Challenger", coinReward: 20 },
-    { id: "ach_07", name: "First Blood", description: "Win a friend's challenge for the first time.", titleReward: "The Victor", coinReward: 20 },
-    { id: "ach_08", name: "Unbeatable", description: "Win 10 challenges overall.", titleReward: "The Champion", coinReward: 20 },
-    { id: "ach_09", name: "Worthy Opponent", description: "Tie a friend's score in challenge mode.", titleReward: "The Diplomat", coinReward: 20 },
+    { id: "ach_06", name: "Brave Speaker", description: "Send your first challenge to a friend.", titleReward: "The Debate Challenger", coinReward: 20 },
+    { id: "ach_07", name: "First Victory", description: "Win a friend's challenge for the first time.", titleReward: "The Fluent Victor", coinReward: 20 },
+    { id: "ach_08", name: "Unbeatable", description: "Win 10 challenges overall.", titleReward: "The Spelling Champion", coinReward: 20 },
+    { id: "ach_09", name: "Worthy Opponent", description: "Tie a friend's score in challenge mode.", titleReward: "The Peer Reviewer", coinReward: 20 },
 
     // --- Category 3: Economy & Wealth ---
-    { id: "ach_10", name: "First Paycheck", description: "Collect 1,000 Coins.", titleReward: "Coin Collector", coinReward: 20 },
-    { id: "ach_11", name: "Big Spender", description: "Spend 5,000 Coins in the Shop.", titleReward: "The Investor", coinReward: 20 },
-    { id: "ach_12", name: "Rolling in Gold", description: "Collect 20,000 Coins overall.", titleReward: "The Millionaire", coinReward: 20 },
+    { id: "ach_10", name: "First Paycheck", description: "Collect 1,000 Coins.", titleReward: "The Knowledge Seeker", coinReward: 20 },
+    { id: "ach_11", name: "Big Spender", description: "Spend 5,000 Coins in the Shop.", titleReward: "The Resource Investor", coinReward: 20 },
+    { id: "ach_12", name: "Rolling in Gold", description: "Collect 20,000 Coins overall.", titleReward: "The Wealthy Wordsmith", coinReward: 20 },
 
     // --- Category 4: Avatar Collection ---
-    { id: "ach_13", name: "New Look", description: "Buy your first avatar.", titleReward: "The Fashionista", coinReward: 20 },
-    { id: "ach_14", name: "Wardrobe Full", description: "Collect 5 different avatars.", titleReward: "The Collector", coinReward: 20 },
-    { id: "ach_15", name: "Max Power", description: "Upgrade any avatar to Level 10 (Max Level).", titleReward: "The Legendary", coinReward: 20 },
-    { id: "ach_16", name: "Guardian Master", description: "Buy all animal or fantasy-themed avatars.", titleReward: "The Beastmaster", coinReward: 20 },
+    { id: "ach_13", name: "New Look", description: "Buy your first avatar.", titleReward: "The Style Articulator", coinReward: 20 },
+    { id: "ach_14", name: "Wardrobe Full", description: "Collect 5 different avatars.", titleReward: "The Guardian Collector", coinReward: 20 },
+    { id: "ach_15", name: "Max Power", description: "Upgrade any avatar to Level 10 (Max Level).", titleReward: "The Syntax Sage", coinReward: 20 },
+    { id: "ach_16", name: "Guardian Master", description: "Buy all animal or fantasy-themed avatars.", titleReward: "The Lore Keeper", coinReward: 20 },
 
     // --- Category 5: Dedication & Events ---
-    { id: "ach_17", name: "Event Hunter", description: "Play during a Limited Time Event.", titleReward: "The Opportunist", coinReward: 20 },
-    { id: "ach_18", name: "Night Owl", description: "Play a game after 10 PM.", titleReward: "Guardian of Night", coinReward: 20 },
-    { id: "ach_19", name: "Early Bird", description: "Play a game before 7 AM.", titleReward: "The Morning Star", coinReward: 20 },
+    { id: "ach_17", name: "Event Hunter", description: "Play during a Limited Time Event.", titleReward: "The Active Participant", coinReward: 20 },
+    { id: "ach_18", name: "Night Owl", description: "Play a game after 10 PM.", titleReward: "The Midnight Reader", coinReward: 20 },
+    { id: "ach_19", name: "Early Bird", description: "Play a game before 7 AM.", titleReward: "The Morning Orator", coinReward: 20 },
 
     // --- Category 6: Persistence & Streaks ---
-    { id: "ach_20", name: "Weekend Warrior", description: "Play at least one game on a Saturday or Sunday.", titleReward: "Weekend Warrior", coinReward: 20 },
-    { id: "ach_21", name: "3-Day Streak", description: "Play at least one game for 3 consecutive days.", titleReward: "The Consistent", coinReward: 20 },
-    { id: "ach_22", name: "1-Week Streak", description: "Play for 7 consecutive days without failing.", titleReward: "The Dedicated", coinReward: 20 },
-    { id: "ach_23", name: "Marathoner", description: "Complete 5 different games in a single day.", titleReward: "The Marathoner", coinReward: 20 },
+    { id: "ach_20", name: "Weekend Warrior", description: "Play at least one game on a Saturday or Sunday.", titleReward: "The Weekend Writer", coinReward: 20 },
+    { id: "ach_21", name: "3-Day Streak", description: "Play at least one game for 3 consecutive days.", titleReward: "The Consistent Student", coinReward: 20 },
+    { id: "ach_22", name: "1-Week Streak", description: "Play for 7 consecutive days without failing.", titleReward: "The Dedicated Linguist", coinReward: 20 },
+    { id: "ach_23", name: "Marathoner", description: "Complete 5 different games in a single day.", titleReward: "The Language Marathoner", coinReward: 20 },
 
     // --- Category 7: Game Mastery ---
-    { id: "ach_24", name: "The Explorer", description: "Play all 12 games at least once.", titleReward: "The Explorer", coinReward: 20 },
-    { id: "ach_25", name: "Jack of All Trades", description: "Score at least 50 points in each of the 12 games.", titleReward: "The All-Rounder", coinReward: 20 },
-    { id: "ach_26", name: "Comeback Kid", description: "Get a Perfect Score in a game you previously scored low in.", titleReward: "The Relentless", coinReward: 20 },
-    { id: "ach_27", name: "Triple Threat", description: "Get a Perfect Score in 3 different games.", titleReward: "The Prodigy", coinReward: 20 },
+    { id: "ach_24", name: "The Explorer", description: "Play all 12 games at least once.", titleReward: "The Syllabus Explorer", coinReward: 20 },
+    { id: "ach_25", name: "Jack of All Trades", description: "Score at least 50 points in each of the 12 games.", titleReward: "The Polymath", coinReward: 20 },
+    { id: "ach_26", name: "Comeback Kid", description: "Get a Perfect Score in a game you previously scored low in.", titleReward: "The Resilient Reviser", coinReward: 20 },
+    { id: "ach_27", name: "Triple Threat", description: "Get a Perfect Score in 3 different games.", titleReward: "The English Prodigy", coinReward: 20 },
 
     // --- Category 8: Social & Advanced Challenges ---
-    { id: "ach_28", name: "Friendly Rival", description: "Send 10 challenge codes to friends.", titleReward: "The Instigator", coinReward: 20 },
-    { id: "ach_29", name: "Challenge Addict", description: "Complete 50 challenges overall.", titleReward: "The Gladiator", coinReward: 20 },
-    { id: "ach_30", name: "Good Sport", description: "Lose 5 challenges. Don't give up!", titleReward: "The Resilient", coinReward: 20 },
-    { id: "ach_31", name: "Close Call", description: "Win a challenge with a narrow margin of 1 to 5 points.", titleReward: "The Lucky One", coinReward: 20 },
-    { id: "ach_32", name: "Revenge", description: "Defeat a friend who previously beat your record.", titleReward: "The Avenger", coinReward: 20 },
+    { id: "ach_28", name: "Friendly Rival", description: "Send 10 challenge codes to friends.", titleReward: "The Study Buddy", coinReward: 20 },
+    { id: "ach_29", name: "Challenge Addict", description: "Complete 50 challenges overall.", titleReward: "The Forum Debater", coinReward: 20 },
+    { id: "ach_30", name: "Good Sport", description: "Lose 5 challenges. Don't give up!", titleReward: "The Gracious Learner", coinReward: 20 },
+    { id: "ach_31", name: "Close Call", description: "Win a challenge with a narrow margin of 1 to 5 points.", titleReward: "The Sharp Thinker", coinReward: 20 },
+    { id: "ach_32", name: "Academic Comeback", description: "Defeat a friend who previously beat your record.", titleReward: "The Academic Redeemer", coinReward: 20 },
 
     // --- Category 9: Advanced Inventory ---
-    { id: "ach_33", name: "Window Shopper", description: "Open the Shop menu 20 times.", titleReward: "The Observer", coinReward: 20 },
-    { id: "ach_34", name: "Avid Collector", description: "Collect 10 different avatars in your inventory.", titleReward: "The Hoarder", coinReward: 20 },
-    { id: "ach_35", name: "Elite Squad", description: "Upgrade 3 different avatars to Level 10 (Max Level).", titleReward: "The Commander", coinReward: 20 },
-    { id: "ach_36", name: "Loyal Companion", description: "Equip the same avatar for 7 consecutive days.", titleReward: "The Loyal", coinReward: 20 },
+    { id: "ach_33", name: "Window Shopper", description: "Open the Shop menu 20 times.", titleReward: "The Curious Browser", coinReward: 20 },
+    { id: "ach_34", name: "Avid Collector", description: "Collect 10 different avatars in your inventory.", titleReward: "The Archive Master", coinReward: 20 },
+    { id: "ach_35", name: "Elite Squad", description: "Upgrade 3 different avatars to Level 10 (Max Level).", titleReward: "The Dean of Guardians", coinReward: 20 },
+    { id: "ach_36", name: "Loyal Companion", description: "Equip the same avatar for 7 consecutive days.", titleReward: "The Steadfast Scholar", coinReward: 20 },
 
     // --- Category 10: Special Events & Hidden ---
-    { id: "ach_37", name: "Merdeka Scholar", description: "Log in and play on August 31st.", titleReward: "The Patriot", coinReward: 20 },
-    { id: "ach_38", name: "Holiday Gamer", description: "Log in and play during the December holidays.", titleReward: "The Festive", coinReward: 20 },
-    { id: "ach_39", name: "First Blood", description: "Log in to the Game Hub for the first time.", titleReward: "The Newcomer", coinReward: 20 },
-    { id: "ach_40", name: "Secret Finder", description: "??? (Discover the hidden secret in the Game Hub)", titleReward: "The Detective", coinReward: 20 }
+    { id: "ach_37", name: "Merdeka Scholar", description: "Log in and play on August 31st.", titleReward: "The Patriotic Poet", coinReward: 20 },
+    { id: "ach_38", name: "Holiday Gamer", description: "Log in and play during the December holidays.", titleReward: "The Festive Storyteller", coinReward: 20 },
+    { id: "ach_39", name: "First Arrival", description: "Log in to the Game Hub for the first time.", titleReward: "The Freshman", coinReward: 20 },
+    { id: "ach_40", name: "Secret Finder", description: "??? (Discover the hidden secret in the Game Hub)", titleReward: "The Context Detective", coinReward: 20 }
 ];
