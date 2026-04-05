@@ -1447,10 +1447,22 @@ function initGame(type) {
             coinsEarned += bonusCoins; 
             // --------------------------------------------------------------
 
-            // SEKARANG BARU SIMPAN KE GOOGLE SHEETS
+// SEKARANG BARU SIMPAN KE GOOGLE SHEETS
             if(coinsEarned > 0) {
+                // 1. Dapatkan data memori terkini dari cloud
                 await loadCloudPlayerData();
+                
+                // 2. Tambah syiling (kod asal Cikgu)
                 localPlayerData.coins += coinsEarned;
+                
+                // 3. Tambah markah ke Total supaya selari dengan Sheet
+                localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + coinsEarned; 
+                localPlayerData.Total = localPlayerData.totalScore;
+
+                // 4. Update UI supaya Progress Bar dan Level bergerak secara LIVE!
+                updatePlayerLevelUI();
+                
+                // 5. Simpan semula semua data yang dah dikemaskini ke cloud
                 await saveCloudPlayerData();
             }
 
