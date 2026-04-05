@@ -72,16 +72,21 @@
     100% { transform: scale(1); }
 }
 
-/* 4. LEGENDARY (Efek Wow yang kita buat tadi) */
 .title-legendary {
     font-weight: 900;
     text-transform: uppercase;
-    background: linear-gradient(to right, #f59e0b, #ffffff, #f59e0b);
+    /* Kita tukar putih (#ffffff) kepada emas terang (#fff2cc) */
+    background: linear-gradient(to right, #d97706, #fff2cc, #d97706);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: textShimmer 3s linear infinite;
-    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.6));
+    
+    /* TAMBAHAN PENTING: Garisan tepi halus warna emas gelap */
+    -webkit-text-stroke: 0.5px #92400e; 
+    
+    /* Shadow yang lebih gelap sedikit supaya tulisan 'timbul' */
+    filter: drop-shadow(0 0 3px rgba(180, 83, 9, 0.4));
 }
 
 		/* Gaya untuk King of the Beast (ach_16) - Emas Berapi */
