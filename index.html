@@ -548,6 +548,47 @@ function handleLevelUpReward(gainedXP) {
     }
 }
 
+		// --- FUNGSI KLAIM GANJARAN TERTUNGGAK (RETROACTIVE REWARDS) ---
+function claimRetroactiveRewards() {
+    let currentTotalXP = Number(localPlayerData.totalScore) || 0;
+    
+    // Hitung level saat ini
+    let currentLevel = Math.floor(currentTotalXP / 100) + 1;
+    if (currentLevel > 100) currentLevel = 100; // Batas max level 100
+
+    // Hitung total koin yang SEHARUSNYA mereka miliki dari level 2 hingga level saat ini
+    let expectedTotalCoins = 0;
+    for (let i = 2; i <= currentLevel; i++) {
+        expectedTotalCoins += (i * 100);
+    }
+
+    let currentCoins = Number(localPlayerData.coins) || 0;
+
+    // Jika koin mereka saat ini kurang dari yang seharusnya, bayar kekurangannya!
+    if (currentCoins < expectedTotalCoins) {
+        let missingCoins = expectedTotalCoins - currentCoins;
+        
+        // Perbarui jumlah koin dengan nilai yang sepatutnya
+        localPlayerData.coins = expectedTotalCoins;
+        
+        // Simpan ke Google Sheets / Cloud
+        if (typeof saveCloudPlayerData === "function") {
+            saveCloudPlayerData();
+        }
+
+        // Tampilkan Notifikasi Spesial
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: '🎁 GANJARAN TERTUNGGAK!',
+                html: `Sistem mendeteksi Anda sudah berada di <b>Level ${currentLevel}</b>!<br><br>Anda berhak menerima kompensasi koin dari level-level sebelumnya sebanyak:<br><br><b style="font-size: 24px; color: #d97706;">💰 ${missingCoins.toLocaleString()} Coins</b>`,
+                icon: 'info',
+                confirmButtonText: 'Klaim Sekarang!',
+                confirmButtonColor: '#10b981'
+            });
+        }
+    }
+}
+
 // ==========================================
 // PENGIRAAN LEVEL PEMAIN (TOTAL SCORE)
 // ==========================================
@@ -1492,7 +1533,7 @@ function initGame(type) {
             alert("TIME'S UP! Check your answers below.");
         }
 
-        async function finishGame() {
+async function finishGame() {
             const inputs = document.querySelectorAll('.game-input');
             let score = 0;
             let total = inputs.length;
@@ -1525,8 +1566,21 @@ function initGame(type) {
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
 
-			handleLevelUpReward(score); // Murid dapat XP berdasarkan 'score' mereka
-			localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
+            // 1. SEMAK DAN BAYAR GANJARAN TERTUNGGAK DAHULU (Bagi pemain lama)
+            if (typeof claimRetroactiveRewards === "function") {
+                claimRetroactiveRewards();
+            }
+
+            // 2. KEMUDIAN, semak jika markah game ini menaikkan level mereka
+            if (typeof handleLevelUpReward === "function") {
+                handleLevelUpReward(score); 
+            }
+
+            // 3. BARU kemaskini totalScore secara kekal
+            localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
+            
+            // (Pilihan) Jika Cikgu guna 'Total' untuk leaderboard, pastikan ia diselaraskan
+            localPlayerData.Total = localPlayerData.totalScore;
 
             // --- PENGIRAAN MARKAH + ACARA BULANAN ---
             let baseCoins = score * 2; // Markah asas: 1 betul = 2 syiling
