@@ -1583,7 +1583,7 @@ async function showLeaderboard() {
 
         body.innerHTML = "";
         
-        leaderboard.slice(0, 50).forEach((student, index) => {
+leaderboard.slice(0, 50).forEach((student, index) => {
             let currentRank = index + 1;
             let rankIcon = `#${index+1}`;
             if(index === 0) rankIcon = `🥇`;
@@ -1595,7 +1595,7 @@ async function showLeaderboard() {
                 checkLeaderboardAchievements(currentRank);
             }
 
-            // LUKIS AVATAR 3D
+            // LUKIS AVATAR 3D DENGAN SELAMAT
             let avatarHtml = '';
             if (student.activeAvatar) {
                 let active = student.activeAvatar;
@@ -1606,15 +1606,19 @@ async function showLeaderboard() {
                 // Rujuk kamus data.js untuk paksa baca gambar
                 const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
 
-                if (rawData && rawData[avatarKey]) {
-                    const levelInfo = rawData[avatarKey].levels[active.level - 1];
+                // PENAMBAHBAIKAN: Pastikan rawData dan levels wujud sebelum dibaca
+                if (rawData && rawData[avatarKey] && rawData[avatarKey].levels) {
+                    let safeLevel = active.level || 1; // Jika tiada level, anggap Level 1
+                    const levelInfo = rawData[avatarKey].levels[safeLevel - 1];
+                    
                     if (levelInfo && levelInfo.img) {
                         // JIKA ADA GAMBAR (Level 10)
                         visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto" alt="${active.name}">`;
                         isLegendaryImage = true;
                     } else {
-                        // JIKA IKON BIASA
-                        visualContent = `<i class="${levelInfo.icon || active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
+                        // JIKA IKON BIASA (Guna cara selamat untuk elak Ralat)
+                        let iconToUse = (levelInfo && levelInfo.icon) ? levelInfo.icon : active.icon;
+                        visualContent = `<i class="${iconToUse} text-xl md:text-2xl text-yellow-600"></i>`;
                     }
                 } else {
                     // Sandaran jika data.js tiada
@@ -1634,7 +1638,8 @@ async function showLeaderboard() {
             // ==========================================
             // KIRA LEVEL MURID KHAS UNTUK LEADERBOARD
             // ==========================================
-            let studentLevel = Math.floor(student.grandScore / 100) + 1;
+            // Gunakan parseInt untuk memastikan ia dikira sebagai nombor
+            let studentLevel = Math.floor((parseInt(student.grandScore) || 0) / 100) + 1;
             if (studentLevel > 100) studentLevel = 100; // Hadkan maksimum Level 100
 
             // BINA BARIS JADUAL HTML
@@ -1649,7 +1654,7 @@ async function showLeaderboard() {
                         <div>
                             <div class="font-bold text-gray-800">${student.name}</div>
                             <div class="text-sm font-semibold text-purple-600 mb-1">${student.activeTitle}</div>
-                            <span class="text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 shadow-sm">
+                            <span class="inline-block text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 mt-0.5 shadow-sm">
                                 Lv. ${studentLevel}
                             </span>
                         </div>
