@@ -1533,13 +1533,21 @@ async function showLeaderboard() {
                     name: s.name.toUpperCase(),
                     cls: s.cls,
                     activeAvatar: s.activeAvatar, 
-                    activeTitle: s.activeTitle || "Novice", // 🚨 1. KUMPUL DATA TITLE DARI GOOGLE SHEETS
+                    activeTitle: s.activeTitle || "Novice", 
                     games: {}
                 };
             }
             
-            if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
-                studentData[key].games[s.type] = { score: s.score, total: s.total };
+            // SEMAKAN PINTAR: 
+            // Jika ada rekod game individu (s.type wujud), kumpul macam biasa
+            if (s.type && s.score !== undefined) {
+                if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
+                    studentData[key].games[s.type] = { score: s.score, total: s.total };
+                }
+            } 
+            // Jika ia data direct dari Tab Players, kita simpan direct total terus
+            else {
+                studentData[key].directTotal = s.total || 0;
             }
         });
 
@@ -1548,15 +1556,23 @@ async function showLeaderboard() {
             let grandMax = 0;
             const gameList = [];
             
+            // Pengiraan jika ada data game list individu
             for (const [gameName, gameData] of Object.entries(student.games)) {
                 grandScore += gameData.score;
                 grandMax += gameData.total;
                 gameList.push({ name: gameName, score: gameData.score, total: gameData.total });
             }
             
+            // Penggantian jika guna data Tab Players (Untuk elak NaN)
+            if (student.directTotal !== undefined) {
+                grandScore = student.directTotal;
+                grandMax = student.directTotal; // Disamakan supaya tak jadi NaN
+            }
+            
             return { ...student, gameList, grandScore, grandMax };
         });
 
+        // Susunan markah tertinggi di atas
         leaderboard.sort((a, b) => b.grandScore - a.grandScore);
 
         body.innerHTML = "";
@@ -1567,7 +1583,7 @@ async function showLeaderboard() {
             if(index === 0) rankIcon = `🥇`;
             if(index === 1) rankIcon = `🥈`;
             if(index === 2) rankIcon = `🥉`;
-
+			
             // 👉 PENGGERA ACHIEVEMENT LEADERBOARD DI SINI 👈
             if (localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
                 checkLeaderboardAchievements(currentRank);
