@@ -1545,13 +1545,11 @@ async function showLeaderboard() {
             }
             
             // SEMAKAN PINTAR: 
-            // Jika ada rekod game individu (s.type wujud), kumpul macam biasa
             if (s.type && s.score !== undefined) {
                 if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
                     studentData[key].games[s.type] = { score: s.score, total: s.total };
                 }
             } 
-            // Jika ia data direct dari Tab Players, kita simpan direct total terus
             else {
                 studentData[key].directTotal = s.total || 0;
             }
@@ -1572,7 +1570,7 @@ async function showLeaderboard() {
             // Penggantian jika guna data Tab Players (Untuk elak NaN)
             if (student.directTotal !== undefined) {
                 grandScore = student.directTotal;
-                grandMax = student.directTotal; // Disamakan supaya tak jadi NaN
+                grandMax = student.directTotal;
             }
             
             return { ...student, gameList, grandScore, grandMax };
@@ -1583,19 +1581,21 @@ async function showLeaderboard() {
 
         body.innerHTML = "";
         
-leaderboard.slice(0, 50).forEach((student, index) => {
+        leaderboard.slice(0, 50).forEach((student, index) => {
             let currentRank = index + 1;
             let rankIcon = `#${index+1}`;
             if(index === 0) rankIcon = `🥇`;
             if(index === 1) rankIcon = `🥈`;
             if(index === 2) rankIcon = `🥉`;
             
-            // 👉 PENGGERA ACHIEVEMENT LEADERBOARD DI SINI 👈
-            if (localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
-                checkLeaderboardAchievements(currentRank);
+            // 👉 PENGGERA ACHIEVEMENT LEADERBOARD
+            if (typeof localPlayerData !== 'undefined' && localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
+                if (typeof checkLeaderboardAchievements === 'function') {
+                    checkLeaderboardAchievements(currentRank);
+                }
             }
 
-            // LUKIS AVATAR 3D DENGAN SELAMAT
+            // LUKIS AVATAR 3D
             let avatarHtml = '';
             if (student.activeAvatar) {
                 let active = student.activeAvatar;
@@ -1603,79 +1603,36 @@ leaderboard.slice(0, 50).forEach((student, index) => {
                 let visualContent = '';
                 let isLegendaryImage = false;
 
-                // Rujuk kamus data.js untuk paksa baca gambar
                 const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
 
-                // PENAMBAHBAIKAN: Pastikan rawData dan levels wujud sebelum dibaca
                 if (rawData && rawData[avatarKey] && rawData[avatarKey].levels) {
-                    let safeLevel = active.level || 1; // Jika tiada level, anggap Level 1
+                    let safeLevel = active.level || 1; 
                     const levelInfo = rawData[avatarKey].levels[safeLevel - 1];
                     
                     if (levelInfo && levelInfo.img) {
-                        // JIKA ADA GAMBAR (Level 10)
                         visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto" alt="${active.name}">`;
                         isLegendaryImage = true;
                     } else {
-                        // JIKA IKON BIASA (Guna cara selamat untuk elak Ralat)
                         let iconToUse = (levelInfo && levelInfo.icon) ? levelInfo.icon : active.icon;
                         visualContent = `<i class="${iconToUse} text-xl md:text-2xl text-yellow-600"></i>`;
                     }
                 } else {
-                    // Sandaran jika data.js tiada
                     visualContent = active.img 
                         ? `<img src="${active.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md legendary-avatar mx-auto">` 
                         : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
                     if (active.img) isLegendaryImage = true;
                 }
                 
-                // Balut visualContent ke dalam bulatan Avatar
-                avatarHtml = `<div class="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center ${isLegendaryImage ? '' : 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-400 shadow-sm'}">${visualContent}</div>`;
-            } else {
-                // Jika tiada avatar, papar huruf pertama nama murid
-                avatarHtml = `<div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 font-bold border-2 border-indigo-200">${student.name.charAt(0)}</div>`;
-            }
-
-            // ==========================================
-            // KIRA LEVEL MURID KHAS UNTUK LEADERBOARD
-            // ==========================================
-            // Gunakan parseInt untuk memastikan ia dikira sebagai nombor
-            let studentLevel = Math.floor((parseInt(student.grandScore) || 0) / 100) + 1;
-            if (studentLevel > 100) studentLevel = 100; // Hadkan maksimum Level 100
-
-            // BINA BARIS JADUAL HTML
-            const tr = document.createElement('tr');
-            tr.className = "border-b border-gray-100 hover:bg-indigo-50/30 transition-colors";
-            
-            tr.innerHTML = `
-                <td class="p-4 text-center font-bold text-gray-500 text-lg">${rankIcon}</td>
-                <td class="p-4">
-                    <div class="flex items-center gap-4">
-                        ${avatarHtml}
-                        <div>
-                            <div class="font-bold text-gray-800">${student.name}</div>
-                            <div class="text-sm font-semibold text-purple-600 mb-1">${student.activeTitle}</div>
-                            <span class="inline-block text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 mt-0.5 shadow-sm">
-                                Lv. ${studentLevel}
-                            </span>
-                        </div>
-                    </div>
-                </td>
-                <td class="p-4 text-center font-bold text-gray-600">${student.cls}</td>
-                <td class="p-4 text-center font-bold text-indigo-600 text-lg">${student.grandScore} XP</td>
-            `;
-            
-            body.appendChild(tr);
-        });
                 // Asingkan CSS: Buang bulatan jika ia gambar (supaya tak cacat/sempit)
                 let containerClass = isLegendaryImage 
-                    ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" // Tiada bulatan untuk imej
-                    : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; // Kekalkan bulatan untuk ikon
+                    ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" 
+                    : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; 
 
                 avatarHtml = `
                     <div class="flex flex-col items-center justify-center p-2">
                         <div class="${containerClass}">
                             ${visualContent}
-                            <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level}</div>
+                            <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level || 1}</div>
                         </div>
                         <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto mt-1" title="${active.name}">
                             ${active.name}
@@ -1683,18 +1640,17 @@ leaderboard.slice(0, 50).forEach((student, index) => {
                     </div>
                 `;
             } else {
-                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center">No Guardian</div>`;
+                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center py-4">No Guardian</div>`;
             }
 
-           // 🚨 2. TENTUKAN WARNA/CSS UNTUK TITLE MURID INI
+            // 🚨 TENTUKAN WARNA/CSS UNTUK TITLE MURID
             const titleName = student.activeTitle;
-            const titleData = achievementsData.find(ach => ach.name === titleName);
+            const rawAchievements = (typeof achievementsData !== 'undefined') ? achievementsData : [];
+            const titleData = rawAchievements.find(ach => ach.name === titleName);
             const tier = titleData ? titleData.tier : 'common';
-            const achId = titleData ? titleData.id : ''; // Ambil ID untuk semakan CSS unik
+            const achId = titleData ? titleData.id : ''; 
             
             let titleHTML = "";
-
-            // --- SEMAK ID SPESIFIK DULU (UNTUK CSS UNIK) ---
             if (achId === 'ach_16') {
                 titleHTML = `<div class="title-king inline-block mt-1">👑 ${titleName}</div>`;
             } 
@@ -1704,7 +1660,6 @@ leaderboard.slice(0, 50).forEach((student, index) => {
             else if (achId === 'ach_08') {
                 titleHTML = `<div class="title-master inline-block mt-1">🔥 ${titleName}</div>`;
             }
-            // --- JIKA TIADA ID KHAS, GUNA LOGIK TIER BIASA ---
             else if (tier === 'legendary') {
                 titleHTML = `<div class="title-legendary inline-block mt-1">🏆 ${titleName}</div>`;
             } 
@@ -1717,7 +1672,7 @@ leaderboard.slice(0, 50).forEach((student, index) => {
             else {
                 titleHTML = `<div class="title-common text-[10px] md:text-xs inline-block mt-1">${titleName}</div>`;
             }
-			
+            
             // KUMPULKAN SEMUA GAME DALAM 1 SEL SEBAGAI "BADGES"
             let gamesBadgesHtml = student.gameList.map(game => {
                 return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">
@@ -1725,25 +1680,36 @@ leaderboard.slice(0, 50).forEach((student, index) => {
                         </span>`;
             }).join('');
 
-            const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore}/${student.grandMax}</span>`;
+            // ==========================================
+            // PENGIRAAN LEVEL MURID & BINA LENCANA (BADGE)
+            // ==========================================
+            let studentLevel = Math.floor((parseInt(student.grandScore) || 0) / 100) + 1;
+            if (studentLevel > 100) studentLevel = 100; // Hadkan ke Level 100
+            
+            let levelBadgeHTML = `<div class="mt-1"><span class="inline-block text-[10px] md:text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 shadow-sm">Lv. ${studentLevel}</span></div>`;
 
-            // 🚨 3. MASUKKAN TITLEHTML DI BAWAH NAMA MURID
+            // PAPARAN JUMLAH MARKAH (Tukar ke format XP yang kemas)
+            const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore} XP</span>`;
+
+            // MASUKKAN KESEMUA DATA KE DALAM JADUAL
             const row = `
                 <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
-                    <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl text-center">${rankIcon}</td>
-                    <td class="p-1 md:p-2 w-12 md:w-24">${avatarHtml}</td>
-                    <td class="p-2 md:p-4">
+                    <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl text-center align-middle">${rankIcon}</td>
+                    <td class="p-1 md:p-2 w-12 md:w-24 align-middle">${avatarHtml}</td>
+                    <td class="p-2 md:p-4 align-middle">
                         <div class="font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</div>
-                        ${titleHTML} </td>
-                    <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500 text-center">${student.cls}</td>
-                    <td class="p-2 md:p-4 text-center">${totalHtmlRes}</td>
+                        ${titleHTML} 
+                        ${levelBadgeHTML}
+                    </td>
+                    <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500 text-center align-middle">${student.cls}</td>
+                    <td class="p-2 md:p-4 text-center align-middle">${totalHtmlRes}</td>
                 </tr>
             `;
             body.innerHTML += row;
         });
         
     } catch (error) {
-        console.error(error);
+        console.error("Leaderboard Error:", error);
         body.innerHTML = "<tr><td colspan='7' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>";
     }
 }
