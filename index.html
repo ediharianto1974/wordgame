@@ -468,20 +468,26 @@
 // ==========================================
 function getPlayerLevelInfo(totalScore) {
     let score = parseInt(totalScore) || 0;
+    let xpPerLevel = 100; // Kadar tetap 100 XP untuk setiap level
     
-    // Formula Level: Skor 0=Lv1, 100=Lv2, 400=Lv3, 900=Lv4...
-    let calculatedLevel = Math.floor(Math.sqrt(score / 100)) + 1;
+    // Formula Level Baharu (Setiap gandaan 100 = 1 level)
+    let calculatedLevel = Math.floor(score / xpPerLevel) + 1;
     if (calculatedLevel > 100) calculatedLevel = 100;
 
     // Cari pangkat dari data.js
     let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Novice", icon: "🌱", colorClass: "text-green-500"};
 
-    // PENGIRAAN PROGRESS BAR (XP)
-    let currentLevelBaseXP = Math.pow(calculatedLevel - 1, 2) * 100;
-    let nextLevelBaseXP = Math.pow(calculatedLevel, 2) * 100;
+    // PENGIRAAN PROGRESS BAR (XP) BAHARU
+    let currentLevelBaseXP = (calculatedLevel - 1) * xpPerLevel;
+    let nextLevelBaseXP = calculatedLevel * xpPerLevel;
     
     let xpInCurrentLevel = score - currentLevelBaseXP; // XP yang dah dikumpul dalam level ini
-    let xpNeededForNextLevel = nextLevelBaseXP - currentLevelBaseXP; // Jumlah XP yang perlu untuk naik ke level seterusnya
+    let xpNeededForNextLevel = xpPerLevel; // Sentiasa 100 XP (jurang yang tetap)
+    
+    // Jika sudah level maksimum (100), paparkan XP penuh
+    if (calculatedLevel >= 100) {
+        xpInCurrentLevel = xpNeededForNextLevel; // Memaparkan 100/100 XP
+    }
     
     // Kira Peratus Lebar Bar (0% hingga 100%)
     let percentage = 100;
@@ -1353,7 +1359,7 @@ function initGame(type) {
 
             // 3. Pilih 10 soalan sahaja untuk dipaparkan dalam pusingan ini
             // (Anda boleh tukar nombor 10 di bawah kepada 15 atau 20 jika mahu)
-            let selectedQuestions = allQuestions.slice(0, 25);
+            let selectedQuestions = allQuestions;
 
             // 4. Paparkan soalan yang telah dirawak dan dipilih
             selectedQuestions.forEach((item, index) => {
