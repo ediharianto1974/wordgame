@@ -515,6 +515,36 @@
         let studentDatabase = [];
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
 
+// --- LEVEL & REWARD LOGIC (ENGLISH) ---
+function handleLevelUpReward(gainedXP) {
+    // 1. Identify current XP (totalScore)
+    // We use Number() to ensure it's a digit calculation
+    let currentTotalXP = Number(localPlayerData.totalScore) || 0;
+    
+    // 2. Calculate Level (1 Level = 100 XP)
+    let oldLevel = Math.floor(currentTotalXP / 100) + 1;
+    let newTotalXP = currentTotalXP + gainedXP;
+    let newLevel = Math.floor(newTotalXP / 100) + 1;
+
+    // 3. Check for Level Up
+    if (newLevel > oldLevel) {
+        // Reward: Level * 100
+        let rewardAmount = newLevel * 100;
+        
+        // Update local data
+        localPlayerData.coins = (Number(localPlayerData.coins) || 0) + rewardAmount;
+        
+        // Show Notification
+        Swal.fire({
+            title: '🎉 LEVEL UP!',
+            html: `Congratulations! You reached <b>Level ${newLevel}</b>.<br>Reward: <b>💰 ${rewardAmount.toLocaleString()} Coins</b> added!`,
+            icon: 'success',
+            confirmButtonText: 'Awesome!',
+            confirmButtonColor: '#4f46e5'
+        });
+    }
+}
+
 // ==========================================
 // PENGIRAAN LEVEL PEMAIN (TOTAL SCORE)
 // ==========================================
@@ -1491,6 +1521,9 @@ function initGame(type) {
             document.getElementById('score-val').innerText = `${score}/${total}`;
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
+
+			handleLevelUpReward(score); // Murid dapat XP berdasarkan 'score' mereka
+			localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
 
             // --- PENGIRAAN MARKAH + ACARA BULANAN ---
             let baseCoins = score * 2; // Markah asas: 1 betul = 2 syiling
