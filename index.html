@@ -1589,7 +1589,7 @@ async function showLeaderboard() {
             if(index === 0) rankIcon = `🥇`;
             if(index === 1) rankIcon = `🥈`;
             if(index === 2) rankIcon = `🥉`;
-			
+            
             // 👉 PENGGERA ACHIEVEMENT LEADERBOARD DI SINI 👈
             if (localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
                 checkLeaderboardAchievements(currentRank);
@@ -1623,7 +1623,44 @@ async function showLeaderboard() {
                         : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
                     if (active.img) isLegendaryImage = true;
                 }
+                
+                // Balut visualContent ke dalam bulatan Avatar
+                avatarHtml = `<div class="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center ${isLegendaryImage ? '' : 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-400 shadow-sm'}">${visualContent}</div>`;
+            } else {
+                // Jika tiada avatar, papar huruf pertama nama murid
+                avatarHtml = `<div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 font-bold border-2 border-indigo-200">${student.name.charAt(0)}</div>`;
+            }
 
+            // ==========================================
+            // KIRA LEVEL MURID KHAS UNTUK LEADERBOARD
+            // ==========================================
+            let studentLevel = Math.floor(student.grandScore / 100) + 1;
+            if (studentLevel > 100) studentLevel = 100; // Hadkan maksimum Level 100
+
+            // BINA BARIS JADUAL HTML
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-100 hover:bg-indigo-50/30 transition-colors";
+            
+            tr.innerHTML = `
+                <td class="p-4 text-center font-bold text-gray-500 text-lg">${rankIcon}</td>
+                <td class="p-4">
+                    <div class="flex items-center gap-4">
+                        ${avatarHtml}
+                        <div>
+                            <div class="font-bold text-gray-800">${student.name}</div>
+                            <div class="text-sm font-semibold text-purple-600 mb-1">${student.activeTitle}</div>
+                            <span class="text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 shadow-sm">
+                                Lv. ${studentLevel}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+                <td class="p-4 text-center font-bold text-gray-600">${student.cls}</td>
+                <td class="p-4 text-center font-bold text-indigo-600 text-lg">${student.grandScore} XP</td>
+            `;
+            
+            body.appendChild(tr);
+        });
                 // Asingkan CSS: Buang bulatan jika ia gambar (supaya tak cacat/sempit)
                 let containerClass = isLegendaryImage 
                     ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" // Tiada bulatan untuk imej
