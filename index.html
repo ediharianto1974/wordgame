@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Mastery Game Hub</title>
@@ -548,46 +545,6 @@ function handleLevelUpReward(gainedXP) {
     }
 }
 
-// --- FUNGSI KLAIM GANJARAN TERTUNGGAK (DIBETULKAN) ---
-function claimRetroactiveRewards() {
-    let currentTotalXP = Number(localPlayerData.totalScore) || 0;
-    
-    // Hitung level saat ini
-    let currentLevel = Math.floor(currentTotalXP / 100) + 1;
-    if (currentLevel > 100) currentLevel = 100;
-
-    // Hitung total koin yang SEHARUSNYA mereka miliki
-    let expectedTotalCoins = 0;
-    for (let i = 2; i <= currentLevel; i++) {
-        expectedTotalCoins += (i * 100);
-    }
-
-    let currentCoins = Number(localPlayerData.coins) || 0;
-
-    // Jika koin kurang dari yang sepatutnya
-    if (currentCoins < expectedTotalCoins) {
-        let missingCoins = expectedTotalCoins - currentCoins;
-        
-        // 1. KEMASKINI PEMBOLEHUBAH (Jangan save ke cloud lagi di sini)
-        localPlayerData.coins = expectedTotalCoins;
-        
-        // 2. TAMPILKAN NOTIFIKASI
-        if (typeof Swal !== 'undefined') {
-            Swal.fire({
-                title: '🎁 GANJARAN TERTUNGGAK!',
-                html: `Kompensasi koin dari level sebelumnya berjaya dimasukkan:<br><br><b style="font-size: 24px; color: #d97706;">💰 ${missingCoins.toLocaleString()} Coins</b>`,
-                icon: 'info',
-                confirmButtonText: 'Terima Kasih!',
-                confirmButtonColor: '#10b981'
-            }).then(() => {
-                // (Pilihan) Segar semula paparan koin di skrin jika ada ID spesifik
-                const coinDisplay = document.getElementById('coin-display-id'); // Ganti jika ada ID
-                if (coinDisplay) coinDisplay.innerText = expectedTotalCoins.toLocaleString();
-            });
-        }
-    }
-}
-		
 // ==========================================
 // PENGIRAAN LEVEL PEMAIN (TOTAL SCORE)
 // ==========================================
@@ -1532,7 +1489,7 @@ function initGame(type) {
             alert("TIME'S UP! Check your answers below.");
         }
 
-async function finishGame() {
+        async function finishGame() {
             const inputs = document.querySelectorAll('.game-input');
             let score = 0;
             let total = inputs.length;
@@ -1565,58 +1522,38 @@ async function finishGame() {
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
 
-            // ====================================================================
-            // 0. SINKRONISASI DATA DULU: Dapatkan data terkini dari cloud 
-            // Pastikan kita buat INI DULU sebelum tambah apa-apa ganjaran baru!
-            // ====================================================================
-            if (typeof loadCloudPlayerData === "function") {
-                await loadCloudPlayerData();
-            }
-
-            // 1. SEMAK DAN BAYAR GANJARAN TERTUNGGAK (Retroactive)
-            if (typeof claimRetroactiveRewards === "function") {
-                claimRetroactiveRewards();
-            }
-
-            // 2. KEMUDIAN, semak jika markah game ini menaikkan level
-            if (typeof handleLevelUpReward === "function") {
-                handleLevelUpReward(score); 
-            }
-
-            // 3. BARU kemaskini totalScore secara kekal (tambah markah game ke XP)
-            localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
-            localPlayerData.Total = localPlayerData.totalScore;
+			handleLevelUpReward(score); // Murid dapat XP berdasarkan 'score' mereka
+			localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
 
             // --- PENGIRAAN MARKAH + ACARA BULANAN ---
             let baseCoins = score * 2; // Markah asas: 1 betul = 2 syiling
-            let currentEvent = typeof getCurrentEvent === "function" ? getCurrentEvent() : null;
+            let currentEvent = getCurrentEvent();
             let eventMultiplier = currentEvent ? currentEvent.multiplier : 1;
             
             let coinsEarned = baseCoins * eventMultiplier; 
             // ---------------------------------------- 
 
-            // --- SEMAK CABARAN TERLEBIH DAHULU ---
-            if (typeof checkChallengeReward === "function") {
-                let bonusCoins = checkChallengeReward(score); 
-                coinsEarned += bonusCoins; 
-            }
+            // --- SEMAK CABARAN TERLEBIH DAHULU SEBELUM SIMPAN KE CLOUD ---
+            let bonusCoins = checkChallengeReward(score); 
+            coinsEarned += bonusCoins; 
             // --------------------------------------------------------------
 
-            // SEKARANG BARU TAMBAH KOIN GAME INI
+// SEKARANG BARU SIMPAN KE GOOGLE SHEETS
             if(coinsEarned > 0) {
-                // Tambah syiling game ke dalam baki syiling (yang mungkin dah ditambah retro tadi)
-                localPlayerData.coins = (Number(localPlayerData.coins) || 0) + coinsEarned;
+                // 1. Dapatkan data memori terkini dari cloud
+                await loadCloudPlayerData();
                 
-                // Update UI supaya Progress Bar dan Level bergerak secara LIVE
-                if (typeof updatePlayerLevelUI === "function") {
-                    updatePlayerLevelUI();
-                }
-            }
+                // 2. Tambah syiling (kod asal Cikgu)
+                localPlayerData.coins += coinsEarned;
+                
+                // 3. Tambah markah ke Total supaya selari dengan Sheet
+                localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + coinsEarned; 
+                localPlayerData.Total = localPlayerData.totalScore;
 
-            // ====================================================================
-            // 4. SIMPAN KE GOOGLE SHEETS: Hantar semua data serentak!
-            // ====================================================================
-            if (typeof saveCloudPlayerData === "function") {
+                // 4. Update UI supaya Progress Bar dan Level bergerak secara LIVE!
+                updatePlayerLevelUI();
+                
+                // 5. Simpan semula semua data yang dah dikemaskini ke cloud
                 await saveCloudPlayerData();
             }
 
@@ -1624,14 +1561,11 @@ async function finishGame() {
             const coinText = coinsEarned > 0 ? ` (+${coinsEarned} Coins! 💰)` : '';
             document.getElementById('praise-text').innerText = praise + coinText;
 
-            if (typeof saveScoreToSheets === "function") {
-                saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
-            }
+            saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
 
             // --- SEMAK PENCAPAIAN LOG MASUK ---
         checkAchievements();
         }
-	}
 
         function showHint(inputElement, correctAns) {
             const hint = document.createElement('span');
