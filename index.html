@@ -1627,11 +1627,11 @@ async function finishGame() {
             if (typeof saveScoreToSheets === "function") {
                 saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
             }
-        }
 
             // --- SEMAK PENCAPAIAN LOG MASUK ---
         checkAchievements();
         }
+	}
 
         function showHint(inputElement, correctAns) {
             const hint = document.createElement('span');
