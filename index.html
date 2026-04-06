@@ -1715,14 +1715,22 @@ async function showLeaderboard() {
 
         const studentData = {};
         
-        // MENGUMPUL DATA MARKAH, AVATAR, DAN TITLE
+        // ==========================================
+        // MENGUMPUL DATA DENGAN SELAMAT (KALIS RALAT)
+        // ==========================================
         scores.forEach(s => {
-            const key = s.name.toUpperCase() + "_" + s.cls.toUpperCase();
+            // Pelindung 1: Abaikan data jika baris kosong atau tiada nama
+            if (!s || !s.name) return; 
+
+            // Pelindung 2: Paksa data menjadi teks (String) supaya toUpperCase() tidak ralat
+            const safeName = String(s.name).toUpperCase();
+            const safeCls = s.cls ? String(s.cls).toUpperCase() : "TIADA KELAS";
+            const key = safeName + "_" + safeCls;
             
             if (!studentData[key]) {
                 studentData[key] = {
-                    name: s.name.toUpperCase(),
-                    cls: s.cls,
+                    name: safeName,
+                    cls: s.cls || "-",
                     activeAvatar: s.activeAvatar, 
                     activeTitle: s.activeTitle || "Novice", 
                     games: {}
@@ -1755,7 +1763,7 @@ async function showLeaderboard() {
             // Penggantian jika guna data Tab Players (Untuk elak NaN)
             if (student.directTotal !== undefined) {
                 grandScore = student.directTotal;
-                grandMax = student.directTotal;
+                grandMax = student.directTotal; // Ataupun apa-apa nilai maksimum yang anda mahu
             }
             
             return { ...student, gameList, grandScore, grandMax };
@@ -1774,7 +1782,7 @@ async function showLeaderboard() {
             if(index === 2) rankIcon = `🥉`;
             
             // 👉 PENGGERA ACHIEVEMENT LEADERBOARD
-            if (typeof localPlayerData !== 'undefined' && localPlayerData && student.name.toUpperCase() === localPlayerData.name.toUpperCase()) {
+            if (typeof localPlayerData !== 'undefined' && localPlayerData && student.name === localPlayerData.name.toUpperCase()) {
                 if (typeof checkLeaderboardAchievements === 'function') {
                     checkLeaderboardAchievements(currentRank);
                 }
@@ -1864,7 +1872,37 @@ async function showLeaderboard() {
                             ${game.name}: <span class="text-green-600">${game.score}/${game.total}</span>
                         </span>`;
             }).join('');
+            
+            // BINA BARIS JADUAL HTML (Telah dilengkapkan penutupnya)
+            let tableRow = `
+                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td class="p-2 md:p-3 text-center font-bold text-xl md:text-2xl text-gray-500">${rankIcon}</td>
+                    <td class="p-1 md:p-2 align-middle">${avatarHtml}</td>
+                    <td class="p-2 md:p-3">
+                        <div class="font-bold text-gray-800 uppercase text-xs md:text-sm">${student.name}</div>
+                        ${titleHTML}
+                    </td>
+                    <td class="p-2 md:p-3 text-center font-semibold text-gray-600 text-[10px] md:text-xs">${student.cls || "-"}</td>
+                    <td class="p-2 md:p-3">
+                        <div class="flex flex-wrap gap-1 justify-start">
+                            ${gamesBadgesHtml}
+                        </div>
+                    </td>
+                    <td class="p-2 md:p-3 text-center font-black text-indigo-600 text-sm md:text-base">
+                        ${student.grandScore} <span class="text-xs text-gray-400 font-normal">pts</span>
+                    </td>
+                </tr>
+            `;
+            
+            body.innerHTML += tableRow;
+        });
 
+    } catch (error) {
+        console.error("Leaderboard Error:", error);
+        body.innerHTML = `<tr><td colspan='6' class='p-8 text-center text-red-500 font-bold'>Error loading leaderboard. Please refresh and try again.</td></tr>`;
+    }
+}
+		
             // ==========================================
             // PENGIRAAN LEVEL MURID & BINA LENCANA (BADGE)
             // ==========================================
