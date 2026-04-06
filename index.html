@@ -572,64 +572,60 @@ function checkRetroactiveOnLogin() {
 function checkLevelRewardsOnLogin() {
     let currentTotalXP = Number(localPlayerData.totalScore) || 0;
     
-    // Kira level semasa pemain (Formula asal anda: setiap 100 XP = 1 level)
     let currentLevel = Math.floor(currentTotalXP / 100) + 1;
-    if (currentLevel > 100) currentLevel = 100; // Hadkan ke Level 100
+    if (currentLevel > 100) currentLevel = 100; 
 
-    // Pastikan array claimedLevels wujud 
-    if (!localPlayerData.claimedLevels) {
+    // Pastikan array wujud
+    if (!localPlayerData.claimedLevels || !Array.isArray(localPlayerData.claimedLevels)) {
         localPlayerData.claimedLevels = [];
     }
+
+    // 🔥 PENAPIS KEBAL: Paksa semua data dalam laci menjadi nombor (Elak isu "2" != 2)
+    let claimedArray = localPlayerData.claimedLevels.map(Number); 
 
     let totalRewardToGive = 0;
     let newlyClaimedLevels = [];
 
-    // Mula semak dari Level 2 hingga Level semasa
-    // (Kita mula dari 2 kerana pemain bermula di Level 1)
     for (let i = 2; i <= currentLevel; i++) {
-        
-        // Semak laci memori: Adakah nombor level ini tiada dalam laci?
-        if (!localPlayerData.claimedLevels.includes(i)) {
-            // JIKA TIADA: Bermaksud pemain belum ambil hadiah level ini!
-            totalRewardToGive += (i * 100); // Kira jumlah ganjaran
-            newlyClaimedLevels.push(i);     // Senaraikan level yang baru dituntut
-            
-            // Masukkan nombor level ini ke dalam laci (Supaya tak dituntut lagi esok)
-            localPlayerData.claimedLevels.push(i); 
+        // Semak dengan tepat
+        if (!claimedArray.includes(i)) {
+            totalRewardToGive += (i * 100); 
+            newlyClaimedLevels.push(i);     
+            claimedArray.push(i); // Masukkan nombor baru
         }
     }
 
-    // Jika ada hadiah baru yang perlu diberikan
+    // Jika ada hadiah baru
     if (newlyClaimedLevels.length > 0) {
-        // Masukkan syiling ke akaun
+        
+        // Kemaskini laci memori yang sebenar
+        localPlayerData.claimedLevels = claimedArray;
+        
         localPlayerData.coins = (Number(localPlayerData.coins) || 0) + totalRewardToGive;
 
-        // SIMPAN TERUS KE GOOGLE SHEETS
+        // SIMPAN KE GOOGLE SHEETS
         if (typeof saveCloudPlayerData === 'function') {
             saveCloudPlayerData();
         }
 
-        // Keluarkan Notifikasi
         setTimeout(() => {
             if (typeof Swal !== 'undefined') {
                 Swal.fire({
                     title: '🎁 LEVEL UP REWARD!',
-                    html: `Congratulations! You have open the reward for <b>Level ${newlyClaimedLevels.join(', ')}</b>.<br><br>Reward: <b style="color: #d97706; font-size: 20px;">💰 ${totalRewardToGive.toLocaleString()} Coins</b> is given!`,
+                    html: `Tahniah! Anda telah membuka ganjaran untuk <b>Level ${newlyClaimedLevels.join(', ')}</b>.<br><br>Ganjaran: <b style="color: #d97706; font-size: 20px;">💰 ${totalRewardToGive.toLocaleString()} Coins</b> telah dimasukkan!`,
                     icon: 'success',
-                    confirmButtonText: 'Thank you!',
+                    confirmButtonText: 'Terima Kasih!',
                     confirmButtonColor: '#4f46e5'
                 });
             } else {
-                alert(`🎁 LEVEL REWARD!\n\nCongratulations, reward for Level ${newlyClaimedLevels.join(', ')} open!\nYou receive +${totalRewardToGive} Coins!`);
+                alert(`🎁 LEVEL REWARD!\n\nTahniah, ganjaran Level ${newlyClaimedLevels.join(', ')} dibuka!\nAnda terima +${totalRewardToGive} Coins!`);
             }
-            
-            // Kemaskini paparan syiling & profil di dashboard jika perlu
             if (typeof updatePlayerLevelUI === 'function') updatePlayerLevelUI();
-        }, 1500); // Tunggu sekejap sebelum pop-up keluar
+        }, 1500); 
         
-        console.log(`[Reward] BSuccessful claiming reward for level: ${newlyClaimedLevels.join(', ')}`);
+        console.log(`[Reward] Berjaya menuntut hadiah untuk level:`, newlyClaimedLevels);
     } else {
-        console.log("[Reward] No new reward. All level's reward had been claimed.");
+        console.log("[Reward] Tiada hadiah baru. Laci memori disemak:", claimedArray);
     }
 }
 
@@ -970,14 +966,15 @@ async function startGameHub() {
                 alert(`🚨 ANNOUNCEMENT FOR RETURNING STUDENTS 🚨\n\nThe system is now more secure! We have generated a special PIN for your account:\n\n👉 YOUR PIN: ${autoPin} 👈\n\nPLEASE WRITE IT DOWN NOW! You must use this PIN to log in next time.`);
                 
                 localPlayerData = {
-                    name: nameInput, class: classInput, passcode: autoPin,
-                    coins: data.coins || 0, inventory: data.inventory || [],
-                    avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
-                    achievements: data.achievements || [],
-                    totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
-                    activeTitle: data.activeTitle || "Novice", 
-					claimedLevels: data.claimedLevels || []
-                };
+    			name: nameInput, class: classInput, passcode: autoPin,
+   			 	coins: data.coins || 0, inventory: data.inventory || [],
+    			avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
+    			achievements: data.achievements || [],
+    			totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
+    			activeTitle: data.activeTitle || "Novice", 
+    			// 👇 GUNA CARA INI UNTUK PASTIKAN IA MENJADI ARRAY YANG BETUL
+    			claimedLevels: Array.isArray(data.claimedLevels) ? data.claimedLevels : [] 
+};
                 studentInfo = { name: nameInput, class: classInput };
 
                 // Pakaikan style title terus ke dashboard
@@ -995,14 +992,16 @@ async function startGameHub() {
                     return; 
                 }
                 
-                localPlayerData = {
-                    name: nameInput, class: classInput, passcode: pinInput,
-                    coins: data.coins || 0, inventory: data.inventory || [],
-                    avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
-                    achievements: data.achievements || [],
-                    totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
-                    activeTitle: data.activeTitle || "Novice" 
-                };
+		localPlayerData = {
+        name: nameInput, class: classInput, passcode: enteredPin,
+        coins: data.coins || 0, inventory: data.inventory || [],
+        avatars: data.avatars || {}, activeAvatar: data.activeAvatar || null,
+        achievements: data.achievements || [],
+        totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
+        activeTitle: data.activeTitle || "Novice", 
+        // 👇 TAMBAH BARIS INI JUGA!
+        claimedLevels: Array.isArray(data.claimedLevels) ? data.claimedLevels : [] 
+    };
                 studentInfo = { name: nameInput, class: classInput };
 
                 // PANGGIL FUNGSI STYLE UNTUK PEMAIN C2 JUGA (Supaya title tak jadi warna kelabu bila login)
