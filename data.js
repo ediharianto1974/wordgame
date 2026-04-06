@@ -837,40 +837,60 @@ const avatars = {
         ]
     }
 };
+
 // ==========================================
-// 3. DATA ITEM KEDAI (BADGE & EDU ITEMS)
+// DATA KEDAI BADGE (BADGES SHOP)
 // ==========================================
-const shopItems = [
-    // ------------------------------------------
-    // KATEGORI: GRAMMAR BADGES
-    // ------------------------------------------
-    { id: 'badge_grammar_1', category: 'badge', name: 'Beginner Grammar', price: 300, icon: 'fas fa-star text-green-300', desc: 'A good start for your grammar journey!' },
-    { id: 'badge_grammar_2', category: 'badge', name: 'Novice Grammar', price: 400, icon: 'fas fa-medal text-green-400', desc: 'You are getting better at grammar.' },
-    { id: 'badge_grammar_3', category: 'badge', name: 'Intermediate Grammar', price: 500, icon: 'fas fa-rosette text-green-500', desc: 'Solid grammar skills proven.' },
-    { id: 'badge_grammar_4', category: 'badge', name: 'Advanced Grammar', price: 600, icon: 'fas fa-certificate text-green-600', desc: 'Excellent understanding of grammar.' },
-    { id: 'badge_grammar_5', category: 'badge', name: 'Master Grammar', price: 700, icon: 'fas fa-award text-green-700', desc: 'A shiny badge to show off perfect grammar!' },
-    { id: 'badge_grammar_6', category: 'badge', name: 'Ultimate Grammar', price: 800, icon: 'fas fa-trophy text-green-800', desc: 'The God of Grammar! Flawless!' },
+const shopBadges = [
+    // ---------------------------------------------------------
+    // 1. GAME BADGES (Tiada syarat, sentiasa ada di kedai)
+    // Harga: 500 (Boleh tukar mengikut harga asal anda)
+    // ---------------------------------------------------------
+    { id: "gb_01", name: "Guessing Word Badge", icon: "fas fa-question-circle", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_02", name: "Word Scramble Badge", icon: "fas fa-random", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_03", name: "Synonym Badge", icon: "fas fa-equals", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_04", name: "Antonym Badge", icon: "fas fa-exchange-alt", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_05", name: "Missing Letter Badge", icon: "fas fa-search", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_06", name: "Past Tense Badge", icon: "fas fa-history", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_07", name: "Plural Form Badge", icon: "fas fa-copy", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_08", name: "Correct Spelling Badge", icon: "fas fa-spell-check", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_09", name: "Occupation Badge", icon: "fas fa-user-md", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_10", name: "Gender Noun Badge", icon: "fas fa-venus-mars", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_11", name: "Popular Idioms Badge", icon: "fas fa-comments", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_12", name: "Superlatives Badge", icon: "fas fa-trophy", price: 500, type: "game", tier: "common", condition: "none" },
 
-    // ------------------------------------------
-    // KATEGORI: VOCABULARY BADGES
-    // ------------------------------------------
-    { id: 'badge_vocab_1', category: 'badge', name: 'Beginner Vocab', price: 300, icon: 'fas fa-star text-purple-300', desc: 'Learning new words every day.' },
-    { id: 'badge_vocab_2', category: 'badge', name: 'Novice Vocab', price: 400, icon: 'fas fa-medal text-purple-400', desc: 'Your vocabulary is expanding.' },
-    { id: 'badge_vocab_3', category: 'badge', name: 'Intermediate Vocab', price: 500, icon: 'fas fa-rosette text-purple-500', desc: 'You know a lot of useful words.' },
-    { id: 'badge_vocab_4', category: 'badge', name: 'Advanced Vocab', price: 600, icon: 'fas fa-certificate text-purple-600', desc: 'A walking dictionary!' },
-    { id: 'badge_vocab_5', category: 'badge', name: 'Vocab Master', price: 700, icon: 'fas fa-award text-purple-700', desc: 'Proof that you know thousands of words.' },
-    { id: 'badge_vocab_6', category: 'badge', name: 'Ultimate Vocab King', price: 800, icon: 'fas fa-crown text-purple-800', desc: 'The ruler of all English words!' },
+    // ---------------------------------------------------------
+    // 2. ACHIEVEMENT BADGES (Terkunci sehingga syarat dipenuhi)
+    // ---------------------------------------------------------
+    
+    // --- TIER COMMON (Harga: 1,000 coins) ---
+    { id: "ab_c1", name: "First Try Badge", desc: "Main mana-mana 1 permainan.", icon: "fas fa-seedling", price: 1000, type: "achievement", tier: "common", reqType: "total_games", reqValue: 1 },
+    { id: "ab_c2", name: "High Five Badge", desc: "Main 5 permainan keseluruhan.", icon: "fas fa-hand-paper", price: 1000, type: "achievement", tier: "common", reqType: "total_games", reqValue: 5 },
+    { id: "ab_c3", name: "Quick Learner Badge", desc: "Dapat 1 markah penuh (Perfect Score).", icon: "fas fa-star", price: 1000, type: "achievement", tier: "common", reqType: "perfect_scores", reqValue: 1 },
+    { id: "ab_c4", name: "Level 5 Guardian Badge", desc: "Capai Level 5.", icon: "fas fa-arrow-up", price: 1000, type: "achievement", tier: "common", reqType: "level", reqValue: 5 },
+    { id: "ab_c5", name: "Pocket Money Badge", desc: "Kumpul jumlah 5,000 coins.", icon: "fas fa-coins", price: 1000, type: "achievement", tier: "common", reqType: "total_coins", reqValue: 5000 },
 
-    // ------------------------------------------
-    // KATEGORI: SPEED RUNNER BADGES
-    // ------------------------------------------
-    { id: 'badge_speed_1', category: 'badge', name: 'Beginner Speed', price: 300, icon: 'fas fa-star text-blue-300', desc: 'Answering questions at a steady pace.' },
-    { id: 'badge_speed_2', category: 'badge', name: 'Novice Speed', price: 400, icon: 'fas fa-medal text-blue-400', desc: 'Getting faster with your fingers.' },
-    { id: 'badge_speed_3', category: 'badge', name: 'Intermediate Speed', price: 500, icon: 'fas fa-rosette text-blue-500', desc: 'Quick thinker and fast typer.' },
-    { id: 'badge_speed_4', category: 'badge', name: 'Advanced Speed', price: 600, icon: 'fas fa-certificate text-blue-600', desc: 'Lightning fast reflexes!' },
-    { id: 'badge_speed_5', category: 'badge', name: 'Speed Master', price: 700, icon: 'fas fa-award text-blue-700', desc: 'Almost impossible to beat your speed.' },
-    { id: 'badge_speed_6', category: 'badge', name: 'Ultimate Speedster', price: 800, icon: 'fas fa-bolt text-blue-800', desc: 'The speed of light! Unstoppable!' },
+    // --- TIER RARE (Harga: 2,000 coins) ---
+    { id: "ab_r1", name: "Regular Player Badge", desc: "Main 20 permainan keseluruhan.", icon: "fas fa-gamepad", price: 2000, type: "achievement", tier: "rare", reqType: "total_games", reqValue: 20 },
+    { id: "ab_r2", name: "Explorer Badge", desc: "Main 6 jenis permainan berbeza.", icon: "fas fa-map", price: 2000, type: "achievement", tier: "rare", reqType: "unique_games", reqValue: 6 },
+    { id: "ab_r3", name: "Hat-trick Badge", desc: "Dapat 3 markah penuh (Perfect Score).", icon: "fas fa-hat-wizard", price: 2000, type: "achievement", tier: "rare", reqType: "perfect_scores", reqValue: 3 },
+    { id: "ab_r4", name: "Level 15 Guardian Badge", desc: "Capai Level 15.", icon: "fas fa-shield-alt", price: 2000, type: "achievement", tier: "rare", reqType: "level", reqValue: 15 },
+    { id: "ab_r5", name: "Coin Collector Badge", desc: "Kumpul jumlah 20,000 coins.", icon: "fas fa-piggy-bank", price: 2000, type: "achievement", tier: "rare", reqType: "total_coins", reqValue: 20000 },
 
+    // --- TIER EPIC (Harga: 5,000 coins) ---
+    { id: "ab_e1", name: "Veteran Badge", desc: "Main 50 permainan keseluruhan.", icon: "fas fa-medal", price: 5000, type: "achievement", tier: "epic", reqType: "total_games", reqValue: 50 },
+    { id: "ab_e2", name: "Adventurer Badge", desc: "Main 10 jenis permainan berbeza.", icon: "fas fa-compass", price: 5000, type: "achievement", tier: "epic", reqType: "unique_games", reqValue: 10 },
+    { id: "ab_e3", name: "Flawless Badge", desc: "Dapat 8 markah penuh (Perfect Score).", icon: "fas fa-gem", price: 5000, type: "achievement", tier: "epic", reqType: "perfect_scores", reqValue: 8 },
+    { id: "ab_e4", name: "Level 30 Guardian Badge", desc: "Capai Level 30.", icon: "fas fa-chess-knight", price: 5000, type: "achievement", tier: "epic", reqType: "level", reqValue: 30 },
+    { id: "ab_e5", name: "Wealthy Student Badge", desc: "Kumpul jumlah 50,000 coins.", icon: "fas fa-money-bill-wave", price: 5000, type: "achievement", tier: "epic", reqType: "total_coins", reqValue: 50000 },
+
+    // --- TIER LEGENDARY (Harga: 10,000 coins) ---
+    { id: "ab_l1", name: "The Addict Badge", desc: "Main 100 permainan keseluruhan.", icon: "fas fa-fire", price: 10000, type: "achievement", tier: "legendary", reqType: "total_games", reqValue: 100 },
+    { id: "ab_l2", name: "Perfectionist Badge", desc: "Dapat markah penuh untuk SEMUA 12 permainan.", icon: "fas fa-crown", price: 10000, type: "achievement", tier: "legendary", reqType: "perfect_scores", reqValue: 12 },
+    { id: "ab_l3", name: "Level 50 Master Badge", desc: "Capai Level 50.", icon: "fas fa-dragon", price: 10000, type: "achievement", tier: "legendary", reqType: "level", reqValue: 50 },
+    { id: "ab_l4", name: "Millionaire Badge", desc: "Kumpul jumlah 100,000 coins.", icon: "fas fa-sack-dollar", price: 10000, type: "achievement", tier: "legendary", reqType: "total_coins", reqValue: 100000 },
+    { id: "ab_l5", name: "The Legend Badge", desc: "Capai Level 100 (Max Level).", icon: "fas fa-infinity", price: 10000, type: "achievement", tier: "legendary", reqType: "level", reqValue: 100 }
+];
 // ------------------------------------------
     // KATEGORI: EDU SHOP (BARANGAN SEKOLAH / ALAT TULIS)
     // ------------------------------------------
