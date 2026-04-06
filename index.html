@@ -515,42 +515,54 @@
         let studentDatabase = [];
         let localPlayerData = { coins: 0, inventory: [], avatars: {}, activeAvatar: null };
 
-// --- LEVEL & REWARD LOGIC (ENGLISH) ---
-function handleLevelUpReward(gainedXP) {
-    // Pastikan kita guna data format nombor
+// --- SEMAKAN GANJARAN RETROAKTIF SEMASA LOG MASUK ---
+function checkRetroactiveOnLogin() {
+    // 1. Pastikan data wujud dan dalam format nombor
     let currentTotalXP = Number(localPlayerData.totalScore) || 0;
     
-    let oldLevel = Math.floor(currentTotalXP / 100) + 1;
-    let newTotalXP = currentTotalXP + gainedXP;
-    let newLevel = Math.floor(newTotalXP / 100) + 1;
+    // Kita perlukan rekod 'level' semasa yang disimpan dalam database pemain
+    // Jika tiada, kita anggap pemain bermula di Level 1
+    let savedLevel = Number(localPlayerData.level) || 1; 
+    
+    // 2. Kira level yang SEPATUTNYA pemain capai berdasarkan formula XP terkini
+    let expectedLevel = Math.floor(currentTotalXP / 100) + 1;
 
-    // Semak jika ada kenaikan level
-    if (newLevel > oldLevel) {
-        let totalRewardAmount = 0;
-        
-        // Kita gunakan gelung (loop) supaya jika murid melompat terus 2-3 level, 
-        // ganjaran setiap level itu tetap dikira dan tak terlepas!
-        for (let i = oldLevel + 1; i <= newLevel; i++) {
-            totalRewardAmount += (i * 100);
+    // 3. Semak jika level sepatutnya (expected) LEBIH BESAR dari level tersimpan (saved)
+    if (expectedLevel > savedLevel) {
+        let totalRetroactiveReward = 0;
+
+        // 4. Gelung (loop) untuk mengira ganjaran bagi setiap level yang tertinggal
+        for (let i = savedLevel + 1; i <= expectedLevel; i++) {
+            totalRetroactiveReward += (i * 100);
         }
-        
-        // Tambah syiling secara rasmi ke dalam akaun murid
-        localPlayerData.coins = (Number(localPlayerData.coins) || 0) + totalRewardAmount;
-        
-        // Keluarkan notifikasi Pop-up (pastikan ia tunggu fungsi lain habis)
+
+        // 5. Kemas kini data pemain dengan level baru & syiling tambahan
+        localPlayerData.level = expectedLevel;
+        localPlayerData.coins = (Number(localPlayerData.coins) || 0) + totalRetroactiveReward;
+
+        // PENTING: Letak fungsi simpan data anda di sini supaya data dikemas kini di server/local
+        // Contoh: savePlayerData(localPlayerData);
+
+        // 6. Paparkan notifikasi Pop-up (Ganjaran Tertunggak)
         setTimeout(() => {
             if (typeof Swal !== 'undefined') {
                 Swal.fire({
-                    title: '🎉 LEVEL UP!',
-                    html: `Congratulations! You have reached <b>Level ${newLevel}</b>.<br><br>Reward: <b style="color: #d97706; font-size: 20px;">💰 ${totalRewardAmount.toLocaleString()} Coins</b> was given!`,
-                    icon: 'success',
-                    confirmButtonText: 'Awesome!',
+                    title: '🎁 Ganjaran Tertunggak!',
+                    html: `Sistem mendapati anda telah mencapai <b>Level ${expectedLevel}</b>!<br><br>Ganjaran level-up sebelum ini: <b style="color: #d97706; font-size: 20px;">💰 ${totalRetroactiveReward.toLocaleString()} Coins</b> telah dimasukkan ke akaun anda.`,
+                    icon: 'info',
+                    confirmButtonText: 'Terima Kasih!',
                     confirmButtonColor: '#4f46e5'
                 });
             } else {
-                alert(`🎉 LEVEL UP! Level ${newLevel}. Reward +${totalRewardAmount} Coins!`);
+                alert(`🎁 Ganjaran Log Masuk! Anda kini Level ${expectedLevel}. Ganjaran tertunggak +${totalRetroactiveReward} Coins!`);
             }
-        }, 500); // Delay sikit supaya tak bertembung dengan notifikasi lain
+        }, 1000); // Masa delay (1 saat) dipanjangkan sikit supaya UI siap 'load' semasa login
+
+        console.log(`[Retroactive Check] Berjaya dinaik taraf dari Level ${savedLevel} ke Level ${expectedLevel}. Ganjaran: ${totalRetroactiveReward}`);
+        
+    } else {
+        // Jika level selari dengan XP, tiada tindakan diperlukan
+        console.log("[Retroactive Check] Tiada ganjaran tertunggak. Level pemain selari dengan XP terkini.");
     }
 }
 
