@@ -567,6 +567,73 @@ function checkRetroactiveOnLogin() {
 }
 
 // ==========================================
+// SISTEM SEMAKAN GANJARAN LEVEL PROAKTIF
+// ==========================================
+function checkLevelRewardsOnLogin() {
+    let currentTotalXP = Number(localPlayerData.totalScore) || 0;
+    
+    // Kira level semasa pemain (Formula asal anda: setiap 100 XP = 1 level)
+    let currentLevel = Math.floor(currentTotalXP / 100) + 1;
+    if (currentLevel > 100) currentLevel = 100; // Hadkan ke Level 100
+
+    // Pastikan array claimedLevels wujud 
+    if (!localPlayerData.claimedLevels) {
+        localPlayerData.claimedLevels = [];
+    }
+
+    let totalRewardToGive = 0;
+    let newlyClaimedLevels = [];
+
+    // Mula semak dari Level 2 hingga Level semasa
+    // (Kita mula dari 2 kerana pemain bermula di Level 1)
+    for (let i = 2; i <= currentLevel; i++) {
+        
+        // Semak laci memori: Adakah nombor level ini tiada dalam laci?
+        if (!localPlayerData.claimedLevels.includes(i)) {
+            // JIKA TIADA: Bermaksud pemain belum ambil hadiah level ini!
+            totalRewardToGive += (i * 100); // Kira jumlah ganjaran
+            newlyClaimedLevels.push(i);     // Senaraikan level yang baru dituntut
+            
+            // Masukkan nombor level ini ke dalam laci (Supaya tak dituntut lagi esok)
+            localPlayerData.claimedLevels.push(i); 
+        }
+    }
+
+    // Jika ada hadiah baru yang perlu diberikan
+    if (newlyClaimedLevels.length > 0) {
+        // Masukkan syiling ke akaun
+        localPlayerData.coins = (Number(localPlayerData.coins) || 0) + totalRewardToGive;
+
+        // SIMPAN TERUS KE GOOGLE SHEETS
+        if (typeof saveCloudPlayerData === 'function') {
+            saveCloudPlayerData();
+        }
+
+        // Keluarkan Notifikasi
+        setTimeout(() => {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: '🎁 LEVEL UP REWARD!',
+                    html: `Congratulations! You have open the reward for <b>Level ${newlyClaimedLevels.join(', ')}</b>.<br><br>Reward: <b style="color: #d97706; font-size: 20px;">💰 ${totalRewardToGive.toLocaleString()} Coins</b> is given!`,
+                    icon: 'success',
+                    confirmButtonText: 'Thank you!',
+                    confirmButtonColor: '#4f46e5'
+                });
+            } else {
+                alert(`🎁 LEVEL REWARD!\n\nCongratulations, reward for Level ${newlyClaimedLevels.join(', ')} open!\nYou receive +${totalRewardToGive} Coins!`);
+            }
+            
+            // Kemaskini paparan syiling & profil di dashboard jika perlu
+            if (typeof updatePlayerLevelUI === 'function') updatePlayerLevelUI();
+        }, 1500); // Tunggu sekejap sebelum pop-up keluar
+        
+        console.log(`[Reward] BSuccessful claiming reward for level: ${newlyClaimedLevels.join(', ')}`);
+    } else {
+        console.log("[Reward] No new reward. All level's reward had been claimed.");
+    }
+}
+
+// ==========================================
 // PENGIRAAN LEVEL PEMAIN (TOTAL SCORE)
 // ==========================================
 function getPlayerLevelInfo(totalScore) {
@@ -890,6 +957,7 @@ async function startGameHub() {
                 coins: 0, inventory: [], avatars: {}, activeAvatar: null,
                 achievements: [], totalScore: 0,
                 activeTitle: "Novice" // 🚨 Title diletakkan untuk murid baru
+				claimedLevels: []
             };
             studentInfo = { name: nameInput, class: classInput };
             await saveCloudPlayerData(); 
@@ -908,6 +976,7 @@ async function startGameHub() {
                     achievements: data.achievements || [],
                     totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
                     activeTitle: data.activeTitle || "Novice" 
+					claimedLevels: data.claimedLevels || []
                 };
                 studentInfo = { name: nameInput, class: classInput };
 
@@ -982,6 +1051,11 @@ async function startGameHub() {
         if (typeof checkAchievements === "function") {
             checkAchievements();
         }
+
+		// 👉 PENGGERA LEVEL REWARD 👈
+		if (typeof checkLevelRewardsOnLogin === "function") {
+    		checkLevelRewardsOnLogin();
+}
 
     } catch (error) {
         console.error(error);
@@ -1543,8 +1617,13 @@ function initGame(type) {
             document.getElementById('final-score').classList.remove('hidden');
             document.getElementById('check-btn').classList.add('hidden');
 
-			handleLevelUpReward(score); // Murid dapat XP berdasarkan 'score' mereka
+			// Murid dapat XP berdasarkan 'score' mereka
 			localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
+
+			// Semak kalau-kalau XP baru ini naik level, beri hadiah on-the-spot!
+			if (typeof checkLevelRewardsOnLogin === "function") {
+   			checkLevelRewardsOnLogin();
+}
 
             // --- PENGIRAAN MARKAH + ACARA BULANAN ---
             let baseCoins = score * 2; // Markah asas: 1 betul = 2 syiling
