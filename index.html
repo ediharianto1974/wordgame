@@ -1231,103 +1231,169 @@ function updateDashboardAvatars() {
         }
 
         function renderShop() {
-            document.getElementById('coin-balance').innerText = localPlayerData.coins;
-            
-            const avatarsContainer = document.getElementById('tab-avatars');
-            const badgesContainer = document.getElementById('tab-badges');
-            const eduContainer = document.getElementById('tab-edu');
-            
-            avatarsContainer.innerHTML = ''; 
-            badgesContainer.innerHTML = '';
-            eduContainer.innerHTML = '';
+    document.getElementById('coin-balance').innerText = localPlayerData.coins;
+    
+    const avatarsContainer = document.getElementById('tab-avatars');
+    const badgesContainer = document.getElementById('tab-badges');
+    const eduContainer = document.getElementById('tab-edu');
+    
+    avatarsContainer.innerHTML = ''; 
+    badgesContainer.innerHTML = '';
+    eduContainer.innerHTML = '';
 
-            for (const [key, avatar] of Object.entries(avatars)) {
-                let currentLevel = localPlayerData.avatars[key] || 0;
-                let nextLevelData = avatar.levels.find(l => l.level === currentLevel + 1);
-                let displayData = nextLevelData || avatar.levels[avatar.maxLevel - 1]; 
+    // ==========================================
+    // 1. RENDER AVATARS / GUARDIANS (Kekal Sama)
+    // ==========================================
+    for (const [key, avatar] of Object.entries(avatars)) {
+        let currentLevel = localPlayerData.avatars[key] || 0;
+        let nextLevelData = avatar.levels.find(l => l.level === currentLevel + 1);
+        let displayData = nextLevelData || avatar.levels[avatar.maxLevel - 1]; 
 
-                let btnHtml = '';
-                if (currentLevel >= avatar.maxLevel) {
-                    btnHtml = `<button disabled class="w-full mt-4 bg-gray-300 text-gray-600 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-400">MAX LEVEL REACHED</button>`;
-                } else {
-                    const canAfford = localPlayerData.coins >= nextLevelData.price;
-                    if (canAfford) {
-                        btnHtml = `<button onclick="buyAvatar('${key}', ${nextLevelData.level}, ${nextLevelData.price})" class="w-full mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 rounded-xl transition shadow shadow-indigo-300">Unlock Lvl ${nextLevelData.level} (${nextLevelData.price} <i class="fas fa-coins"></i>)</button>`;
-                    } else {
-                        btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${nextLevelData.price} <i class="fas fa-coins"></i></button>`;
-                    }
-                }
-
-                // 1. Tentukan visual yang hendak dipaparkan (Imej atau Ikon)
-const avatarVisual = displayData.img 
-    ? `<img src="${displayData.img}" class="h-16 w-auto object-contain mx-auto drop-shadow-xl" alt="${displayData.name}">` 
-    : `<i class="${displayData.icon}"></i>`;
-
-// 2. Masukkan ke dalam HTML
-avatarsContainer.innerHTML += `
-    <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition shadow-sm text-center flex flex-col justify-between">
-        <div>
-            <div class="text-xs font-bold text-indigo-400 uppercase mb-1 tracking-wider">${avatar.theme}</div>
-            
-            <div class="text-5xl mb-3 mt-2 flex justify-center h-16 items-center">
-                ${avatarVisual}
-            </div>
-
-            <h3 class="font-bold text-gray-800 text-lg">${displayData.name}</h3>
-            <p class="text-[10px] font-bold text-indigo-600 mb-2">Current: Level ${currentLevel}/${avatar.maxLevel}</p>
-            <p class="text-xs text-gray-600 mt-1">${displayData.desc}</p>
-        </div>
-        ${btnHtml}
-    </div>
-`;
+        let btnHtml = '';
+        if (currentLevel >= avatar.maxLevel) {
+            btnHtml = `<button disabled class="w-full mt-4 bg-gray-300 text-gray-600 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-400">MAX LEVEL REACHED</button>`;
+        } else {
+            const canAfford = localPlayerData.coins >= nextLevelData.price;
+            if (canAfford) {
+                btnHtml = `<button onclick="buyAvatar('${key}', ${nextLevelData.level}, ${nextLevelData.price})" class="w-full mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 rounded-xl transition shadow shadow-indigo-300">Unlock Lvl ${nextLevelData.level} (${nextLevelData.price} <i class="fas fa-coins"></i>)</button>`;
+            } else {
+                btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${nextLevelData.price} <i class="fas fa-coins"></i></button>`;
             }
-
-            if (typeof shopItems !== 'undefined') {
-                shopItems.forEach(item => {
-                    const isOwned = localPlayerData.inventory.includes(item.id);
-                    const canAfford = localPlayerData.coins >= item.price;
-                    
-const isEdu = item.category === 'edu';
-                    
-                    let btnHtml = '';
-                    // Butang 'Owned' hanya untuk Badges yang sudah dimiliki
-                    if (isOwned && !isEdu) {
-                        btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-300">Owned</button>`;
-                    } 
-                    // Jika pelajar ada cukup syiling untuk beli (sekurang-kurangnya 1 unit)
-                    else if (canAfford) {
-                        btnHtml = `<button onclick="buyItem('${item.id}')" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow shadow-green-300">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
-                    } 
-                    // Jika syiling tak cukup
-                    else {
-                        btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${item.price} <i class="fas fa-coins"></i></button>`;
-                    }
-
-                    const itemHTML = `
-                        <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 hover:border-green-300 transition shadow-sm text-center flex flex-col justify-between">
-                            <div>
-                                <div class="text-5xl mb-3 h-16 flex items-center justify-center"><i class="${item.icon}"></i></div>
-                                <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
-                                <p class="text-xs text-gray-500 mt-2">${item.desc}</p>
-                            </div>
-                            ${btnHtml}
-                        </div>
-                    `;
-
-                    if (item.category === 'badge') {
-                        badgesContainer.innerHTML += itemHTML;
-                    } else if (item.category === 'edu') {
-                        eduContainer.innerHTML += itemHTML;
-                    }
-                });
-            }
-
-            if (badgesContainer.innerHTML === '') badgesContainer.innerHTML = '<p class="col-span-full text-center text-gray-400 italic">No badges available.</p>';
-            if (eduContainer.innerHTML === '') eduContainer.innerHTML = '<p class="col-span-full text-center text-gray-400 italic">No items available.</p>';
-
-            renderInventory(); 
         }
 
+        const avatarVisual = displayData.img 
+            ? `<img src="${displayData.img}" class="h-16 w-auto object-contain mx-auto drop-shadow-xl" alt="${displayData.name}">` 
+            : `<i class="${displayData.icon}"></i>`;
+
+        avatarsContainer.innerHTML += `
+            <div class="bg-indigo-50 p-5 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 transition shadow-sm text-center flex flex-col justify-between">
+                <div>
+                    <div class="text-xs font-bold text-indigo-400 uppercase mb-1 tracking-wider">${avatar.theme}</div>
+                    <div class="text-5xl mb-3 mt-2 flex justify-center h-16 items-center">
+                        ${avatarVisual}
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">${displayData.name}</h3>
+                    <p class="text-[10px] font-bold text-indigo-600 mb-2">Current: Level ${currentLevel}/${avatar.maxLevel}</p>
+                    <p class="text-xs text-gray-600 mt-1">${displayData.desc}</p>
+                </div>
+                ${btnHtml}
+            </div>
+        `;
+    }
+
+    // ==========================================
+    // 2. RENDER BADGES BAHARU (Game & Achievements)
+    // ==========================================
+    if (typeof shopBadges !== 'undefined') {
+        shopBadges.forEach(badge => {
+            const isOwned = localPlayerData.inventory.includes(badge.id);
+            const canAfford = Number(localPlayerData.coins) >= badge.price;
+            
+            // Logik untuk menyemak sama ada badge "Terkunci" atau "Terbuka"
+            let isUnlocked = true;
+            let lockReason = "";
+
+            if (badge.type === "achievement") {
+                let currentTotalScore = Number(localPlayerData.totalScore) || 0;
+                let currentLevel = Math.floor(currentTotalScore / 100) + 1;
+                let currentCoins = Number(localPlayerData.coins) || 0;
+                
+                // Anggaran jumlah game dimainkan berdasarkan markah XP (100 XP = 1 Game)
+                let estimatedGames = Math.floor(currentTotalScore / 100);
+
+                if (badge.reqType === "level" && currentLevel < badge.reqValue) {
+                    isUnlocked = false; lockReason = `Reach Lvl ${badge.reqValue}`;
+                } 
+                else if (badge.reqType === "total_coins" && currentCoins < badge.reqValue) {
+                    isUnlocked = false; lockReason = `Collect ${badge.reqValue.toLocaleString()} Coins`;
+                }
+                else if (badge.reqType === "total_games" && estimatedGames < badge.reqValue) {
+                    isUnlocked = false; lockReason = `Play ${badge.reqValue} Games`;
+                }
+                else if (badge.reqType === "unique_games" && estimatedGames < badge.reqValue) {
+                    isUnlocked = false; lockReason = `Explore ${badge.reqValue} Games`;
+                }
+                else if (badge.reqType === "perfect_scores" && estimatedGames < badge.reqValue) {
+                    isUnlocked = false; lockReason = `Need ${badge.reqValue} Perfects`;
+                }
+            }
+
+            // Membina Butang Beli
+            let btnHtml = '';
+            if (isOwned) {
+                btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-500 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-300">Owned</button>`;
+            } 
+            else if (!isUnlocked) {
+                btnHtml = `<button disabled class="w-full mt-4 bg-gray-700 text-gray-300 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-800"><i class="fas fa-lock mr-1"></i> ${lockReason}</button>`;
+            }
+            else if (canAfford) {
+                // Hantar badge.price terus ke fungsi buyItem supaya sistem tahu harganya
+                btnHtml = `<button onclick="buyItem('${badge.id}', ${badge.price})" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow shadow-green-300">Buy (${badge.price.toLocaleString()} <i class="fas fa-coins"></i>)</button>`;
+            } 
+            else {
+                btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${badge.price.toLocaleString()} <i class="fas fa-coins"></i></button>`;
+            }
+
+            // Warna Kosmetik mengikut Tier
+            let tierBorder = "border-gray-200 hover:border-gray-400";
+            let nameColor = "text-gray-800";
+            if (badge.tier === "rare") { tierBorder = "border-blue-300 hover:border-blue-500 shadow-blue-100"; nameColor = "text-blue-700"; }
+            if (badge.tier === "epic") { tierBorder = "border-purple-400 hover:border-purple-600 shadow-purple-200"; nameColor = "text-purple-700"; }
+            if (badge.tier === "legendary") { tierBorder = "border-yellow-400 hover:border-yellow-600 shadow-yellow-300 bg-yellow-50"; nameColor = "text-yellow-700"; }
+
+            let lockIconHtml = !isUnlocked ? `<div class="absolute top-2 right-2 text-gray-400 text-xl"><i class="fas fa-lock"></i></div>` : '';
+
+            badgesContainer.innerHTML += `
+                <div class="bg-white p-5 rounded-2xl border-2 ${tierBorder} transition shadow-sm text-center flex flex-col justify-between relative ${!isUnlocked ? 'opacity-80 grayscale-[40%]' : ''}">
+                    ${lockIconHtml}
+                    <div>
+                        <div class="text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">${badge.tier || 'common'}</div>
+                        <div class="text-5xl mb-3 h-16 flex items-center justify-center ${!isUnlocked ? 'text-gray-400' : 'text-gray-700'}"><i class="${badge.icon}"></i></div>
+                        <h3 class="font-bold ${nameColor} text-lg">${badge.name}</h3>
+                        ${badge.desc ? `<p class="text-[10px] text-gray-500 mt-2 leading-tight">${badge.desc}</p>` : ''}
+                    </div>
+                    ${btnHtml}
+                </div>
+            `;
+        });
+    }
+
+    // ==========================================
+    // 3. RENDER EDU ITEMS (Jika Ada)
+    // ==========================================
+    if (typeof shopItems !== 'undefined') {
+        shopItems.forEach(item => {
+            if (item.category === 'edu') {
+                const isOwned = localPlayerData.inventory.includes(item.id);
+                const canAfford = localPlayerData.coins >= item.price;
+                
+                let btnHtml = '';
+                if (canAfford) {
+                    btnHtml = `<button onclick="buyItem('${item.id}', ${item.price})" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow shadow-green-300">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
+                } else {
+                    btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${item.price} <i class="fas fa-coins"></i></button>`;
+                }
+
+                eduContainer.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 hover:border-green-300 transition shadow-sm text-center flex flex-col justify-between">
+                        <div>
+                            <div class="text-5xl mb-3 h-16 flex items-center justify-center"><i class="${item.icon}"></i></div>
+                            <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
+                            <p class="text-xs text-gray-500 mt-2">${item.desc}</p>
+                        </div>
+                        ${btnHtml}
+                    </div>
+                `;
+            }
+        });
+    }
+
+    if (badgesContainer.innerHTML === '') badgesContainer.innerHTML = '<p class="col-span-full text-center text-gray-400 italic">No badges available.</p>';
+    if (eduContainer.innerHTML === '') eduContainer.innerHTML = '<p class="col-span-full text-center text-gray-400 italic">No items available.</p>';
+
+    renderInventory(); 
+}
+		
         async function buyAvatar(avatarKey, level, price) {
             if(localPlayerData.coins >= price) {
                 localPlayerData.coins -= price;
