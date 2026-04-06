@@ -894,6 +894,7 @@ const shopBadges = [
 // ------------------------------------------
     // KATEGORI: EDU SHOP (BARANGAN SEKOLAH / ALAT TULIS)
     // ------------------------------------------
+        const shopItems = [
     { id: 'edu_eraser', category: 'edu', name: 'Eraser', price: 100, icon: 'fas fa-eraser text-pink-400', desc: 'A basic pink eraser to fix tiny mistakes.' },
     { id: 'edu_pencil', category: 'edu', name: 'Pencil', price: 150, icon: 'fas fa-pencil-alt text-yellow-500', desc: 'A sharp 2B pencil for writing down answers.' },
     { id: 'edu_pen', category: 'edu', name: 'Pen', price: 200, icon: 'fas fa-pen text-blue-600', desc: 'A smooth blue pen for confident writing.' },
