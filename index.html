@@ -1987,33 +1987,34 @@ async function showLeaderboard() {
                 return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">${game.name}: <span class="text-green-600">${game.score}/${game.total}</span></span>`;
             }).join('');
 
-            // LEVEL BADGE
-            let studentLevel = Math.floor(student.grandScore / 100) + 1;
-            if (studentLevel > 100) studentLevel = 100;
-            let levelBadgeHTML = `<div class="mt-1"><span class="inline-block text-[10px] md:text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 shadow-sm">Lv. ${studentLevel}</span></div>`;
+           // LEVEL BADGE
+			let studentLevel = Math.floor(student.grandScore / 100) + 1;
+			// if (studentLevel > 100) studentLevel = 100; // Pastikan ini dipadam/disembunyikan
 
-            // MARKAH KESELURUHAN (TOTAL XP)
+			// Gabungkan Lv. dengan Gelaran (Title) di dalam lencana
+			let levelBadgeHTML = `<div class="mt-1"><span class="inline-block text-[10px] md:text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 shadow-sm">Lv. ${studentLevel} - ${titleName}</span></div>`;
+            
+			// MARKAH KESELURUHAN (TOTAL XP)
             const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base">${student.grandScore} XP</span>`;
 
             // BINA BARIS JADUAL HTML
-            const row = `
-                <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
-                    <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl text-center align-middle">${rankIcon}</td>
-                    <td class="p-1 md:p-2 w-12 md:w-24 align-middle">${avatarHtml}</td>
-                    <td class="p-2 md:p-4 align-middle">
-                        <div class="font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</div>
-                        ${titleHTML} 
-                        ${levelBadgeHTML}
-                    </td>
-                    <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500 text-center align-middle">${student.cls || "-"}</td>
-                    <td class="p-2 md:p-4 align-middle">
-                        <div class="flex flex-wrap gap-1 justify-start">
-                            ${gamesBadgesHtml}
-                        </div>
-                    </td>
-                    <td class="p-2 md:p-4 text-center align-middle">${totalHtmlRes}</td>
-                </tr>
-            `;
+const row = `
+    <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
+        <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl text-center align-middle">${rankIcon}</td>
+        <td class="p-1 md:p-2 w-12 md:w-24 align-middle">${avatarHtml}</td>
+        <td class="p-2 md:p-4 align-middle">
+            <div class="font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</div>
+            ${levelBadgeHTML}
+        </td>
+        <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500 text-center align-middle">${student.cls || "-"}</td>
+        <td class="p-2 md:p-4 align-middle">
+            <div class="flex flex-wrap gap-1 justify-start">
+                ${gamesBadgesHtml}
+            </div>
+        </td>
+        <td class="p-2 md:p-4 text-center align-middle">${totalHtmlRes}</td>
+    </tr>
+`;
             
             body.innerHTML += row;
         });
