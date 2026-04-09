@@ -1581,20 +1581,26 @@ function initGame(type) {
     if (!type) return; 
     const safeType = type.toUpperCase(); // Seragamkan kepada huruf besar
 
-    // 1. PENAPIS KESELAMATAN DATA (Pastikan ia adalah Array)
-    if (!localPlayerData.lastPlayed) {
-        localPlayerData.lastPlayed = [];
+    // [BARU] Kunci unik untuk menyimpan memori pelajar ini di pelayar web
+    const userKey = "memoriPemain_" + (typeof studentInfo !== 'undefined' ? studentInfo.name : "guest");
+
+    // 1. PENAPIS KESELAMATAN DATA & PEMULIHAN DARI LOCALSTORAGE
+    if (!localPlayerData.lastPlayed || localPlayerData.lastPlayed.length === 0) {
+        // Jika memori kosong (mungkin sebab baru lepas refresh), cuba gali dari memori komputer
+        const savedMem = localStorage.getItem(userKey);
+        if (savedMem) {
+            localPlayerData.lastPlayed = JSON.parse(savedMem);
+        } else {
+            localPlayerData.lastPlayed = [];
+        }
     } else if (typeof localPlayerData.lastPlayed === 'string') {
         try {
-            // Cuba tukar teks JSON kembali ke Array
             localPlayerData.lastPlayed = JSON.parse(localPlayerData.lastPlayed);
         } catch (e) {
-            // Jika gagal, mungkin ia guna koma (KUIZ 1,KUIZ 2)
             localPlayerData.lastPlayed = localPlayerData.lastPlayed.split(',');
         }
     }
     
-    // Jika data masih bukan Array atas sebab pelik, paksa ia jadi Array kosong
     if (!Array.isArray(localPlayerData.lastPlayed)) {
         localPlayerData.lastPlayed = [];
     }
@@ -1618,7 +1624,10 @@ function initGame(type) {
         localPlayerData.lastPlayed.shift(); 
     }
     
-    // Simpan ke Cloud menggunakan fungsi yang anda berikan tadi
+    // [BARU] Simpan serta-merta ke dalam komputer (Kebal Refresh)
+    localStorage.setItem(userKey, JSON.stringify(localPlayerData.lastPlayed));
+
+    // Simpan ke Cloud menggunakan fungsi yang anda berikan
     if (typeof saveCloudPlayerData === 'function') {
         saveCloudPlayerData(); 
     } else if (typeof savePlayerData === 'function') {
@@ -1626,7 +1635,7 @@ function initGame(type) {
     }
     // ==========================================
 
-    console.log(`Permainan ${safeType} bermula!`);
+    console.log(`Permainan ${safeType} bermula! Memori terkini:`, localPlayerData.lastPlayed);
 
     // ==========================================
     // KOD ASAL BERMULA DI SINI:
@@ -1634,7 +1643,7 @@ function initGame(type) {
     currentGameType = type;
     document.getElementById('menu-screen').classList.add('hidden');
     document.getElementById('game-arena').classList.remove('hidden');
-    document.getElementById('check-btn').classList.remove('hidden'); // Pastikan butang semak ada
+    document.getElementById('check-btn').classList.remove('hidden'); 
     document.getElementById('final-score').classList.add('hidden');
     
     const container = document.getElementById('question-container');
@@ -1650,30 +1659,24 @@ function initGame(type) {
     if(type === 'plural') title = "Singular to Plural";
     if(type === 'spelling') title = "Correct the Spelling";
     
-    // Ejaan telah diselaraskan dengan data.js
     if(type === 'occupations') title = "Jobs & Occupations";
     if(type === 'genderNouns') title = "Gender Nouns";
     if(type === 'idioms') title = "Popular Idioms";
     if(type === 'superlatives') title = "Superlatives";
     
-    // Jika tajuk tak jumpa, guna nama type asal
     document.getElementById('game-title').innerText = title || type.toUpperCase();
 
-    // 1. Dapatkan soalan dari data.js dan salin ke dalam array baharu
     let allQuestions = [...(gameData[type] || [])];
     
     if(allQuestions.length === 0) {
         container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila pastikan data.js anda telah dikemaskini.</p>";
-        return; // SEKARANG RETURN INI SAH!
+        return; 
     }
 
-    // 2. Rawakkan susunan soalan (Shuffle) menggunakan Math.random
     allQuestions.sort(() => Math.random() - 0.5);
 
-    // 3. Pilih soalan (Anda boleh letak .slice(0, 10) di hujung allQuestions jika mahu hadkan 10 soalan sahaja)
     let selectedQuestions = allQuestions;
 
-    // 4. Paparkan soalan yang telah dirawak dan dipilih
     selectedQuestions.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
@@ -1684,7 +1687,7 @@ function initGame(type) {
         container.appendChild(div);
     });
 
-    startTimer(120); 
+    startTimer(120);  
 } // <---- INI ADALAH PENUTUP SEBENAR UNTUK FUNGSI initGame()
 
 
