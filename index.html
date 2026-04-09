@@ -1983,7 +1983,7 @@ async function showLeaderboard() {
 
             // 3. PENGIRAAN LEVEL & GELARAN LEVEL (Contoh: 💬 Lv.150 Omniscient)
             // Formula sebenar (Total Score / 1000)
-            let studentLevel = Math.floor(student.grandScore / 1000);
+            let studentLevel = Math.floor(student.grandScore / 100) + 1;
             if (studentLevel === 0) studentLevel = 1; // Minimum level 1
 
             let studentLevelTitle = "Novice";
