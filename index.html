@@ -1854,7 +1854,7 @@ async function showLeaderboard() {
 
         const studentData = {};
         
-        // MENGUMPUL DATA DENGAN SELAMAT (KALIS RALAT)
+        // MENGUMPUL DATA DENGAN SELAMAT
         scores.forEach(s => {
             if (!s || !s.name) return; 
 
@@ -1872,7 +1872,7 @@ async function showLeaderboard() {
                 };
             }
             
-            // PAKSA MARKAH MENJADI NOMBOR (NUMBER)
+            // PAKSA MARKAH MENJADI NOMBOR
             if (s.type && s.score !== undefined) {
                 let numericScore = Number(s.score) || 0;
                 let numericTotal = Number(s.total) || 0;
@@ -1893,7 +1893,6 @@ async function showLeaderboard() {
             const gameList = [];
             
             for (const [gameName, gameData] of Object.entries(student.games)) {
-                // PASTIKAN TAMBAH SEBAGAI NOMBOR MATEMATIK
                 grandScore += Number(gameData.score);
                 grandMax += Number(gameData.total);
                 gameList.push({ name: gameName, score: Number(gameData.score), total: Number(gameData.total) });
@@ -1910,7 +1909,7 @@ async function showLeaderboard() {
         leaderboard.sort((a, b) => b.grandScore - a.grandScore);
 
         body.innerHTML = "";
-        let allRowsHTML = ""; // Pembolehubah untuk kumpul semua baris (lebih pantas)
+        let allRowsHTML = "";
 
         // GELUNG UNTUK 50 PEMAIN TERATAS
         leaderboard.slice(0, 50).forEach((student, index) => {
@@ -1968,23 +1967,39 @@ async function showLeaderboard() {
                 avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center py-4">No Guardian</div>`;
             }
 
-            // 2. GELARAN KARAKTER (Lencana Emas contoh: 🏆 THE LITERARY MASTERMIND)
+            // 2. GELARAN KARAKTER (MENGGUNAKAN CSS ASAL ANDA)
             const titleName = student.activeTitle;
             const rawAchievements = (typeof achievementsData !== 'undefined') ? achievementsData : [];
             const titleData = rawAchievements.find(ach => ach.name === titleName);
+            const tier = titleData ? titleData.tier : 'common';
+            const achId = titleData ? titleData.id : ''; 
             
-            let characterTitleBadgeHTML = "";
-            if (titleData) {
-                const icon = titleData.icon ? titleData.icon : "🏆";
-                characterTitleBadgeHTML = `<div class="mt-1 flex items-center bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-bold text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 rounded-full shadow-md w-max gap-1"><i>${icon}</i> ${titleName.toUpperCase()}</div>`;
-            } else if (titleName && titleName !== "Novice") {
-                characterTitleBadgeHTML = `<div class="mt-1 flex items-center bg-yellow-100 text-yellow-700 font-bold text-[10px] md:text-xs px-2 py-0.5 md:py-1 rounded-full shadow-sm w-max gap-1">🏆 ${titleName.toUpperCase()}</div>`;
+            let titleHTML = "";
+            // Nota: Saya tambah .toUpperCase() supaya tulisan nampak kemas (huruf besar)
+            if (achId === 'ach_16') {
+                titleHTML = `<div class="title-king inline-block mt-1">👑 ${titleName.toUpperCase()}</div>`;
+            } 
+            else if (achId === 'ach_15') {
+                titleHTML = `<div class="title-legendary-beast inline-block mt-1">👾 ${titleName.toUpperCase()}</div>`;
+            }
+            else if (achId === 'ach_08') {
+                titleHTML = `<div class="title-master inline-block mt-1">🔥 ${titleName.toUpperCase()}</div>`;
+            }
+            else if (tier === 'legendary') {
+                titleHTML = `<div class="title-legendary inline-block mt-1">🏆 ${titleName.toUpperCase()}</div>`;
+            } 
+            else if (tier === 'epic') {
+                titleHTML = `<div class="title-epic text-[10px] md:text-xs inline-block mt-1">✨ ${titleName.toUpperCase()}</div>`;
+            } 
+            else if (tier === 'rare') {
+                titleHTML = `<div class="title-rare text-[10px] md:text-xs inline-block mt-1">⭐ ${titleName.toUpperCase()}</div>`;
+            } 
+            else {
+                titleHTML = `<div class="title-common text-[10px] md:text-xs inline-block mt-1">${titleName.toUpperCase()}</div>`;
             }
 
-            // 3. PENGIRAAN LEVEL & GELARAN LEVEL (Contoh: 💬 Lv.150 Omniscient)
-            // Formula sebenar (Total Score / 1000)
+            // 3. PENGIRAAN LEVEL & GELARAN LEVEL (Formula Betul: / 100 + 1)
             let studentLevel = Math.floor(student.grandScore / 100) + 1;
-            if (studentLevel === 0) studentLevel = 1; // Minimum level 1
 
             let studentLevelTitle = "Novice";
             if (studentLevel >= 151) {
@@ -1995,7 +2010,7 @@ async function showLeaderboard() {
                 studentLevelTitle = "Adept";
             }
 
-            let newLevelBadgeHTML = `<div class="mt-1.5 flex items-center gap-1 text-[11px] md:text-sm font-semibold text-pink-600"><i class="fas fa-comment"></i> Lv.${studentLevel} ${studentLevelTitle}</div>`;
+            let newLevelBadgeHTML = `<div class="mt-1 flex items-center gap-1 text-[11px] md:text-sm font-semibold text-pink-600"><i class="fas fa-comment"></i> Lv.${studentLevel} ${studentLevelTitle}</div>`;
 
             // 4. LENCANA PERMAINAN MINIGAME
             let gamesBadgesHtml = student.gameList.map(game => {
@@ -2012,8 +2027,8 @@ async function showLeaderboard() {
                     <td class="p-1 md:p-2 w-12 md:w-24 align-middle">${avatarHtml}</td>
                     <td class="p-2 md:p-4 align-middle">
                         <div class="font-black uppercase text-gray-800 text-xs md:text-lg">${student.name}</div>
-                        ${characterTitleBadgeHTML}
-                        ${newLevelBadgeHTML}
+                        ${titleHTML}
+                        <br> ${newLevelBadgeHTML}
                     </td>
                     <td class="p-2 md:p-4 text-[10px] md:text-sm text-gray-500 text-center align-middle">${student.cls || "-"}</td>
                     <td class="p-2 md:p-4 align-middle">
@@ -2025,7 +2040,7 @@ async function showLeaderboard() {
                 </tr>
             `;
             
-            allRowsHTML += row; // Simpan baris ke dalam memori
+            allRowsHTML += row; 
         });
 
         // MASUKKAN SEMUA DATA KE DALAM JADUAL SAKALIGUS
