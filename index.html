@@ -588,8 +588,10 @@ function checkLevelRewardsOnLogin() {
         localPlayerData.claimedLevels = [];
     }
 
-	localPlayerData.lastPlayed = data.lastPlayed || [];
-	localPlayerData.games = data.games || {};
+    // --- BAHAGIAN YANG DIBETULKAN ---
+    localPlayerData.lastPlayed = localPlayerData.lastPlayed || [];
+    localPlayerData.games = localPlayerData.games || {};
+    // --------------------------------
 
     // 🔥 PENAPIS KEBAL: Paksa semua data dalam laci menjadi nombor (Elak isu "2" != 2)
     let claimedArray = localPlayerData.claimedLevels.map(Number); 
