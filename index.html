@@ -2022,14 +2022,20 @@ async function generateChallenge() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menjana kod...';
     btn.disabled = true;
 
-    const code = generateChallengeCode();
-    const payload = {
-        action: "createChallenge",
-        challengeCode: code,
-        challengerName: localPlayerData.name,
-        challengerClass: localPlayerData.class || "-",
-        gameType: currentGameType,
-        challengerScore: finalscore // Menggunakan markah semasa
+const code = generateChallengeCode(); 
+    
+    // --- KOD YANG TERTINGGAL: Ambil markah dari skrin ---
+    const scoreText = document.getElementById('score-val').innerText; 
+    const finalScore = parseInt(scoreText.split('/')[0]); 
+    // -----------------------------------------------------
+
+    const payload = { 
+        action: "createChallenge", 
+        challengeCode: code, 
+        challengerName: localPlayerData.name, 
+        challengerClass: localPlayerData.class || "-", 
+        gameType: currentGameType, 
+        challengerScore: finalScore // <--- Sekarang ia menggunakan finalScore yang sah
     };
 
     try {
