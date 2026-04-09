@@ -1702,89 +1702,102 @@ function initGame(type) {
             alert("TIME'S UP! Check your answers below.");
         }
 
-        async function finishGame() {
-            const inputs = document.querySelectorAll('.game-input');
-            let score = 0;
-            let total = inputs.length;
+// ==========================================
+// FUNGSI TAMAT PERMAINAN & KIRA MARKAH
+// ==========================================
+async function finishGame() {
+    const inputs = document.querySelectorAll('.game-input');
+    let score = 0;
+    let total = inputs.length;
 
-            inputs.forEach(input => {
-                const userAns = input.value.trim().toLowerCase();
-                const correctAns = input.dataset.answer.toLowerCase();
+    // 1. Semak jawapan pelajar
+    inputs.forEach(input => {
+        const userAns = input.value.trim().toLowerCase();
+        const correctAns = input.dataset.answer.toLowerCase();
 
-                if (correctAns.includes('|')) {
-                    const validAnswers = correctAns.split('|');
-                    if(validAnswers.includes(userAns)) {
-                        score++;
-                        input.classList.add('bg-green-100', 'border-green-500');
-                    } else {
-                        input.classList.add('bg-red-100', 'border-red-500');
-                        showHint(input, correctAns);
-                    }
-                } else {
-                    if(userAns === correctAns) {
-                        score++;
-                        input.classList.add('bg-green-100', 'border-green-500');
-                    } else {
-                        input.classList.add('bg-red-100', 'border-red-500');
-                        showHint(input, correctAns);
-                    }
-                }
-            });
-
-            document.getElementById('score-val').innerText = `${score}/${total}`;
-            document.getElementById('final-score').classList.remove('hidden');
-            document.getElementById('check-btn').classList.add('hidden');
-
-			// Murid dapat XP berdasarkan 'score' mereka
-			localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
-
-			// Semak kalau-kalau XP baru ini naik level, beri hadiah on-the-spot!
-			if (typeof checkLevelRewardsOnLogin === "function") {
-   			checkLevelRewardsOnLogin();
-}
-
-            // --- PENGIRAAN MARKAH + ACARA BULANAN ---
-            let baseCoins = score * 2; // Markah asas: 1 betul = 2 syiling
-            let currentEvent = getCurrentEvent();
-            let eventMultiplier = currentEvent ? currentEvent.multiplier : 1;
-            
-            let coinsEarned = baseCoins * eventMultiplier; 
-            // ---------------------------------------- 
-
-            // --- SEMAK CABARAN TERLEBIH DAHULU SEBELUM SIMPAN KE CLOUD ---
-            let bonusCoins = checkChallengeReward(score); 
-            coinsEarned += bonusCoins; 
-            // --------------------------------------------------------------
-
-// SEKARANG BARU SIMPAN KE GOOGLE SHEETS
-            if(coinsEarned > 0) {
-                // 1. Dapatkan data memori terkini dari cloud
-                await loadCloudPlayerData();
-                
-                // 2. Tambah syiling (kod asal Cikgu)
-                localPlayerData.coins += coinsEarned;
-                
-                // 3. Tambah markah ke Total supaya selari dengan Sheet
-                localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + coinsEarned; 
-                localPlayerData.Total = localPlayerData.totalScore;
-
-                // 4. Update UI supaya Progress Bar dan Level bergerak secara LIVE!
-                updatePlayerLevelUI();
-                
-                // 5. Simpan semula semua data yang dah dikemaskini ke cloud
-                await saveCloudPlayerData();
+        if (correctAns.includes('|')) {
+            const validAnswers = correctAns.split('|');
+            if(validAnswers.includes(userAns)) {
+                score++;
+                input.classList.add('bg-green-100', 'border-green-500');
+            } else {
+                input.classList.add('bg-red-100', 'border-red-500');
+                showHint(input, correctAns);
             }
-
-            const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
-            const coinText = coinsEarned > 0 ? ` (+${coinsEarned} Coins! 💰)` : '';
-            document.getElementById('praise-text').innerText = praise + coinText;
-
-            saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
-
-            // --- SEMAK PENCAPAIAN LOG MASUK ---
-        checkAchievements();
+        } else {
+            if(userAns === correctAns) {
+                score++;
+                input.classList.add('bg-green-100', 'border-green-500');
+            } else {
+                input.classList.add('bg-red-100', 'border-red-500');
+                showHint(input, correctAns);
+            }
         }
+    });
 
+    // 2. REKOD MARKAH TERTINGGI GAME (LEADERBOARD) - WAJIB ADA DI SINI!
+    if (!localPlayerData.games) localPlayerData.games = {};
+    
+    let currentBest = localPlayerData.games[currentGameType] ? localPlayerData.games[currentGameType].score : -1;
+    if (score > currentBest) {
+        localPlayerData.games[currentGameType] = { 
+            score: score, 
+            total: total 
+        };
+    }
+
+    // 3. Papar markah di skrin
+    document.getElementById('score-val').innerText = `${score}/${total}`;
+    document.getElementById('final-score').classList.remove('hidden');
+    document.getElementById('check-btn').classList.add('hidden');
+
+    // 4. Tambah XP/Total Score
+    localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
+
+    // 5. Semak kenaikan Level
+    if (typeof checkLevelRewardsOnLogin === "function") {
+        checkLevelRewardsOnLogin();
+    }
+
+    // 6. Pengiraan Syiling (Coins) Asas + Event Multiplier
+    let baseCoins = score * 2; 
+    let currentEvent = getCurrentEvent();
+    let eventMultiplier = currentEvent ? currentEvent.multiplier : 1;
+    let coinsEarned = baseCoins * eventMultiplier; 
+
+    // 7. Semak Sistem Cabaran (Multiplayer)
+    if (typeof checkChallengeReward === "function") {
+        let bonusCoins = checkChallengeReward(score); 
+        coinsEarned += bonusCoins; 
+    }
+
+    // 8. Simpan ke Google Sheets (Cloud) jika ada syiling
+    if(coinsEarned > 0) {
+        if (typeof loadCloudPlayerData === "function") await loadCloudPlayerData();
+        
+        localPlayerData.coins += coinsEarned;
+        localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + coinsEarned; 
+        localPlayerData.Total = localPlayerData.totalScore;
+
+        if (typeof updatePlayerLevelUI === "function") updatePlayerLevelUI();
+        if (typeof saveCloudPlayerData === "function") await saveCloudPlayerData();
+    }
+
+    // 9. Kata-kata pujian
+    const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
+    const coinText = coinsEarned > 0 ? ` (+${coinsEarned} Coins! 💰)` : '';
+    document.getElementById('praise-text').innerText = praise + coinText;
+
+    // 10. Simpan data game ini ke lembaran sejarah (History)
+    if (typeof saveScoreToSheets === "function") {
+        saveScoreToSheets(studentInfo.name, studentInfo.class, score, total, currentGameType);
+    }
+
+    // 11. Semak Pencapaian (Achievements)
+    if (typeof checkAchievements === "function") {
+        checkAchievements();
+    }
+}
         function showHint(inputElement, correctAns) {
             const hint = document.createElement('span');
             hint.className = "text-xs text-green-600 block mt-1 font-bold";
