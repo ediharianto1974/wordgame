@@ -1626,10 +1626,11 @@ function initGame(type) {
     }
     // ==========================================
 
-    // ... (kod seterusnya untuk mulakan permainan, contohnya memaparkan kuiz)
     console.log(`Permainan ${safeType} bermula!`);
-}
+
+    // ==========================================
     // KOD ASAL BERMULA DI SINI:
+    // ==========================================
     currentGameType = type;
     document.getElementById('menu-screen').classList.add('hidden');
     document.getElementById('game-arena').classList.remove('hidden');
@@ -1663,7 +1664,7 @@ function initGame(type) {
     
     if(allQuestions.length === 0) {
         container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila pastikan data.js anda telah dikemaskini.</p>";
-        return;
+        return; // SEKARANG RETURN INI SAH!
     }
 
     // 2. Rawakkan susunan soalan (Shuffle) menggunakan Math.random
@@ -1684,39 +1685,44 @@ function initGame(type) {
     });
 
     startTimer(120); 
-}
-        function startTimer(seconds) {
-            timeLeft = seconds;
+} // <---- INI ADALAH PENUTUP SEBENAR UNTUK FUNGSI initGame()
+
+
+// ==========================================
+// FUNGSI MASA DIASINGKAN DI BAWAH (JANGAN GANGGU)
+// ==========================================
+
+function startTimer(seconds) {
+    timeLeft = seconds;
+    clearInterval(currentTimer);
+    
+    currentTimer = setInterval(() => {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('timer-box').innerText = 
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 10) {
+            document.getElementById('timer-box').classList.add('animate-pulse', 'bg-red-600');
+        } else {
+            document.getElementById('timer-box').classList.remove('animate-pulse', 'bg-red-600');
+        }
+
+        if (timeLeft <= 0) {
             clearInterval(currentTimer);
-            
-            currentTimer = setInterval(() => {
-                const mins = Math.floor(timeLeft / 60);
-                const secs = timeLeft % 60;
-                document.getElementById('timer-box').innerText = 
-                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                
-                if (timeLeft <= 10) {
-                    document.getElementById('timer-box').classList.add('animate-pulse', 'bg-red-600');
-                } else {
-                    document.getElementById('timer-box').classList.remove('animate-pulse', 'bg-red-600');
-                }
-
-                if (timeLeft <= 0) {
-                    clearInterval(currentTimer);
-                    timeUp();
-                }
-                timeLeft--;
-            }, 1000);
+            timeUp();
         }
+        timeLeft--;
+    }, 1000);
+}
 
-        function timeUp() {
-            document.getElementById('timer-box').innerText = "TIME UP!";
-            const inputs = document.querySelectorAll('.game-input');
-            inputs.forEach(input => input.disabled = true);
-            document.getElementById('check-btn').classList.remove('hidden');
-            alert("TIME'S UP! Check your answers below.");
-        }
-
+function timeUp() {
+    document.getElementById('timer-box').innerText = "TIME UP!";
+    const inputs = document.querySelectorAll('.game-input');
+    inputs.forEach(input => input.disabled = true);
+    document.getElementById('check-btn').classList.remove('hidden');
+    alert("TIME'S UP! Check your answers below.");
+}
 // ==========================================
 // FUNGSI TAMAT PERMAINAN & KIRA MARKAH
 // ==========================================
