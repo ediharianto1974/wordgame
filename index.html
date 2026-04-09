@@ -1579,34 +1579,43 @@ async function equipAvatar(avatarKey) {
         
 function initGame(type) {
     if (!type) return; 
-    const safeType = type.toUpperCase(); // Seragamkan kepada huruf besar
+    const safeType = type.toUpperCase(); 
 
-    // [BARU] Kunci unik untuk menyimpan memori pelajar ini di pelayar web
-    const userKey = "memoriPemain_" + (typeof studentInfo !== 'undefined' ? studentInfo.name : "guest");
+    // [DIPERBAIKI] Guna passcode atau nama dari localPlayerData sebagai kunci yang tepat!
+    const playerName = localPlayerData.passcode || localPlayerData.name || "guest";
+    const userKey = "memoriPemain_" + playerName;
 
-    // 1. PENAPIS KESELAMATAN DATA & PEMULIHAN DARI LOCALSTORAGE
-    if (!localPlayerData.lastPlayed || localPlayerData.lastPlayed.length === 0) {
-        // Jika memori kosong (mungkin sebab baru lepas refresh), cuba gali dari memori komputer
+    // ==========================================
+    // 1. PEMULIHAN & PEMBERSIHAN MEMORI (CLOUD + LOKAL)
+    // ==========================================
+    
+    // A. Tarik dan bersihkan data dari Cloud (Google Sheets)
+    let cloudMem = localPlayerData.lastPlayed;
+    if (typeof cloudMem === 'string') {
+        // Kuasa Regex: Buang semua simbol [ ] " ' yang mengelirukan, kemudian susun balik jadi Array
+        cloudMem = cloudMem.replace(/[\[\]"'\\]/g, '').split(',').map(s => s.trim()).filter(s => s !== "");
+    } else if (!Array.isArray(cloudMem)) {
+        cloudMem = []; // Jika tiada data, jadikan kosong
+    }
+
+    // B. Tarik dan bersihkan data dari Gam Gajah (LocalStorage)
+    let localMem = [];
+    try {
         const savedMem = localStorage.getItem(userKey);
         if (savedMem) {
-            localPlayerData.lastPlayed = JSON.parse(savedMem);
-        } else {
-            localPlayerData.lastPlayed = [];
+            localMem = savedMem.replace(/[\[\]"'\\]/g, '').split(',').map(s => s.trim()).filter(s => s !== "");
         }
-    } else if (typeof localPlayerData.lastPlayed === 'string') {
-        try {
-            localPlayerData.lastPlayed = JSON.parse(localPlayerData.lastPlayed);
-        } catch (e) {
-            localPlayerData.lastPlayed = localPlayerData.lastPlayed.split(',');
-        }
-    }
-    
-    if (!Array.isArray(localPlayerData.lastPlayed)) {
-        localPlayerData.lastPlayed = [];
+    } catch (e) {}
+
+    // C. GABUNGKAN! Ambil senarai memori yang paling panjang (Paling tepat)
+    if (localMem.length > cloudMem.length) {
+        localPlayerData.lastPlayed = localMem;
+    } else {
+        localPlayerData.lastPlayed = cloudMem;
     }
 
     // ==========================================
-    // 2. SISTEM ANTI-GRINDING (SEKATAN MEMORI)
+    // 2. SISTEM ANTI-GRINDING (SEKATAN)
     // ==========================================
     
     // Semak memori
@@ -1615,27 +1624,27 @@ function initGame(type) {
         return; // HALANG PERMAINAN DARI BERMULA!
     }
 
-    // Jika lulus, masuk ke memori
+    // Jika lulus, masuk ke memori baharu
     localPlayerData.lastPlayed.push(safeType);
     
-    // Had memori
+    // Had memori tetap 5
     const HAD_MEMORI = 5; 
     if (localPlayerData.lastPlayed.length > HAD_MEMORI) {
         localPlayerData.lastPlayed.shift(); 
     }
     
-    // [BARU] Simpan serta-merta ke dalam komputer (Kebal Refresh)
-    localStorage.setItem(userKey, JSON.stringify(localPlayerData.lastPlayed));
+    // Simpan ke komputer (Kemas kini localStorage dengan teks bersih)
+    localStorage.setItem(userKey, localPlayerData.lastPlayed.join(','));
 
-    // Simpan ke Cloud menggunakan fungsi yang anda berikan
+    // Simpan ke Cloud Google Sheet
     if (typeof saveCloudPlayerData === 'function') {
         saveCloudPlayerData(); 
     } else if (typeof savePlayerData === 'function') {
-        savePlayerData(); // Backup jika fungsi lama digunakan
+        savePlayerData(); 
     }
     // ==========================================
 
-    console.log(`Permainan ${safeType} bermula! Memori terkini:`, localPlayerData.lastPlayed);
+    console.log(`Permainan ${safeType} bermula! Memori disahkan:`, localPlayerData.lastPlayed);
 
     // ==========================================
     // KOD ASAL BERMULA DI SINI:
@@ -1687,7 +1696,7 @@ function initGame(type) {
         container.appendChild(div);
     });
 
-    startTimer(120);  
+    startTimer(120); 
 } // <---- INI ADALAH PENUTUP SEBENAR UNTUK FUNGSI initGame()
 
 
