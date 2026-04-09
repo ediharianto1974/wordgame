@@ -1747,10 +1747,24 @@ async function finishGame() {
     document.getElementById('final-score').classList.remove('hidden');
     document.getElementById('check-btn').classList.add('hidden');
 
-    // 4. Tambah XP (Total Score) yang Sebenar
-    // Gunakan 'score' (jawapan betul), bukannya duit (coinsEarned)
-    localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + score;
-    localPlayerData.Total = localPlayerData.totalScore;
+// 4. Tambah XP (Total Score) yang Sebenar berserta "XP Scaling"
+let currentXP = parseInt(localPlayerData.totalScore) || parseInt(localPlayerData.Total) || 0;
+
+// Dapatkan level semasa murid. 
+// (Nota: Pastikan cikgu guna fungsi kiraan level cikgu yang sebenar, contohnya calculateLevel() atau getLevel())
+let currentLevel = calculateLevel(currentXP); 
+
+let finalScoreToAdd = score; // Markah lalai (default) untuk Level 1-49
+
+// Semakan Peringkat Hardcore
+if (currentLevel >= 50) {
+    // Pilihan A: Bahagi 10 dan bundar ke bawah (baki hangus)
+    finalScoreToAdd = Math.floor(score / 10); 
+}
+
+// Tambah markah akhir ke dalam memori
+localPlayerData.totalScore = currentXP + finalScoreToAdd;
+localPlayerData.Total = localPlayerData.totalScore; // Selaraskan
 
     // 5. Semak kenaikan Level
     if (typeof checkLevelRewardsOnLogin === "function") {
