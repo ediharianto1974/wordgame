@@ -580,6 +580,9 @@ function checkLevelRewardsOnLogin() {
         localPlayerData.claimedLevels = [];
     }
 
+	localPlayerData.lastPlayed = data.lastPlayed || [];
+	localPlayerData.games = data.games || {};
+
     // 🔥 PENAPIS KEBAL: Paksa semua data dalam laci menjadi nombor (Elak isu "2" != 2)
     let claimedArray = localPlayerData.claimedLevels.map(Number); 
 
@@ -1104,6 +1107,18 @@ async function loadCloudPlayerData() {
             }
         }
 
+		// (Letak kod ini sebelum anda memanggil savePlayerData() di akhir game)
+    if (!localPlayerData.games) localPlayerData.games = {};
+    
+    // Hanya simpan dan timpa rekod jika markah game ini lebih tinggi dari rekod sebelumnya
+    let currentBest = localPlayerData.games[currentGame] ? localPlayerData.games[currentGame].score : -1;
+    if (score > currentBest) {
+        localPlayerData.games[currentGame] = { 
+            score: score, 
+            total: gameData[currentGame].length 
+        };
+    }
+		
 async function saveCloudPlayerData() {
             const payload = {
                 action: "updatePlayer",
@@ -1116,8 +1131,10 @@ async function saveCloudPlayerData() {
                 activeAvatar: localPlayerData.activeAvatar,
                 achievements: localPlayerData.achievements,
                 activeTitle: localPlayerData.activeTitle, // <--- 🚨 TAMBAH BARIS INI
-				claimedLevels: localPlayerData.claimedLevels
-            };
+				claimedLevels: localPlayerData.claimedLevels || [],
+    			lastPlayed: localPlayerData.lastPlayed || [], // <--- TAMBAH INI
+   				games: localPlayerData.games || {}            // <--- TAMBAH INI
+			};
 
             try {
                 await fetch(SCRIPT_URL, {
@@ -1564,60 +1581,87 @@ async function equipAvatar(avatarKey) {
 }
         
 function initGame(type) {
-            currentGameType = type;
-            document.getElementById('menu-screen').classList.add('hidden');
-            document.getElementById('game-arena').classList.remove('hidden');
-            document.getElementById('check-btn').classList.add('hidden');
-            document.getElementById('final-score').classList.add('hidden');
-            
-            const container = document.getElementById('question-container');
-            container.innerHTML = "";
-            
-            let title = "";
-            if(type === 'guessing') title = "Guess the Word";
-            if(type === 'puzzle') title = "Word Scramble";
-            if(type === 'synonym') title = "Synonyms (Same Meaning)";
-            if(type === 'antonym') title = "Antonyms (Opposite Meaning)";
-            if(type === 'missing') title = "Missing Letters";
-            if(type === 'pastTense') title = "Past Tense Challenge";
-            if(type === 'plural') title = "Singular to Plural";
-            if(type === 'spelling') title = "Correct the Spelling";
-            if(type === 'occupation') title = "Jobs & Occupations";
-            if(type === 'gender') title = "Gender Nouns";
-            if(type === 'idiom') title = "Popular Idioms";
-            if(type === 'superlative') title = "Superlatives";
-            
-            document.getElementById('game-title').innerText = title;
+    // ==========================================
+    // SISTEM ANTI-GRINDING (SEKATAN 5 MEMORI)
+    // ==========================================
+    if (!localPlayerData.lastPlayed) localPlayerData.lastPlayed = [];
+    
+    // Semak adakah kategori ini ada dalam senarai memori?
+    if (localPlayerData.lastPlayed.includes(type)) {
+        alert(`⛔ KATEGORI INI SEDANG BEREHAT! ⛔\n\nAnda telah bermain kategori "${type.toUpperCase()}" baru-baru ini.\nSila main kategori lain untuk menolak kategori ini keluar dari memori.\n\nMemori Terkini:\n[ ${localPlayerData.lastPlayed.join(' ➔ ')} ]`);
+        return; // HALANG PERMAINAN DARI BERMULA!
+    }
 
-            // 1. Dapatkan soalan dari data.js dan salin ke dalam array baharu
-            let allQuestions = [...(gameData[type] || [])];
-            
-            if(allQuestions.length === 0) {
-                container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila pastikan data.js anda telah dikemaskini.</p>";
-                return;
-            }
+    // Jika lulus, masukkan kategori baharu ke dalam senarai memori
+    localPlayerData.lastPlayed.push(type);
+    
+    // Jika senarai memori sudah lebih 5, buang yang paling lama (First In, First Out)
+    if (localPlayerData.lastPlayed.length > 5) {
+        localPlayerData.lastPlayed.shift(); 
+    }
+    
+    // Simpan memori terkini ke Google Sheets secara automatik
+    if (typeof savePlayerData === 'function') {
+        savePlayerData(); 
+    }
+    // ==========================================
 
-            // 2. Rawakkan susunan soalan (Shuffle) menggunakan Math.random
-            allQuestions.sort(() => Math.random() - 0.5);
+    // KOD ASAL BERMULA DI SINI:
+    currentGameType = type;
+    document.getElementById('menu-screen').classList.add('hidden');
+    document.getElementById('game-arena').classList.remove('hidden');
+    document.getElementById('check-btn').classList.remove('hidden'); // Pastikan butang semak ada
+    document.getElementById('final-score').classList.add('hidden');
+    
+    const container = document.getElementById('question-container');
+    container.innerHTML = "";
+    
+    let title = "";
+    if(type === 'guessing') title = "Guess the Word";
+    if(type === 'puzzle') title = "Word Scramble";
+    if(type === 'synonym') title = "Synonyms (Same Meaning)";
+    if(type === 'antonym') title = "Antonyms (Opposite Meaning)";
+    if(type === 'missing') title = "Missing Letters";
+    if(type === 'pastTense') title = "Past Tense Challenge";
+    if(type === 'plural') title = "Singular to Plural";
+    if(type === 'spelling') title = "Correct the Spelling";
+    
+    // Ejaan telah diselaraskan dengan data.js
+    if(type === 'occupations') title = "Jobs & Occupations";
+    if(type === 'genderNouns') title = "Gender Nouns";
+    if(type === 'idioms') title = "Popular Idioms";
+    if(type === 'superlatives') title = "Superlatives";
+    
+    // Jika tajuk tak jumpa, guna nama type asal
+    document.getElementById('game-title').innerText = title || type.toUpperCase();
 
-            // 3. Pilih 10 soalan sahaja untuk dipaparkan dalam pusingan ini
-            // (Anda boleh tukar nombor 10 di bawah kepada 15 atau 20 jika mahu)
-            let selectedQuestions = allQuestions;
+    // 1. Dapatkan soalan dari data.js dan salin ke dalam array baharu
+    let allQuestions = [...(gameData[type] || [])];
+    
+    if(allQuestions.length === 0) {
+        container.innerHTML = "<p class='text-center text-red-500 font-bold'>Data soalan kosong! Sila pastikan data.js anda telah dikemaskini.</p>";
+        return;
+    }
 
-            // 4. Paparkan soalan yang telah dirawak dan dipilih
-            selectedQuestions.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
-                div.innerHTML = `
-                    <p class="font-bold text-gray-700 mb-3">${index + 1}. ${item.q}</p>
-                    <input type="text" class="game-input w-full p-3 rounded-lg bg-gray-50 border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Type your answer here..." data-answer="${item.a}">
-                `;
-                container.appendChild(div);
-            });
+    // 2. Rawakkan susunan soalan (Shuffle) menggunakan Math.random
+    allQuestions.sort(() => Math.random() - 0.5);
 
-            startTimer(120); 
-        }
+    // 3. Pilih soalan (Anda boleh letak .slice(0, 10) di hujung allQuestions jika mahu hadkan 10 soalan sahaja)
+    let selectedQuestions = allQuestions;
 
+    // 4. Paparkan soalan yang telah dirawak dan dipilih
+    selectedQuestions.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
+        div.innerHTML = `
+            <p class="font-bold text-gray-700 mb-3">${index + 1}. ${item.q}</p>
+            <input type="text" class="game-input w-full p-3 rounded-lg bg-gray-50 border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Type your answer here..." data-answer="${item.a}">
+        `;
+        container.appendChild(div);
+    });
+
+    startTimer(120); 
+}
         function startTimer(seconds) {
             timeLeft = seconds;
             clearInterval(currentTimer);
