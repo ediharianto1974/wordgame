@@ -1723,7 +1723,13 @@ async function finishGame() {
         }
     });
 
-    // 2. REKOD MARKAH TERTINGGI GAME (LEADERBOARD) - WAJIB ADA DI SINI!
+    // --- PENTING: TARIK DATA TERKINI DARI CLOUD SEBELUM MENGIRA MARKAH ---
+    // Ini mengelakkan markah baharu murid "ditindih" oleh data lama
+    if (typeof loadCloudPlayerData === "function") {
+        await loadCloudPlayerData();
+    }
+
+    // 2. REKOD MARKAH TERTINGGI GAME (LEADERBOARD)
     if (!localPlayerData.games) localPlayerData.games = {};
     
     let currentBest = localPlayerData.games[currentGameType] ? localPlayerData.games[currentGameType].score : -1;
@@ -1739,8 +1745,10 @@ async function finishGame() {
     document.getElementById('final-score').classList.remove('hidden');
     document.getElementById('check-btn').classList.add('hidden');
 
-    // 4. Tambah XP/Total Score
-    localPlayerData.totalScore = (Number(localPlayerData.totalScore) || 0) + score;
+    // 4. Tambah XP (Total Score) yang Sebenar
+    // Gunakan 'score' (jawapan betul), bukannya duit (coinsEarned)
+    localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + score;
+    localPlayerData.Total = localPlayerData.totalScore;
 
     // 5. Semak kenaikan Level
     if (typeof checkLevelRewardsOnLogin === "function") {
@@ -1759,17 +1767,14 @@ async function finishGame() {
         coinsEarned += bonusCoins; 
     }
 
-    // 8. Simpan ke Google Sheets (Cloud) jika ada syiling
+    // 8. Masukkan Syiling dan Simpan ke Google Sheets (Cloud)
     if(coinsEarned > 0) {
-        if (typeof loadCloudPlayerData === "function") await loadCloudPlayerData();
-        
-        localPlayerData.coins += coinsEarned;
-        localPlayerData.totalScore = (parseInt(localPlayerData.totalScore) || 0) + coinsEarned; 
-        localPlayerData.Total = localPlayerData.totalScore;
-
-        if (typeof updatePlayerLevelUI === "function") updatePlayerLevelUI();
-        if (typeof saveCloudPlayerData === "function") await saveCloudPlayerData();
+        localPlayerData.coins = (parseInt(localPlayerData.coins) || 0) + coinsEarned;
     }
+    
+    // Kemaskini UI (Bar Level) dan hantar data terbaharu ke Sheets
+    if (typeof updatePlayerLevelUI === "function") updatePlayerLevelUI();
+    if (typeof saveCloudPlayerData === "function") await saveCloudPlayerData();
 
     // 9. Kata-kata pujian
     const praise = score === total ? "Excellent! You're a Master! 🌟" : score > 0 ? "Good Job! Keep Practicing! 💪" : "Try again, you can do it! 📚";
@@ -1786,7 +1791,8 @@ async function finishGame() {
         checkAchievements();
     }
 }
-        function showHint(inputElement, correctAns) {
+	
+	function showHint(inputElement, correctAns) {
             const hint = document.createElement('span');
             hint.className = "text-xs text-green-600 block mt-1 font-bold";
             hint.innerText = "Correct: " + correctAns.replace(/\|/g, ' or ');
