@@ -1799,12 +1799,18 @@ async function showLeaderboard() {
                 };
             }
             
+            // 🚨 PEMBETULAN: PAKSA MARKAH MENJADI NOMBOR (NUMBER)
             if (s.type && s.score !== undefined) {
-                if (!studentData[key].games[s.type] || s.score > studentData[key].games[s.type].score) {
-                    studentData[key].games[s.type] = { score: s.score, total: s.total };
+                let numericScore = Number(s.score) || 0;
+                let numericTotal = Number(s.total) || 0;
+                
+                let currentBestScore = studentData[key].games[s.type] ? studentData[key].games[s.type].score : -1;
+                
+                if (numericScore > currentBestScore) {
+                    studentData[key].games[s.type] = { score: numericScore, total: numericTotal };
                 }
             } else {
-                studentData[key].directTotal = s.total || 0;
+                studentData[key].directTotal = Number(s.total) || 0;
             }
         });
 
@@ -1814,14 +1820,15 @@ async function showLeaderboard() {
             const gameList = [];
             
             for (const [gameName, gameData] of Object.entries(student.games)) {
-                grandScore += gameData.score;
-                grandMax += gameData.total;
-                gameList.push({ name: gameName, score: gameData.score, total: gameData.total });
+                // 🚨 PEMBETULAN: PASTIKAN TAMBAH SEBAGAI NOMBOR MATEMATIK
+                grandScore += Number(gameData.score);
+                grandMax += Number(gameData.total);
+                gameList.push({ name: gameName, score: Number(gameData.score), total: Number(gameData.total) });
             }
             
-            if (student.directTotal !== undefined) {
-                grandScore = student.directTotal;
-                grandMax = student.directTotal;
+            if (student.directTotal !== undefined && student.directTotal > 0) {
+                grandScore = Number(student.directTotal);
+                grandMax = Number(student.directTotal);
             }
             
             return { ...student, gameList, grandScore, grandMax };
@@ -1907,8 +1914,8 @@ async function showLeaderboard() {
                 return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">${game.name}: <span class="text-green-600">${game.score}/${game.total}</span></span>`;
             }).join('');
 
-            // LEVEL BADGE (Khas untuk dipapar di jadual)
-            let studentLevel = Math.floor((parseInt(student.grandScore) || 0) / 100) + 1;
+            // LEVEL BADGE
+            let studentLevel = Math.floor(student.grandScore / 100) + 1;
             if (studentLevel > 100) studentLevel = 100;
             let levelBadgeHTML = `<div class="mt-1"><span class="inline-block text-[10px] md:text-xs font-bold text-white bg-indigo-500 rounded-full px-2 py-0.5 shadow-sm">Lv. ${studentLevel}</span></div>`;
 
