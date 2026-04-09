@@ -581,7 +581,7 @@ function checkLevelRewardsOnLogin() {
     let currentTotalXP = Number(localPlayerData.totalScore) || 0;
     
     let currentLevel = Math.floor(currentTotalXP / 100) + 1;
-    if (currentLevel > 100) currentLevel = 100; 
+    if (currentLevel > 150) currentLevel = 150; 
 
     // Pastikan array wujud
     if (!localPlayerData.claimedLevels || !Array.isArray(localPlayerData.claimedLevels)) {
@@ -649,28 +649,27 @@ function getPlayerLevelInfo(totalScore) {
     let score = parseInt(totalScore) || 0;
     let xpPerLevel = 100; // Kadar tetap 100 XP untuk setiap level
     
-    // Formula Level Baharu (Setiap gandaan 100 = 1 level)
+    // Formula Level Baharu
     let calculatedLevel = Math.floor(score / xpPerLevel) + 1;
-    if (calculatedLevel > 100) calculatedLevel = 100;
+    if (calculatedLevel > 150) calculatedLevel = 150; // 💥 TUKAR KE 150
 
     // Cari pangkat dari data.js
-    let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Novice", icon: "🌱", colorClass: "text-green-500"};
+    let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Mythic", icon: "✨", colorClass: "text-purple-500"};
 
-    // PENGIRAAN PROGRESS BAR (XP) BAHARU
+    // PENGIRAAN PROGRESS BAR
     let currentLevelBaseXP = (calculatedLevel - 1) * xpPerLevel;
     let nextLevelBaseXP = calculatedLevel * xpPerLevel;
     
-    let xpInCurrentLevel = score - currentLevelBaseXP; // XP yang dah dikumpul dalam level ini
-    let xpNeededForNextLevel = xpPerLevel; // Sentiasa 100 XP (jurang yang tetap)
+    let xpInCurrentLevel = score - currentLevelBaseXP; 
+    let xpNeededForNextLevel = xpPerLevel; 
     
-    // Jika sudah level maksimum (100), paparkan XP penuh
-    if (calculatedLevel >= 100) {
-        xpInCurrentLevel = xpNeededForNextLevel; // Memaparkan 100/100 XP
+    // Jika sudah level maksimum (150)
+    if (calculatedLevel >= 150) { // 💥 TUKAR KE 150
+        xpInCurrentLevel = xpNeededForNextLevel; 
     }
     
-    // Kira Peratus Lebar Bar (0% hingga 100%)
     let percentage = 100;
-    if (calculatedLevel < 100) {
+    if (calculatedLevel < 150) { // 💥 TUKAR KE 150
         percentage = Math.max(0, Math.min(100, (xpInCurrentLevel / xpNeededForNextLevel) * 100));
     }
 
@@ -678,12 +677,12 @@ function getPlayerLevelInfo(totalScore) {
         level: calculatedLevel,
         title: currentRank.title,
         icon: currentRank.icon,
-        colorClass: currentRank.colorClass || "text-green-500", // Pastikan warna dihantar
-        xpText: `${xpInCurrentLevel} / ${xpNeededForNextLevel} XP`, // Teks untuk hujung bar
-        percentage: percentage // Nombor peratusan untuk gerakkan lebar bar
+        colorClass: currentRank.colorClass || "text-green-500", 
+        xpText: `${xpInCurrentLevel} / ${xpNeededForNextLevel} XP`, 
+        percentage: percentage 
     };
 }
-
+	
 function updatePlayerLevelUI() {
     if (!localPlayerData) return;
     
@@ -1748,23 +1747,22 @@ async function finishGame() {
     document.getElementById('check-btn').classList.add('hidden');
 
 // 4. Tambah XP (Total Score) yang Sebenar berserta "XP Scaling"
-let currentXP = parseInt(localPlayerData.totalScore) || parseInt(localPlayerData.Total) || 0;
-
-// Dapatkan level semasa murid. 
-// (Nota: Pastikan cikgu guna fungsi kiraan level cikgu yang sebenar, contohnya calculateLevel() atau getLevel())
-let currentLevel = calculateLevel(currentXP); 
-
-let finalScoreToAdd = score; // Markah lalai (default) untuk Level 1-49
-
-// Semakan Peringkat Hardcore
-if (currentLevel >= 50) {
-    // Pilihan A: Bahagi 10 dan bundar ke bawah (baki hangus)
-    finalScoreToAdd = Math.floor(score / 10); 
-}
-
-// Tambah markah akhir ke dalam memori
-localPlayerData.totalScore = currentXP + finalScoreToAdd;
-localPlayerData.Total = localPlayerData.totalScore; // Selaraskan
+    let currentXP = parseInt(localPlayerData.totalScore) || parseInt(localPlayerData.Total) || 0;
+    
+    // Dapatkan level semasa murid (Berdasarkan formula 100 XP = 1 Level)
+    let currentLevel = Math.floor(currentXP / 100) + 1;
+    
+    let xpToAdd = score; // Markah asal untuk Level 1 hingga 49
+    
+    // 💥 SEMAKAN PERINGKAT HARDCORE (Level 50 ke atas)
+    if (currentLevel >= 50) {
+        // Bahagi 10 dan bundar ke bawah (baki jawapan tidak dikira)
+        xpToAdd = Math.floor(score / 10);
+    }
+    
+    // Tambah markah baharu ke dalam memori
+    localPlayerData.totalScore = currentXP + xpToAdd;
+    localPlayerData.Total = localPlayerData.totalScore;
 
     // 5. Semak kenaikan Level
     if (typeof checkLevelRewardsOnLogin === "function") {
