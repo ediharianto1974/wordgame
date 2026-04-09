@@ -295,7 +295,7 @@
                 <button onclick="initGame('puzzle')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-blue-400 shadow-sm hover:shadow-md">
                     <div class="text-4xl mb-4 text-blue-500"><i class="fas fa-puzzle-piece"></i></div>
                     <h3 class="text-lg font-bold mb-1">Word Scramble</h3>
-                    <p class="text-xs text-gray-500">Unscramble the messy ters.</p>
+                    <p class="text-xs text-gray-500">Unscramble the messy letters.</p>
                 </button>
 
                 <button onclick="initGame('synonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-purple-400 shadow-sm hover:shadow-md">
@@ -1578,31 +1578,57 @@ async function equipAvatar(avatarKey) {
 }
         
 function initGame(type) {
-    // ==========================================
-    // SISTEM ANTI-GRINDING (SEKATAN 5 MEMORI)
-    // ==========================================
-    if (!localPlayerData.lastPlayed) localPlayerData.lastPlayed = [];
+    if (!type) return; 
+    const safeType = type.toUpperCase(); // Seragamkan kepada huruf besar
+
+    // 1. PENAPIS KESELAMATAN DATA (Pastikan ia adalah Array)
+    if (!localPlayerData.lastPlayed) {
+        localPlayerData.lastPlayed = [];
+    } else if (typeof localPlayerData.lastPlayed === 'string') {
+        try {
+            // Cuba tukar teks JSON kembali ke Array
+            localPlayerData.lastPlayed = JSON.parse(localPlayerData.lastPlayed);
+        } catch (e) {
+            // Jika gagal, mungkin ia guna koma (KUIZ 1,KUIZ 2)
+            localPlayerData.lastPlayed = localPlayerData.lastPlayed.split(',');
+        }
+    }
     
-    // Semak adakah kategori ini ada dalam senarai memori?
-    if (localPlayerData.lastPlayed.includes(type)) {
-        alert(`⛔ KATEGORI INI SEDANG BEREHAT! ⛔\n\nAnda telah bermain kategori "${type.toUpperCase()}" baru-baru ini.\nSila main kategori lain untuk menolak kategori ini keluar dari memori.\n\nMemori Terkini:\n[ ${localPlayerData.lastPlayed.join(' ➔ ')} ]`);
+    // Jika data masih bukan Array atas sebab pelik, paksa ia jadi Array kosong
+    if (!Array.isArray(localPlayerData.lastPlayed)) {
+        localPlayerData.lastPlayed = [];
+    }
+
+    // ==========================================
+    // 2. SISTEM ANTI-GRINDING (SEKATAN MEMORI)
+    // ==========================================
+    
+    // Semak memori
+    if (localPlayerData.lastPlayed.includes(safeType)) {
+        alert(`⛔ KATEGORI INI SEDANG BEREHAT! ⛔\n\nAnda telah bermain kategori "${safeType}" baru-baru ini.\nSila main kategori lain untuk menolak kategori ini keluar dari memori.\n\nMemori Terkini:\n[ ${localPlayerData.lastPlayed.join(' ➔ ')} ]`);
         return; // HALANG PERMAINAN DARI BERMULA!
     }
 
-    // Jika lulus, masukkan kategori baharu ke dalam senarai memori
-    localPlayerData.lastPlayed.push(type);
+    // Jika lulus, masuk ke memori
+    localPlayerData.lastPlayed.push(safeType);
     
-    // Jika senarai memori sudah lebih 5, buang yang paling lama (First In, First Out)
-    if (localPlayerData.lastPlayed.length > 5) {
+    // Had memori
+    const HAD_MEMORI = 5; 
+    if (localPlayerData.lastPlayed.length > HAD_MEMORI) {
         localPlayerData.lastPlayed.shift(); 
     }
     
-    // Simpan memori terkini ke Google Sheets secara automatik
-    if (typeof savePlayerData === 'function') {
-        savePlayerData(); 
+    // Simpan ke Cloud menggunakan fungsi yang anda berikan tadi
+    if (typeof saveCloudPlayerData === 'function') {
+        saveCloudPlayerData(); 
+    } else if (typeof savePlayerData === 'function') {
+        savePlayerData(); // Backup jika fungsi lama digunakan
     }
     // ==========================================
 
+    // ... (kod seterusnya untuk mulakan permainan, contohnya memaparkan kuiz)
+    console.log(`Permainan ${safeType} bermula!`);
+}
     // KOD ASAL BERMULA DI SINI:
     currentGameType = type;
     document.getElementById('menu-screen').classList.add('hidden');
