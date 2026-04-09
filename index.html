@@ -1115,18 +1115,6 @@ async function loadCloudPlayerData() {
             }
         }
 
-// --- REKOD MARKAH TERTINGGI GAME (LEADERBOARD) ---
-    if (!localPlayerData.games) localPlayerData.games = {};
-    
-    let currentBest = localPlayerData.games[currentGameType] ? localPlayerData.games[currentGameType].score : -1;
-    if (score > currentBest) {
-        localPlayerData.games[currentGameType] = { 
-            score: score, 
-            total: total 
-        };
-    }
-    // -------------------------------------------------
-		
 async function saveCloudPlayerData() {
             const payload = {
                 action: "updatePlayer",
