@@ -1115,17 +1115,17 @@ async function loadCloudPlayerData() {
             }
         }
 
-		// (Letak kod ini sebelum anda memanggil savePlayerData() di akhir game)
+// --- REKOD MARKAH TERTINGGI GAME (LEADERBOARD) ---
     if (!localPlayerData.games) localPlayerData.games = {};
     
-    // Hanya simpan dan timpa rekod jika markah game ini lebih tinggi dari rekod sebelumnya
-    let currentBest = localPlayerData.games[currentGame] ? localPlayerData.games[currentGame].score : -1;
+    let currentBest = localPlayerData.games[currentGameType] ? localPlayerData.games[currentGameType].score : -1;
     if (score > currentBest) {
-        localPlayerData.games[currentGame] = { 
+        localPlayerData.games[currentGameType] = { 
             score: score, 
-            total: gameData[currentGame].length 
+            total: total 
         };
     }
+    // -------------------------------------------------
 		
 async function saveCloudPlayerData() {
             const payload = {
