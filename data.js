@@ -976,7 +976,7 @@ const ACHIEVEMENTS_LIST = [
 ];
 
 // ==========================================
-// 3. DATA LEVEL & PANGKAT (1 - 100)
+// 3. DATA LEVEL & PANGKAT (1 - 150)
 // ==========================================
 const levelRanks = [
     { minLevel: 1,  maxLevel: 10, title: "Novice",       icon: "🌱", colorClass: "text-green-500" },
@@ -988,5 +988,12 @@ const levelRanks = [
     { minLevel: 61, maxLevel: 70, title: "Champion",     icon: "⚔️", colorClass: "text-red-500" },
     { minLevel: 71, maxLevel: 80, title: "Wordsmith",    icon: "🖋️", colorClass: "text-orange-500" },
     { minLevel: 81, maxLevel: 90, title: "Grandmaster",  icon: "👑", colorClass: "text-yellow-400 drop-shadow-md" },
-    { minLevel: 91, maxLevel: 100, title: "Legend",      icon: "🌟", colorClass: "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] animate-pulse" } // Level paling tinggi siap ada glow & pulse!
+    { minLevel: 91, maxLevel: 100, title: "Legend",      icon: "🌟", colorClass: "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] animate-pulse" },
+    
+    // --- ERA HARDCORE (END-GAME TIERS) ---
+    { minLevel: 101, maxLevel: 110, title: "Mythic",     icon: "🦄", colorClass: "text-pink-400 drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]" },
+    { minLevel: 111, maxLevel: 120, title: "Oracle",     icon: "🔮", colorClass: "text-cyan-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.9)] animate-pulse" },
+    { minLevel: 121, maxLevel: 130, title: "Celestial",  icon: "🌌", colorClass: "text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,1)] animate-pulse" },
+    { minLevel: 131, maxLevel: 140, title: "Ascendant",  icon: "🕊️", colorClass: "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 drop-shadow-lg animate-pulse font-extrabold" },
+    { minLevel: 141, maxLevel: 150, title: "Omniscient", icon: "👁️‍🗨️", colorClass: "text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 via-red-500 to-orange-500 drop-shadow-[0_0_20px_rgba(217,70,239,1)] animate-pulse font-black" }
 ];
