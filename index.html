@@ -1654,6 +1654,15 @@ function initGame(type) {
     document.getElementById('game-arena').classList.remove('hidden');
     document.getElementById('check-btn').classList.remove('hidden'); 
     document.getElementById('final-score').classList.add('hidden');
+
+	// --- KOD RESET BUTANG CHECK ANSWER ---
+    const checkBtn = document.getElementById('check-btn');
+    checkBtn.classList.remove('hidden');
+    checkBtn.disabled = false; // Buka kunci butang
+    checkBtn.innerHTML = 'CHECK ANSWERS & SEE SCORE'; // Kembalikan teks asal
+    checkBtn.classList.remove('bg-gray-400', 'cursor-not-allowed'); // Buang kelabu
+    checkBtn.classList.add('bg-green-500', 'hover:bg-green-600'); // Pulangkan warna hijau
+    // --------------------------------------
     
     const container = document.getElementById('question-container');
     container.innerHTML = "";
