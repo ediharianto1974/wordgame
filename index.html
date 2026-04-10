@@ -2641,54 +2641,68 @@ function renderAchievements() {
         statsEl.innerText = `Unlocked: ${unlockedCount} / ${ACHIEVEMENTS_LIST.length}`;
     }
 }
-        // ==========================================
-// LOGIK PENCAPAIAN (ACHIEVEMENTS SYSTEM)
-// ==========================================
 
 // --- FUNGSI PENCAPAIAN (ACHIEVEMENTS) ---
 function checkAchievements() {
     if (!localPlayerData) return;
 
-    // 🚨 1. PEMBERSIHAN DATA DARI GOOGLE SHEETS (SANGAT PENTING!)
-    // Tukar format teks dari Sheet kepada Senarai/Array yang sah untuk elak ralat "push is not a function"
+    // 🚨 1. PEMBERSIHAN DATA
     if (typeof localPlayerData.achievements === 'string') {
         try { localPlayerData.achievements = JSON.parse(localPlayerData.achievements); } 
         catch(e) { localPlayerData.achievements = []; }
     }
     if (!Array.isArray(localPlayerData.achievements)) localPlayerData.achievements = [];
 
-    if (typeof localPlayerData.inventory === 'string') {
-        try { localPlayerData.inventory = JSON.parse(localPlayerData.inventory); } 
-        catch(e) { localPlayerData.inventory = []; }
-    }
-    if (!Array.isArray(localPlayerData.inventory)) localPlayerData.inventory = [];
-
     let avatarObj = localPlayerData.avatars || {};
     if (typeof avatarObj === 'string') {
         try { avatarObj = JSON.parse(avatarObj); } 
         catch(e) { avatarObj = {}; }
     }
-    localPlayerData.avatars = avatarObj; // Simpan semula objek yang telah dibersihkan
+    localPlayerData.avatars = avatarObj;
 
-    // 👉 2. Definisi pembolehubah (Sangat Penting supaya sistem tidak ralat!)
     const currentScore = Number(localPlayerData.totalScore) || 0;
     const currentCoins = Number(localPlayerData.coins) || 0;
 
-    // --- KIRA JUMLAH AVATAR & LEVEL MAKSIMUM DENGAN SELAMAT ---
-    // Lebih tepat mengira jumlah dari kekunci (keys) avatarObj berbanding inventory
+    // --- KIRA JUMLAH AVATAR & LEVEL MAKSIMUM ---
     let avatarCount = Object.keys(avatarObj).length;
     let maxAvatarLevel = 0;
-
     const levels = Object.values(avatarObj).map(Number);
     if (levels.length > 0) {
         maxAvatarLevel = Math.max(...levels);
     }
-    // -------------------------------------------------------------
+
+    // --- 🚨 KIRA GAMES PLAYED & PERFECT SCORES DENGAN SELAMAT ---
+    const userScores = localPlayerData.games || localPlayerData.scores || {};
+    let totalGamesPlayed = Object.keys(userScores).length;
+    let totalPerfects = 0;
+
+    for (let cat in userScores) {
+        let rawScore = userScores[cat];
+        let scoreVal = 0;
+
+        // "Buka kotak" markah
+        if (typeof rawScore === 'object' && rawScore !== null) {
+            scoreVal = parseInt(rawScore.score || rawScore.best || rawScore.mark || 0);
+        } else {
+            scoreVal = parseInt(rawScore) || 0;
+        }
+
+        // Tentukan jumlah soalan (guna data dari gameData)
+        let totalQ = (typeof gameData !== 'undefined' && gameData[cat]) ? gameData[cat].length : 50;
+        
+        // Tambah 1 jika markah penuh
+        if (scoreVal > 0 && scoreVal >= totalQ) {
+            totalPerfects++;
+        }
+    }
 
     let hasNewAchievement = false;
 
+    // 👉 2. SELARASKAN NAMA DENGAN data.js (ACHIEVEMENTS_LIST)
+    const achievementsToLoop = (typeof ACHIEVEMENTS_LIST !== 'undefined') ? ACHIEVEMENTS_LIST : (typeof achievementsData !== 'undefined' ? achievementsData : []);
+
     // 👉 3. Semak setiap pencapaian
-    achievementsData.forEach(ach => {
+    achievementsToLoop.forEach(ach => {
         // Abaikan yang dah unlock
         if (localPlayerData.achievements.includes(ach.id)) return; 
         
@@ -2700,7 +2714,7 @@ function checkAchievements() {
             case "ach_02": if (currentScore >= 1000) conditionMet = true; break;
             case "ach_03": if (currentScore >= 5000) conditionMet = true; break;
             case "ach_04": if (currentScore >= 10000) conditionMet = true; break;
-            case "ach_05": if (localPlayerData.perfectScores && localPlayerData.perfectScores >= 5) conditionMet = true; break;
+            case "ach_05": if (totalPerfects >= 5) conditionMet = true; break; // Guna totalPerfects yang dibetulkan
 
             // --- Category 2: Challenge Mode ---
             case "ach_06": if (localPlayerData.challengesSent && localPlayerData.challengesSent >= 1) conditionMet = true; break;
@@ -2734,10 +2748,10 @@ function checkAchievements() {
             case "ach_23": if (localPlayerData.gamesPlayedToday && localPlayerData.gamesPlayedToday >= 5) conditionMet = true; break;
 
             // --- Category 7: Game Mastery ---
-            case "ach_24": if (localPlayerData.uniqueGamesPlayed && localPlayerData.uniqueGamesPlayed >= 12) conditionMet = true; break;
+            case "ach_24": if (totalGamesPlayed >= 12) conditionMet = true; break; // Guna totalGamesPlayed yang dibetulkan
             case "ach_25": if (localPlayerData.gamesOver50 && localPlayerData.gamesOver50 >= 12) conditionMet = true; break;
             case "ach_26": if (localPlayerData.comebackWins && localPlayerData.comebackWins >= 1) conditionMet = true; break;
-            case "ach_27": if (localPlayerData.perfectScores && localPlayerData.perfectScores >= 3) conditionMet = true; break;
+            case "ach_27": if (totalPerfects >= 3) conditionMet = true; break; // Guna totalPerfects yang dibetulkan
 
             // --- Category 8: Social & Advanced Challenges ---
             case "ach_28": if (localPlayerData.challengesSent && localPlayerData.challengesSent >= 10) conditionMet = true; break;
@@ -2749,18 +2763,13 @@ function checkAchievements() {
             // --- Category 9: Advanced Inventory ---
             case "ach_33": if (localPlayerData.shopVisits && localPlayerData.shopVisits >= 20) conditionMet = true; break;
             case "ach_34": if (avatarCount >= 10) conditionMet = true; break;
-			case "ach_35": 
-                // Sistem akan menapis (filter) senarai level untuk mencari yang bernilai 5 ke atas
+            case "ach_35": 
                 const avatarsLevel5OrMore = levels.filter(lvl => lvl >= 5).length;
                 if (avatarsLevel5OrMore >= 5) conditionMet = true; 
                 break;
                 
             case "ach_36": 
-                // ANDAIAN 1: Jika Cikgu ada menyimpan rekod skin dalam 'localPlayerData'
                 if (localPlayerData.skinsUnlocked && localPlayerData.skinsUnlocked >= 1) conditionMet = true; 
-                
-                // ANDAIAN 2: Jika skin direkodkan dalam 'inventory' (Google Sheet) dan namanya ada perkataan "skin"
-                // if (localPlayerData.inventory && localPlayerData.inventory.some(item => item.toLowerCase().includes("skin"))) conditionMet = true;
                 break;
 
             // --- Category 10: Special Events & Hidden ---
@@ -2770,7 +2779,6 @@ function checkAchievements() {
                 break;
             case "ach_38": if (new Date().getMonth() === 11) conditionMet = true; break;
             
-            // 👉 First Step Achievement - Sentiasa unlock masa login
             case "ach_39": conditionMet = true; break; 
             
             case "ach_40": if (localPlayerData.secretsFound && localPlayerData.secretsFound >= 1) conditionMet = true; break;
@@ -2790,7 +2798,7 @@ function checkAchievements() {
         saveCloudPlayerData();
     }
 }
-		
+	
 function unlockAchievement(ach) {
     if (!localPlayerData.achievements) localPlayerData.achievements = [];
     
