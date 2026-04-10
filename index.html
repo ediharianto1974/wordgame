@@ -1791,38 +1791,62 @@ async function finishGame() {
     document.getElementById('check-btn').classList.add('hidden');
 
 // ==========================================
-// 4. PENGIRAAN XP & LEVEL YANG TEPAT (DIPERBAIKI)
+// 4. PENGIRAAN XP, LEVEL & PENALTI HARDCORE
 // ==========================================
 
-// Dapatkan markah mentah dari permainan semasa (pastikan ia nombor tulen)
+// Dapatkan markah mentah dari permainan semasa
 let currentXP = parseInt(localPlayerData.totalScore) || parseInt(localPlayerData.Total) || 0;
 let xpToAdd = parseInt(score) || 0;
 
-// KIRA LEVEL SEMASA DENGAN TEPAT (Secara Live)
-// Wajib kira sekarang supaya sistem tahu level sebenar pemain sebelum letak hukuman
+// KIRA LEVEL SEMASA SECARA LIVE
 let liveLevel = Math.floor(currentXP / 100) + 1;
 
-// 💥 SEMAKAN PERINGKAT HARDCORE (Level 50 dan ke atas)
+// 💥 A. SYARAT XP HARDCORE (Level 50 dan ke atas)
 if (liveLevel >= 50) {
-    // Tidak kira berapa markah (score) yang murid dapat dari kuiz, 
-    // mereka HANYA akan menerima 1 XP sahaja per permainan!
+    // Hanya dapat 1 XP walau berapa pun markah yang betul
     xpToAdd = 1;
 }
 
-// Tambah markah bersih ke dalam memori pemain
+// Tambah XP ke dalam memori
 localPlayerData.totalScore = currentXP + xpToAdd;
 localPlayerData.Total = localPlayerData.totalScore;
+
+
+// 💥 B. SISTEM PENALTI SYILING (COINS DEDUCTION)
+// Kira jumlah jawapan yang salah (Total Soalan - Soalan Betul)
+let wrongAnswers = total - score; 
+
+if (liveLevel >= 50 && wrongAnswers > 0) {
+    // Formula pintar: (Gandaan Level 10) tolak 4, darab 100.
+    // Lvl 50 = 100, Lvl 60 = 200, Lvl 70 = 300, dst...
+    let penaltyMultiplier = Math.floor(liveLevel / 10) - 4; 
+    let penaltyPerWrong = penaltyMultiplier * 100;
+    
+    // Jumlah besar yang akan dipotong
+    let totalPenalty = wrongAnswers * penaltyPerWrong;
+    
+    // Potong syiling pemain
+    localPlayerData.coins -= totalPenalty;
+    
+    // PENTING: Elakkan syiling menjadi negatif (berhutang)
+    if (localPlayerData.coins < 0) {
+        localPlayerData.coins = 0; 
+    }
+    
+    // Berikan pop-up amaran kepada pemain supaya mereka serik!
+    alert(`🔥 HARDCORE MODE PENALTY!\n\nLevel: ${liveLevel}\nSoalan Salah: ${wrongAnswers}\nPenalti: Tolak ${totalPenalty} Coins!\n\nSila berhati-hati!`);
+}
+
 
 // 5. Semak kenaikan Level (Panggil fungsi ganjaran jika ada)
 if (typeof checkLevelRewardsOnLogin === "function") {
     checkLevelRewardsOnLogin();
 }
 
-// Simpan data terus ke Google Sheets sebagai langkah keselamatan tambahan
+// Simpan data terus ke Google Sheets
 if (typeof saveCloudPlayerData === 'function') {
     saveCloudPlayerData(); 
 }
-
 // ==========================================
 
     // 6. Pengiraan Syiling (Coins) Asas + Event Multiplier
