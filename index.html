@@ -206,6 +206,25 @@
         width: 100%;
         text-align: center;
     }
+
+		.mastered-badge {
+    background-color: #10b981; /* Hijau */
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.score-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen p-4 md:p-8">
@@ -1113,6 +1132,7 @@ async function startGameHub() {
         activeTitle: data.activeTitle || "Novice", 
         // 👇 TAMBAH BARIS INI JUGA!
         claimedLevels: Array.isArray(data.claimedLevels) ? data.claimedLevels : [] 
+		games: data.games || {}
     };
                 studentInfo = { name: nameInput, class: classInput };
 
@@ -1131,6 +1151,9 @@ async function startGameHub() {
 		updatePlayerLevelUI();
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('menu-screen').classList.remove('hidden');
+		if (typeof updateCategoryProgress === "function") {
+            updateCategoryProgress();
+        }
 		checkLevelAccess();
 
         const avatarContainer = document.getElementById('dashboard-avatars');
@@ -1241,6 +1264,9 @@ async function saveCloudPlayerData() {
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
+				if (typeof updateCategoryProgress === 'function') {
+            updateCategoryProgress();
+        }
             } catch(e) {
                 console.error("Error saving player data", e);
             }
@@ -3009,11 +3035,54 @@ function startMic(btnElement) {
 
     // 2. Tunjukkan semula Menu Utama
     document.getElementById('menu-screen').classList.remove('hidden');
+		updateCategoryProgress();
 
     // 3. (Opsional) Scroll ke atas supaya murid nampak profil mereka
     window.scrollTo(0, 0);
     
     console.log("Return to Main Menu.");
+}
+
+	function updateCategoryProgress() {
+    // Ambil semua markah murid
+    const userScores = localPlayerData.scores || {};
+
+    // Senarai semua ID kategori yang anda ada
+    const categories = [
+        'guessing', 'puzzle', 'synonym', 'antonym', 'missing', 
+        'pastTense', 'plural', 'spelling', 'occupations', 
+        'genderNouns', 'idioms', 'superlatives', 'grammar'
+    ];
+
+    categories.forEach(cat => {
+        const card = document.querySelector(`[onclick="initGame('${cat}')"]`);
+        if (!card) return;
+
+        const currentScore = userScores[cat] || 0;
+        const totalQuestions = gameData[cat] ? gameData[cat].length : 0;
+
+        // 1. Buang lencana lama jika ada (supaya tidak bertindan)
+        const oldBadge = card.querySelector('.mastered-badge');
+        if (oldBadge) oldBadge.remove();
+        
+        const oldScore = card.querySelector('.score-text');
+        if (oldScore) oldScore.remove();
+
+        // 2. Tambah paparan markah (Contoh: Score: 10/10)
+        const scoreInfo = document.createElement('div');
+        scoreInfo.className = 'score-text';
+        scoreInfo.innerHTML = `Best: ${currentScore}/${totalQuestions}`;
+        card.appendChild(scoreInfo);
+
+        // 3. Jika markah penuh, tambah lencana "MASTERED"
+        if (currentScore > 0 && currentScore === totalQuestions) {
+            const badge = document.createElement('span');
+            badge.className = 'mastered-badge';
+            badge.innerHTML = '✓ MASTERED';
+            card.style.borderColor = '#10b981'; // Tukar border jadi hijau
+            card.appendChild(badge);
+        }
+    });
 }
 </script>
 </body>
