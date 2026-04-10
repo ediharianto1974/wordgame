@@ -1739,6 +1739,22 @@ function timeUp() {
 // FUNGSI TAMAT PERMAINAN & KIRA MARKAH
 // ==========================================
 async function finishGame() {
+
+	// ==========================================
+    // 1. KUNCI KESELAMATAN (ELAK SPAM KLIK)
+    // ==========================================
+    const checkBtn = document.getElementById('check-btn');
+    
+    // Jika butang sudah dibekukan, batalkan klik seterusnya (Keluar dari fungsi)!
+    if (checkBtn.disabled) return; 
+    
+    // Bekukan butang, tukar warna kelabu, dan letak teks "Checking..." berserta animasi
+    checkBtn.disabled = true;
+    checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+    checkBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+    checkBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+    // ==========================================
+	
     const inputs = document.querySelectorAll('.game-input');
     let score = 0;
     let total = inputs.length;
