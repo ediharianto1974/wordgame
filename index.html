@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Mastery Game Hub</title>
@@ -357,6 +359,22 @@
                     <h3 class="text-lg font-bold mb-1">Superlatives</h3>
                     <p class="text-xs text-gray-500">Fast, Faster, ...?</p>
                 </button>
+
+				<button onclick="initGame('grammar')" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded m-2">
+    🔍 Grammar Inquisitor
+</button>
+
+<button onclick="initGame('architect')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded m-2">
+    🧩 Sentence Architect
+</button>
+
+<button onclick="initGame('listening')" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded m-2">
+    🎧 Spelling Bee (Listen)
+</button>
+
+<button onclick="initGame('speaking')" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded m-2">
+    🎤 Pronunciation (Speak)
+</button>
 
             </div>
         </div>
@@ -1681,6 +1699,10 @@ function initGame(type) {
     if(type === 'genderNouns') title = "Gender Nouns";
     if(type === 'idioms') title = "Popular Idioms";
     if(type === 'superlatives') title = "Superlatives";
+	if(type === 'grammar') title = "Grammar Inquisitor";
+    if(type === 'architect') title = "Sentence Architect";
+    if(type === 'listening') title = "Spelling Bee";
+    if(type === 'speaking') title = "Pronunciation Master";
     
     document.getElementById('game-title').innerText = title || type.toUpperCase();
 
@@ -2830,6 +2852,66 @@ function applyTitleStyle(titleName) {
 
     updateElement(displayHeader);
     updateElement(displayProfile);
+}
+
+	// ==========================================
+// FUNGSI UNTUK MENDENGAR (LISTENING)
+// ==========================================
+function playAudio(word) {
+    if ('speechSynthesis' in window) {
+        let msg = new SpeechSynthesisUtterance();
+        msg.text = word;
+        msg.lang = 'en-US'; // Bahasa Inggeris
+        msg.rate = 0.8;     // Kelajuan perlahan sedikit supaya jelas
+        window.speechSynthesis.speak(msg);
+    } else {
+        alert("Sistem suara tidak disokong pada pelayar ini.");
+    }
+}
+
+// ==========================================
+// FUNGSI UNTUK BERCAKAP (SPEAKING)
+// ==========================================
+function startMic(btnElement) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+        alert("Fungsi mikrofon hanya disokong di Google Chrome atau Edge.");
+        return;
+    }
+    
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US'; 
+    
+    // Visual ketika butang ditekan
+    const originalText = btnElement.innerHTML;
+    btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Listening...';
+    btnElement.classList.replace('bg-red-500', 'bg-green-500');
+    
+    recognition.start(); // Mula rakam
+    
+    recognition.onresult = function(event) {
+        let speechResult = event.results[0][0].transcript.toLowerCase();
+        
+        // Cari kotak input jawapan (Gantikan '.game-input' jika kelas input anda berbeza)
+        let inputEl = document.querySelector('.game-input'); // Atau guna document.getElementById('input-jawapan')
+        if (inputEl) {
+            inputEl.value = speechResult; 
+        }
+        
+        // Pulangkan ke asal
+        btnElement.innerHTML = '<i class="fas fa-check"></i> Done';
+        setTimeout(() => {
+            btnElement.innerHTML = originalText;
+            btnElement.classList.replace('bg-green-500', 'bg-red-500');
+        }, 2000);
+    };
+    
+    recognition.onerror = function() {
+        alert("Gagal mengesan suara. Sila cuba lagi dan pastikan anda membenarkan akses mikrofon.");
+        btnElement.innerHTML = originalText;
+        btnElement.classList.replace('bg-green-500', 'bg-red-500');
+    };
 }
 </script>
 </body>
