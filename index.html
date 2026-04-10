@@ -3073,7 +3073,7 @@ function startMic(btnElement) {
         scoreInfo.innerHTML = `Best: ${currentScore}/${totalQuestions}`;
         card.appendChild(scoreInfo);
 
-        // 3. Jika markah penuh, tambah lencana "MASTERED"
+// 3. Jika markah penuh, tambah lencana "MASTERED"
         if (currentScore > 0 && currentScore === totalQuestions) {
             const badge = document.createElement('span');
             badge.className = 'mastered-badge';
@@ -3081,8 +3081,21 @@ function startMic(btnElement) {
             card.style.borderColor = '#10b981'; // Tukar border jadi hijau
             card.appendChild(badge);
         }
-    });
-}
+    }); // <--- INI ADALAH PENUTUP GELUNG .forEach
+
+    // ==========================================
+    // LETAKKAN PENGIRAAN MASTERY DI SINI (LUAR GELUNG)
+    // ==========================================
+    const totalMastered = Object.keys(userScores).filter(cat => 
+        userScores[cat] === (gameData[cat] ? gameData[cat].length : -1)
+    ).length;
+
+    // Semak dahulu wujud tak id="mastery-count" untuk elak ralat (error)
+    const masteryElement = document.getElementById('mastery-count');
+    if (masteryElement) {
+        masteryElement.innerText = totalMastered;
+    }
+} // <--- INI ADALAH PENUTUP FUNGSI updateCategoryProgress()
 </script>
 </body>
 </html>
