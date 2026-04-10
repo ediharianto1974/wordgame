@@ -3044,7 +3044,7 @@ function startMic(btnElement) {
 
 	function updateCategoryProgress() {
     // Ambil semua markah murid
-    const userScores = localPlayerData.scores || {};
+    const userScores = localPlayerData.games || localPlayerData.scores || {};
 
     // Senarai semua ID kategori yang anda ada
     const categories = [
