@@ -441,6 +441,10 @@
                     <button onclick="createChallenge(parseInt(document.getElementById('score-val').innerText), currentGameType)" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-2 px-6 rounded-full shadow-lg mt-4 ml-2 transition transform hover:scale-105">
                         <i class="fas fa-bullhorn mr-2"></i> Challenge Friends!
                     </button>
+
+					<button onclick="backToMenu()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition">
+        <i class="fas fa-home mr-2"></i> Return to Main Menu
+    </button>
                 </div>
             </div>
         </div>
@@ -2997,6 +3001,20 @@ function startMic(btnElement) {
 	window.addEventListener('load', () => {
     checkLevelAccess();
 });
+
+	function backToMenu() {
+    // 1. Sembunyikan Arena Permainan dan Skrin Skor
+    document.getElementById('game-arena').classList.add('hidden');
+    document.getElementById('final-score').classList.add('hidden');
+
+    // 2. Tunjukkan semula Menu Utama
+    document.getElementById('menu-screen').classList.remove('hidden');
+
+    // 3. (Opsional) Scroll ke atas supaya murid nampak profil mereka
+    window.scrollTo(0, 0);
+    
+    console.log("Return to Main Menu.");
+}
 </script>
 </body>
 </html>
