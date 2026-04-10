@@ -288,19 +288,19 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <button onclick="initGame('guessing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-orange-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('guessing')" class="category-card p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-orange-400 shadow-sm hover:shadow-md" data-category="guessing">
                     <div class="text-4xl mb-4 text-orange-500"><i class="fas fa-search"></i></div>
                     <h3 class="text-lg font-bold mb-1">Guessing Word</h3>
                     <p class="text-xs text-gray-500">Guess the word based on hints.</p>
                 </button>
                 
-                <button onclick="initGame('puzzle')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-blue-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('puzzle')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-blue-400 shadow-sm hover:shadow-md" data-category="puzzle">
                     <div class="text-4xl mb-4 text-blue-500"><i class="fas fa-puzzle-piece"></i></div>
                     <h3 class="text-lg font-bold mb-1">Word Scramble</h3>
                     <p class="text-xs text-gray-500">Unscramble the messy letters.</p>
                 </button>
 
-                <button onclick="initGame('synonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-purple-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('synonym')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-purple-400 shadow-sm hover:shadow-md" data-category="synonym">
                     <div class="text-4xl mb-4 text-purple-500"><i class="fas fa-link"></i></div>
                     <h3 class="text-lg font-bold mb-1">Synonyms</h3>
                     <p class="text-xs text-gray-500">Find words with the SAME meaning.</p>
@@ -312,55 +312,55 @@
                     <p class="text-xs text-gray-500">Find words with the OPPOSITE meaning.</p>
                 </button>
 
-                <button onclick="initGame('missing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-teal-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('missing')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-teal-400 shadow-sm hover:shadow-md" data-category="missing">
                     <div class="text-4xl mb-4 text-teal-500"><i class="fas fa-pen-nib"></i></div>
                     <h3 class="text-lg font-bold mb-1">Missing Letters</h3>
                     <p class="text-xs text-gray-500">Fill in the missing alphabets.</p>
                 </button>
 
-                <button onclick="initGame('pastTense')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-pink-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('pastTense')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-pink-400 shadow-sm hover:shadow-md" data-category="pastTense">
                     <div class="text-4xl mb-4 text-pink-500"><i class="fas fa-history"></i></div>
                     <h3 class="text-lg font-bold mb-1">Past Tense</h3>
                     <p class="text-xs text-gray-500">Change verb to the past tense.</p>
                 </button>
 
-                <button onclick="initGame('plural')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-cyan-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('plural')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-cyan-400 shadow-sm hover:shadow-md" data-category="plural">
                     <div class="text-4xl mb-4 text-cyan-500"><i class="fas fa-clone"></i></div>
                     <h3 class="text-lg font-bold mb-1">Plural Forms</h3>
                     <p class="text-xs text-gray-500">Change 1 object to many objects.</p>
                 </button>
 
-                <button onclick="initGame('spelling')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-emerald-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('spelling')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-emerald-400 shadow-sm hover:shadow-md" data-category="spelling">
                     <div class="text-4xl mb-4 text-emerald-500"><i class="fas fa-spell-check"></i></div>
                     <h3 class="text-lg font-bold mb-1">Correct Spelling</h3>
                     <p class="text-xs text-gray-500">Fix the wrongly spelled word.</p>
                 </button>
 
-<button onclick="initGame('occupations')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-amber-400 shadow-sm hover:shadow-md">
+<button onclick="initGame('occupations')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-amber-400 shadow-sm hover:shadow-md" data-category="occupations">
                     <div class="text-4xl mb-4 text-amber-500"><i class="fas fa-user-md"></i></div>
                     <h3 class="text-lg font-bold mb-1">Occupations</h3>
                     <p class="text-xs text-gray-500">Guess the correct job/career.</p>
                 </button>
 
-                <button onclick="initGame('genderNouns')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-fuchsia-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('genderNouns')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-fuchsia-400 shadow-sm hover:shadow-md" data-category="genderNouns">
                     <div class="text-4xl mb-4 text-fuchsia-500"><i class="fas fa-venus-mars"></i></div>
                     <h3 class="text-lg font-bold mb-1">Gender Nouns</h3>
                     <p class="text-xs text-gray-500">Change male to female (or vice versa).</p>
                 </button>
 
-                <button onclick="initGame('idioms')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-lime-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('idioms')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-lime-400 shadow-sm hover:shadow-md" data-category="idioms?>
                     <div class="text-4xl mb-4 text-lime-500"><i class="fas fa-comment-dots"></i></div>
                     <h3 class="text-lg font-bold mb-1">Popular Idioms</h3>
                     <p class="text-xs text-gray-500">Fill in the blank for the idiom.</p>
                 </button>
 
-                <button onclick="initGame('superlatives')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md">
+                <button onclick="initGame('superlatives')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" data-category="superlatives">
                     <div class="text-4xl mb-4 text-vio-500"><i class="fas fa-level-up-alt"></i></div>
                     <h3 class="text-lg font-bold mb-1">Superlatives</h3>
                     <p class="text-xs text-gray-500">Fast, Faster, ...?</p>
                 </button>
 
-<div onclick="initGame('grammar')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;">
+<div onclick="initGame('grammar')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;" data-category="grammar">
     <div class="text-purple-500 mb-2">
         <i class="fas fa-check-double fa-2x"></i>
     </div>
@@ -368,7 +368,7 @@
     <p class="text-sm text-gray-500 mt-1">Fix the grammar mistakes in the sentence.</p>
 </div>
 
-<div onclick="initGame('architect')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;">
+<div onclick="initGame('architect')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;" data-category="architect">
     <div class="text-blue-500 mb-2">
         <i class="fas fa-cubes fa-2x"></i>
     </div>
@@ -376,7 +376,7 @@
     <p class="text-sm text-gray-500 mt-1">Arrange the words to form a correct sentence.</p>
 </div>
 
-<div onclick="initGame('listening')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;">
+<div onclick="initGame('listening')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;" data-category="listening">
     <div class="text-pink-500 mb-2">
         <i class="fas fa-headphones fa-2x"></i>
     </div>
@@ -384,7 +384,7 @@
     <p class="text-sm text-gray-500 mt-1">Listen to the audio and spell the word.</p>
 </div>
 
-<div onclick="initGame('speaking')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;">
+<div onclick="initGame('speaking')" class="p-6 glass rounded-3xl text-left hover:bg-indigo-50 transition group border-b-4 border-vio-400 shadow-sm hover:shadow-md" style="cursor: pointer;" data-category="speaking">
     <div class="text-teal-500 mb-2">
         <i class="fas fa-microphone-alt fa-2x"></i>
     </div>
@@ -539,6 +539,54 @@
     <script src="data.js"></script>
 
 <script>
+// === SISTEM KUNCI TAHAP (STRICT MODE) ===
+const levels = {
+    // Sila pastikan perkataan di bawah SAMA SEBIJIK dengan data-category / initGame anda
+    easy: ['missing', 'puzzle', 'plural', 'genderNouns', 'occupations'],
+    medium: ['puzzle', 'guessing', 'pastTense', 'superlatives', 'synonym', 'antonym'],
+    hard: ['grammar', 'architect', 'idioms', 'listening', 'speaking']
+};
+
+function checkLevelAccess() {
+    const userScores = JSON.parse(localStorage.getItem('gameScores')) || {};
+
+    let easyMastered = levels.easy.filter(cat => (userScores[cat] || 0) >= 50).length;
+    let mediumMastered = levels.medium.filter(cat => (userScores[cat] || 0) >= 50).length;
+
+    document.querySelectorAll('.category-card').forEach(card => {
+        const category = card.getAttribute('data-category');
+        let isLocked = true;
+
+        if (levels.easy.includes(category)) {
+            isLocked = false; 
+        } 
+        else if (levels.medium.includes(category) && easyMastered >= 3) {
+            isLocked = false; 
+        } 
+        else if (levels.hard.includes(category) && mediumMastered >= 3) {
+            isLocked = false; 
+        }
+
+        if (isLocked) {
+            card.classList.add('opacity-40', 'pointer-events-none', 'grayscale');
+            if (!card.querySelector('.fa-lock')) {
+                card.innerHTML += `
+                    <div class="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-xl z-10 lock-icon-overlay">
+                        <div class="bg-gray-800 text-white p-3 rounded-full shadow-lg">
+                            <i class="fas fa-lock fa-lg"></i>
+                        </div>
+                    </div>
+                `;
+            }
+        } else {
+            card.classList.remove('opacity-40', 'pointer-events-none', 'grayscale');
+            const lockIcon = card.querySelector('.lock-icon-overlay');
+            if (lockIcon) lockIcon.remove();
+        }
+    });
+}
+// ==========================================
+	
         // URL GOOGLE APPS SCRIPT ANDA
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec";
 
@@ -1065,6 +1113,7 @@ async function startGameHub() {
 		updatePlayerLevelUI();
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('menu-screen').classList.remove('hidden');
+		checkLevelAccess();
 
         const avatarContainer = document.getElementById('dashboard-avatars');
         if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
@@ -1125,6 +1174,7 @@ async function startGameHub() {
             document.getElementById('leaderboard-screen').classList.add('hidden');
             document.getElementById('achievements-screen').classList.add('hidden'); // <--- TAMBAH BARIS INI
             document.getElementById('menu-screen').classList.remove('hidden');
+			checkLevelAccess();
         }
 
         // --- SISTEM CLOUD DATABASE & DASHBOARD AVATAR ---
@@ -2929,6 +2979,10 @@ function startMic(btnElement) {
         btnElement.classList.replace('bg-green-500', 'bg-red-500');
     };
 }
+
+	window.addEventListener('load', () => {
+    checkLevelAccess();
+});
 </script>
 </body>
 </html>
