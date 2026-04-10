@@ -1683,20 +1683,17 @@ function initGame(type) {
     const playerName = localPlayerData.passcode || localPlayerData.name || "guest";
     const userKey = "memoriPemain_" + playerName;
 
-    // ==========================================
-    // 1. PEMULIHAN & PEMBERSIHAN MEMORI (CLOUD + LOKAL)
+// ==========================================
+    // 1. PEMULIHAN & PEMBERSIHAN MEMORI (FIXED)
     // ==========================================
     
-    // A. Tarik dan bersihkan data dari Cloud (Google Sheets)
-    let cloudMem = localPlayerData.lastPlayed;
-    if (typeof cloudMem === 'string') {
-        // Kuasa Regex: Buang semua simbol [ ] " ' yang mengelirukan, kemudian susun balik jadi Array
-        cloudMem = cloudMem.replace(/[\[\]"'\\]/g, '').split(',').map(s => s.trim()).filter(s => s !== "");
-    } else if (!Array.isArray(cloudMem)) {
-        cloudMem = []; // Jika tiada data, jadikan kosong
+    // A. Ambil data dari localPlayerData (Cloud)
+    let currentMem = localPlayerData.lastPlayed || [];
+    if (typeof currentMem === 'string') {
+        currentMem = currentMem.replace(/[\[\]"'\\]/g, '').split(',').map(s => s.trim()).filter(s => s !== "");
     }
 
-    // B. Tarik dan bersihkan data dari Gam Gajah (LocalStorage)
+    // B. Ambil data dari LocalStorage
     let localMem = [];
     try {
         const savedMem = localStorage.getItem(userKey);
@@ -1705,18 +1702,24 @@ function initGame(type) {
         }
     } catch (e) {}
 
-    // C. GABUNGKAN! Ambil senarai memori yang paling panjang (Paling tepat)
-    if (localMem.length > cloudMem.length) {
-        localPlayerData.lastPlayed = localMem;
-    } else {
-        localPlayerData.lastPlayed = cloudMem;
+    // C. Pilih yang paling terkini/panjang
+    let combinedMem = localMem.length > currentMem.length ? localMem : currentMem;
+
+    // D. [PENTING] PAKSA HAD 2 DI SINI SEBELUM DISEKAT
+    // Ini akan membuang memori lama (had 5) supaya kategori lain terbuka semula
+    const HAD_MEMORI = 2;
+    if (combinedMem.length > HAD_MEMORI) {
+        combinedMem = combinedMem.slice(-HAD_MEMORI);
     }
+    
+    // Simpan semula ke dalam localPlayerData (Pastikan Huruf Besar)
+    localPlayerData.lastPlayed = combinedMem.map(s => s.toUpperCase());
 
     // ==========================================
     // 2. SISTEM ANTI-GRINDING (SEKATAN)
     // ==========================================
     
-    // Semak memori
+    // Semak jika kategori ada dalam 2 memori terakhir
     if (localPlayerData.lastPlayed.includes(safeType)) {
         alert(`⛔ KATEGORI INI SEDANG BEREHAT! ⛔\n\nAnda telah bermain kategori "${safeType}" baru-baru ini.\nSila main kategori lain untuk menolak kategori ini keluar dari memori.\n\nMemori Terkini:\n[ ${localPlayerData.lastPlayed.join(' ➔ ')} ]`);
         return; // HALANG PERMAINAN DARI BERMULA!
@@ -1725,23 +1728,20 @@ function initGame(type) {
     // Jika lulus, masuk ke memori baharu
     localPlayerData.lastPlayed.push(safeType);
     
-    // Had memori tetap 2
-    const HAD_MEMORI = 2; 
+    // Pastikan kekal had 2 selepas ditambah
     if (localPlayerData.lastPlayed.length > HAD_MEMORI) {
-        localPlayerData.lastPlayed.shift(); 
+        localPlayerData.lastPlayed = localPlayerData.lastPlayed.slice(-HAD_MEMORI);
     }
     
-    // Simpan ke komputer (Kemas kini localStorage dengan teks bersih)
+    // Simpan ke komputer & Cloud
     localStorage.setItem(userKey, localPlayerData.lastPlayed.join(','));
 
-    // Simpan ke Cloud Google Sheet
     if (typeof saveCloudPlayerData === 'function') {
         saveCloudPlayerData(); 
     } else if (typeof savePlayerData === 'function') {
         savePlayerData(); 
     }
     // ==========================================
-
     console.log(`Permainan ${safeType} bermula! Memori disahkan:`, localPlayerData.lastPlayed);
 
     // ==========================================
