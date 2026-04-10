@@ -848,68 +848,68 @@ const shopBadges = [
     // 1. GAME BADGES (Tiada syarat, sentiasa ada di kedai)
     // Harga: 500 (Boleh tukar mengikut harga asal anda)
     // ---------------------------------------------------------
-    { id: "gb_01", name: "Guessing Word Badge", icon: "fas fa-question-circle", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_02", name: "Word Scramble Badge", icon: "fas fa-random", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_03", name: "Synonym Badge", icon: "fas fa-equals", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_04", name: "Antonym Badge", icon: "fas fa-exchange-alt", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_05", name: "Missing Letter Badge", icon: "fas fa-search", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_06", name: "Past Tense Badge", icon: "fas fa-history", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_07", name: "Plural Form Badge", icon: "fas fa-copy", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_08", name: "Correct Spelling Badge", icon: "fas fa-spell-check", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_09", name: "Occupation Badge", icon: "fas fa-user-md", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_10", name: "Gender Noun Badge", icon: "fas fa-venus-mars", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_11", name: "Popular Idioms Badge", icon: "fas fa-comments", price: 500, type: "game", tier: "common", condition: "none" },
-    { id: "gb_12", name: "Superlatives Badge", icon: "fas fa-trophy", price: 500, type: "game", tier: "common", condition: "none" },
+    { id: "gb_01", name: "Guessing Word Badge", icon: "fas fa-question-circle", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_02", name: "Word Scramble Badge", icon: "fas fa-random", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_03", name: "Synonym Badge", icon: "fas fa-equals", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_04", name: "Antonym Badge", icon: "fas fa-exchange-alt", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_05", name: "Missing Letter Badge", icon: "fas fa-search", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_06", name: "Past Tense Badge", icon: "fas fa-history", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_07", name: "Plural Form Badge", icon: "fas fa-copy", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_08", name: "Correct Spelling Badge", icon: "fas fa-spell-check", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_09", name: "Occupation Badge", icon: "fas fa-user-md", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_10", name: "Gender Noun Badge", icon: "fas fa-venus-mars", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_11", name: "Popular Idioms Badge", icon: "fas fa-comments", price: 5000, type: "game", tier: "common", condition: "none" },
+    { id: "gb_12", name: "Superlatives Badge", icon: "fas fa-trophy", price: 5000, type: "game", tier: "common", condition: "none" },
 
     // ---------------------------------------------------------
     // 2. ACHIEVEMENT BADGES (Terkunci sehingga syarat dipenuhi)
     // ---------------------------------------------------------
     
     // --- TIER COMMON (Harga: 1,000 coins) ---
-    { id: "ab_c1", name: "First Try Badge", desc: "Main mana-mana 1 permainan.", icon: "fas fa-seedling", price: 1000, type: "achievement", tier: "common", reqType: "total_games", reqValue: 1 },
-    { id: "ab_c2", name: "High Five Badge", desc: "Main 5 permainan keseluruhan.", icon: "fas fa-hand-paper", price: 1000, type: "achievement", tier: "common", reqType: "total_games", reqValue: 5 },
-    { id: "ab_c3", name: "Quick Learner Badge", desc: "Dapat 1 markah penuh (Perfect Score).", icon: "fas fa-star", price: 1000, type: "achievement", tier: "common", reqType: "perfect_scores", reqValue: 1 },
-    { id: "ab_c4", name: "Level 5 Guardian Badge", desc: "Capai Level 5.", icon: "fas fa-arrow-up", price: 1000, type: "achievement", tier: "common", reqType: "level", reqValue: 5 },
-    { id: "ab_c5", name: "Pocket Money Badge", desc: "Kumpul jumlah 5,000 coins.", icon: "fas fa-coins", price: 1000, type: "achievement", tier: "common", reqType: "total_coins", reqValue: 5000 },
+    { id: "ab_c1", name: "First Try Badge", desc: "Main mana-mana 1 permainan.", icon: "fas fa-seedling", price: 10000, type: "achievement", tier: "common", reqType: "total_games", reqValue: 1 },
+    { id: "ab_c2", name: "High Five Badge", desc: "Main 5 permainan keseluruhan.", icon: "fas fa-hand-paper", price: 10000, type: "achievement", tier: "common", reqType: "total_games", reqValue: 5 },
+    { id: "ab_c3", name: "Quick Learner Badge", desc: "Dapat 1 markah penuh (Perfect Score).", icon: "fas fa-star", price: 10000, type: "achievement", tier: "common", reqType: "perfect_scores", reqValue: 1 },
+    { id: "ab_c4", name: "Level 5 Guardian Badge", desc: "Capai Level 5.", icon: "fas fa-arrow-up", price: 10000, type: "achievement", tier: "common", reqType: "level", reqValue: 5 },
+    { id: "ab_c5", name: "Pocket Money Badge", desc: "Kumpul jumlah 5,000 coins.", icon: "fas fa-coins", price: 10000, type: "achievement", tier: "common", reqType: "total_coins", reqValue: 5000 },
 
     // --- TIER RARE (Harga: 2,000 coins) ---
-    { id: "ab_r1", name: "Regular Player Badge", desc: "Main 20 permainan keseluruhan.", icon: "fas fa-gamepad", price: 2000, type: "achievement", tier: "rare", reqType: "total_games", reqValue: 20 },
-    { id: "ab_r2", name: "Explorer Badge", desc: "Main 6 jenis permainan berbeza.", icon: "fas fa-map", price: 2000, type: "achievement", tier: "rare", reqType: "unique_games", reqValue: 6 },
-    { id: "ab_r3", name: "Hat-trick Badge", desc: "Dapat 3 markah penuh (Perfect Score).", icon: "fas fa-hat-wizard", price: 2000, type: "achievement", tier: "rare", reqType: "perfect_scores", reqValue: 3 },
-    { id: "ab_r4", name: "Level 15 Guardian Badge", desc: "Capai Level 15.", icon: "fas fa-shield-alt", price: 2000, type: "achievement", tier: "rare", reqType: "level", reqValue: 15 },
-    { id: "ab_r5", name: "Coin Collector Badge", desc: "Kumpul jumlah 20,000 coins.", icon: "fas fa-piggy-bank", price: 2000, type: "achievement", tier: "rare", reqType: "total_coins", reqValue: 20000 },
+    { id: "ab_r1", name: "Regular Player Badge", desc: "Main 20 permainan keseluruhan.", icon: "fas fa-gamepad", price: 20000, type: "achievement", tier: "rare", reqType: "total_games", reqValue: 20 },
+    { id: "ab_r2", name: "Explorer Badge", desc: "Main 6 jenis permainan berbeza.", icon: "fas fa-map", price: 20000, type: "achievement", tier: "rare", reqType: "unique_games", reqValue: 6 },
+    { id: "ab_r3", name: "Hat-trick Badge", desc: "Dapat 3 markah penuh (Perfect Score).", icon: "fas fa-hat-wizard", price: 20000, type: "achievement", tier: "rare", reqType: "perfect_scores", reqValue: 3 },
+    { id: "ab_r4", name: "Level 15 Guardian Badge", desc: "Capai Level 15.", icon: "fas fa-shield-alt", price: 20000, type: "achievement", tier: "rare", reqType: "level", reqValue: 15 },
+    { id: "ab_r5", name: "Coin Collector Badge", desc: "Kumpul jumlah 20,000 coins.", icon: "fas fa-piggy-bank", price: 20000, type: "achievement", tier: "rare", reqType: "total_coins", reqValue: 20000 },
 
     // --- TIER EPIC (Harga: 5,000 coins) ---
-    { id: "ab_e1", name: "Veteran Badge", desc: "Main 50 permainan keseluruhan.", icon: "fas fa-medal", price: 5000, type: "achievement", tier: "epic", reqType: "total_games", reqValue: 50 },
-    { id: "ab_e2", name: "Adventurer Badge", desc: "Main 10 jenis permainan berbeza.", icon: "fas fa-compass", price: 5000, type: "achievement", tier: "epic", reqType: "unique_games", reqValue: 10 },
-    { id: "ab_e3", name: "Flawless Badge", desc: "Dapat 8 markah penuh (Perfect Score).", icon: "fas fa-gem", price: 5000, type: "achievement", tier: "epic", reqType: "perfect_scores", reqValue: 8 },
-    { id: "ab_e4", name: "Level 30 Guardian Badge", desc: "Capai Level 30.", icon: "fas fa-chess-knight", price: 5000, type: "achievement", tier: "epic", reqType: "level", reqValue: 30 },
-    { id: "ab_e5", name: "Wealthy Student Badge", desc: "Kumpul jumlah 50,000 coins.", icon: "fas fa-money-bill-wave", price: 5000, type: "achievement", tier: "epic", reqType: "total_coins", reqValue: 50000 },
+    { id: "ab_e1", name: "Veteran Badge", desc: "Main 50 permainan keseluruhan.", icon: "fas fa-medal", price: 30000, type: "achievement", tier: "epic", reqType: "total_games", reqValue: 50 },
+    { id: "ab_e2", name: "Adventurer Badge", desc: "Main 10 jenis permainan berbeza.", icon: "fas fa-compass", price: 30000, type: "achievement", tier: "epic", reqType: "unique_games", reqValue: 10 },
+    { id: "ab_e3", name: "Flawless Badge", desc: "Dapat 8 markah penuh (Perfect Score).", icon: "fas fa-gem", price: 30000, type: "achievement", tier: "epic", reqType: "perfect_scores", reqValue: 8 },
+    { id: "ab_e4", name: "Level 30 Guardian Badge", desc: "Capai Level 30.", icon: "fas fa-chess-knight", price: 30000, type: "achievement", tier: "epic", reqType: "level", reqValue: 30 },
+    { id: "ab_e5", name: "Wealthy Student Badge", desc: "Kumpul jumlah 50,000 coins.", icon: "fas fa-money-bill-wave", price: 30000, type: "achievement", tier: "epic", reqType: "total_coins", reqValue: 50000 },
 
     // --- TIER LEGENDARY (Harga: 10,000 coins) ---
-    { id: "ab_l1", name: "The Addict Badge", desc: "Main 100 permainan keseluruhan.", icon: "fas fa-fire", price: 10000, type: "achievement", tier: "legendary", reqType: "total_games", reqValue: 100 },
-    { id: "ab_l2", name: "Perfectionist Badge", desc: "Dapat markah penuh untuk SEMUA 12 permainan.", icon: "fas fa-crown", price: 10000, type: "achievement", tier: "legendary", reqType: "perfect_scores", reqValue: 12 },
-    { id: "ab_l3", name: "Level 50 Master Badge", desc: "Capai Level 50.", icon: "fas fa-dragon", price: 10000, type: "achievement", tier: "legendary", reqType: "level", reqValue: 50 },
-    { id: "ab_l4", name: "Millionaire Badge", desc: "Kumpul jumlah 100,000 coins.", icon: "fas fa-sack-dollar", price: 10000, type: "achievement", tier: "legendary", reqType: "total_coins", reqValue: 100000 },
-    { id: "ab_l5", name: "The Legend Badge", desc: "Capai Level 100 (Max Level).", icon: "fas fa-infinity", price: 10000, type: "achievement", tier: "legendary", reqType: "level", reqValue: 100 }
+    { id: "ab_l1", name: "The Addict Badge", desc: "Main 100 permainan keseluruhan.", icon: "fas fa-fire", price: 50000, type: "achievement", tier: "legendary", reqType: "total_games", reqValue: 100 },
+    { id: "ab_l2", name: "Perfectionist Badge", desc: "Dapat markah penuh untuk SEMUA 12 permainan.", icon: "fas fa-crown", price: 50000, type: "achievement", tier: "legendary", reqType: "perfect_scores", reqValue: 12 },
+    { id: "ab_l3", name: "Level 50 Master Badge", desc: "Capai Level 50.", icon: "fas fa-dragon", price: 50000, type: "achievement", tier: "legendary", reqType: "level", reqValue: 50 },
+    { id: "ab_l4", name: "Millionaire Badge", desc: "Kumpul jumlah 100,000 coins.", icon: "fas fa-sack-dollar", price: 50000, type: "achievement", tier: "legendary", reqType: "total_coins", reqValue: 100000 },
+    { id: "ab_l5", name: "The Legend Badge", desc: "Capai Level 100 (Max Level).", icon: "fas fa-infinity", price: 50000, type: "achievement", tier: "legendary", reqType: "level", reqValue: 100 }
 ];
 // ------------------------------------------
     // KATEGORI: EDU SHOP (BARANGAN SEKOLAH / ALAT TULIS)
     // ------------------------------------------
         const shopItems = [
-    { id: 'edu_eraser', category: 'edu', name: 'Eraser', price: 100, icon: 'fas fa-eraser text-pink-400', desc: 'A basic pink eraser to fix tiny mistakes.' },
-    { id: 'edu_pencil', category: 'edu', name: 'Pencil', price: 150, icon: 'fas fa-pencil-alt text-yellow-500', desc: 'A sharp 2B pencil for writing down answers.' },
-    { id: 'edu_pen', category: 'edu', name: 'Pen', price: 200, icon: 'fas fa-pen text-blue-600', desc: 'A smooth blue pen for confident writing.' },
-    { id: 'edu_ruler', category: 'edu', name: 'Ruler', price: 250, icon: 'fas fa-ruler text-green-500', desc: 'Keep your lines straight and neat.' },
-    { id: 'edu_sharpener', category: 'edu', name: 'Sharpener', price: 300, icon: 'fas fa-cube text-red-500', desc: 'Keep your pencils sharp and ready.' },
-    { id: 'edu_exercise_book', category: 'edu', name: 'Exercise Book', price: 400, icon: 'fas fa-book-open text-blue-400', desc: 'A standard book for daily grammar practice.' },
-    { id: 'edu_color_paper', category: 'edu', name: 'Color Paper', price: 500, icon: 'fas fa-copy text-pink-500', desc: 'Bright colorful papers for your art projects.' },
-    { id: 'edu_notebook', category: 'edu', name: 'Notebook', price: 600, icon: 'fas fa-book text-indigo-500', desc: 'A premium notebook with thick pages.' },
-    { id: 'edu_drawing_book', category: 'edu', name: 'Drawing Book', price: 700, icon: 'fas fa-book-reader text-orange-400', desc: 'A large book for your creative ideas.' },
-    { id: 'edu_pencil_box', category: 'edu', name: 'Pencil Box', price: 1800, icon: 'fas fa-box text-purple-500', desc: 'A cool box to store all your stationery.' },
-    { id: 'edu_adv_sharpener', category: 'edu', name: 'Advance Sharpener', price: 1850, icon: 'fas fa-cogs text-gray-700', desc: 'An automatic sharpener. Fast and easy!' },
-    { id: 'edu_pencil_color', category: 'edu', name: 'Pencil Color', price: 1500, icon: 'fas fa-pencil-ruler text-yellow-600', desc: 'A set of 24 beautiful colored pencils.' },
-    { id: 'edu_water_color', category: 'edu', name: 'Water Color', price: 2000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Premium water colors for a masterpiece!' }
+    { id: 'edu_eraser', category: 'edu', name: 'Eraser', price: 1000, icon: 'fas fa-eraser text-pink-400', desc: 'A basic pink eraser to fix tiny mistakes.' },
+    { id: 'edu_pencil', category: 'edu', name: 'Pencil', price: 1500, icon: 'fas fa-pencil-alt text-yellow-500', desc: 'A sharp 2B pencil for writing down answers.' },
+    { id: 'edu_pen', category: 'edu', name: 'Pen', price: 3000, icon: 'fas fa-pen text-blue-600', desc: 'A smooth blue pen for confident writing.' },
+    { id: 'edu_ruler', category: 'edu', name: 'Ruler', price: 3500, icon: 'fas fa-ruler text-green-500', desc: 'Keep your lines straight and neat.' },
+    { id: 'edu_sharpener', category: 'edu', name: 'Sharpener', price: 7000, icon: 'fas fa-cube text-red-500', desc: 'Keep your pencils sharp and ready.' },
+    { id: 'edu_exercise_book', category: 'edu', name: 'Exercise Book', price: 10000, icon: 'fas fa-book-open text-blue-400', desc: 'A standard book for daily grammar practice.' },
+    { id: 'edu_color_paper', category: 'edu', name: 'Color Paper', price: 10000, icon: 'fas fa-copy text-pink-500', desc: 'Bright colorful papers for your art projects.' },
+    { id: 'edu_notebook', category: 'edu', name: 'Notebook', price: 12000, icon: 'fas fa-book text-indigo-500', desc: 'A premium notebook with thick pages.' },
+    { id: 'edu_drawing_book', category: 'edu', name: 'Drawing Book', price: 20000, icon: 'fas fa-book-reader text-orange-400', desc: 'A large book for your creative ideas.' },
+    { id: 'edu_pencil_box', category: 'edu', name: 'Pencil Box', price: 50000, icon: 'fas fa-box text-purple-500', desc: 'A cool box to store all your stationery.' },
+    { id: 'edu_adv_sharpener', category: 'edu', name: 'Advance Sharpener', price: 75000, icon: 'fas fa-cogs text-gray-700', desc: 'An automatic sharpener. Fast and easy!' },
+    { id: 'edu_pencil_color', category: 'edu', name: 'Pencil Color', price: 100000, icon: 'fas fa-pencil-ruler text-yellow-600', desc: 'A set of 24 beautiful colored pencils.' },
+    { id: 'edu_water_color', category: 'edu', name: 'Water Color', price: 150000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Premium water colors for a masterpiece!' }
 ];
 
 // ==========================================
