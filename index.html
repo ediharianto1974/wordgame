@@ -1768,30 +1768,47 @@ async function finishGame() {
     let score = 0;
     let total = inputs.length;
 
-    // 1. Semak jawapan pelajar
+// ==========================================
+    // 1. Semak jawapan pelajar (Versi Rahsia / Tiada Hint)
+    // ==========================================
     inputs.forEach(input => {
         const userAns = input.value.trim().toLowerCase();
         const correctAns = input.dataset.answer.toLowerCase();
 
+        // Buang gaya visual asal kotak input
+        input.classList.remove('border-gray-200', 'focus:ring-indigo-400', 'bg-gray-50');
+
+        let isCorrect = false;
+
+        // Semak jika ada lebih dari satu jawapan yang betul (guna simbol |)
         if (correctAns.includes('|')) {
             const validAnswers = correctAns.split('|');
-            if(validAnswers.includes(userAns)) {
-                score++;
-                input.classList.add('bg-green-100', 'border-green-500');
-            } else {
-                input.classList.add('bg-red-100', 'border-red-500');
-                showHint(input, correctAns);
+            if (validAnswers.includes(userAns)) {
+                isCorrect = true;
             }
         } else {
-            if(userAns === correctAns) {
-                score++;
-                input.classList.add('bg-green-100', 'border-green-500');
-            } else {
-                input.classList.add('bg-red-100', 'border-red-500');
-                showHint(input, correctAns);
+            if (userAns === correctAns) {
+                isCorrect = true;
             }
         }
+
+        // Tentukan tindakan berdasarkan betul atau salah
+        if (isCorrect) {
+            score++;
+            // Jika BETUL: Warnakan petak menjadi HIJAU
+            input.classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'font-bold');
+        } else {
+            // Jika SALAH: Warnakan petak menjadi MERAH sahaja
+            input.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+            
+            // 🛑 FUNGSI INI DIBUANG SUPAYA JAWAPAN KEKAL RAHSIA:
+            // showHint(input, correctAns); 
+        }
+        
+        // Kunci kotak teks supaya murid tidak boleh mengubahnya lagi selepas disemak
+        input.readOnly = true;
     });
+    // ==========================================
 
     // --- PENTING: TARIK DATA TERKINI DARI CLOUD SEBELUM MENGIRA MARKAH ---
     // Ini mengelakkan markah baharu murid "ditindih" oleh data lama
