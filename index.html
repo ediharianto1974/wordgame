@@ -1802,13 +1802,11 @@ let xpToAdd = parseInt(score) || 0;
 // Wajib kira sekarang supaya sistem tahu level sebenar pemain sebelum letak hukuman
 let liveLevel = Math.floor(currentXP / 100) + 1;
 
-// 💥 SEMAKAN PERINGKAT HARDCORE (Hukuman Bertingkat)
-if (liveLevel >= 100) {
-    // Level 100 ke atas: Terlalu susah, markah asal dibahagi 20 (Max ~5 XP per game)
-    xpToAdd = Math.floor(xpToAdd / 20);
-} else if (liveLevel >= 50) {
-    // Level 50 - 99: Markah asal dibahagi 10 (Max ~10 XP per game)
-    xpToAdd = Math.floor(xpToAdd / 10);
+// 💥 SEMAKAN PERINGKAT HARDCORE (Level 50 dan ke atas)
+if (liveLevel >= 50) {
+    // Tidak kira berapa markah (score) yang murid dapat dari kuiz, 
+    // mereka HANYA akan menerima 1 XP sahaja per permainan!
+    xpToAdd = 1;
 }
 
 // Tambah markah bersih ke dalam memori pemain
