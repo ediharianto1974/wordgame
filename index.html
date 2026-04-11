@@ -3452,10 +3452,10 @@ async function submitEduCheckout() {
     
     const itemID = document.getElementById('eduItemID').value;
     const qty = parseInt(document.getElementById('eduQuantity').value);
-    // const totalCost = parseInt(document.getElementById('eduTotalCost').value);
 
-    // Dapatkan nama dari profil
-    let playerName = document.getElementById('eduStudentName').value;
+    // KEMASKINI DI SINI: Tambah .trim().toUpperCase()
+    let playerName = document.getElementById('eduStudentName').value.trim().toUpperCase();
+    
     // Kelas lalai (jika tak dapat dikesan)
     let playerClass = (typeof localPlayerData !== 'undefined' && localPlayerData.class) ? localPlayerData.class : "-";
 
