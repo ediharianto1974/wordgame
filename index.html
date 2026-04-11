@@ -1348,14 +1348,25 @@ async function startGameHub() {
         }
 
         // ==========================================
-        // MASUK KE MENU UTAMA
+        // PROCESS TO OPEN MAIN MENU (Kod UI Asal Anda)
         // ==========================================
+        document.getElementById('display-name').innerText = studentInfo.name;
+        document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
+        
+        if (typeof updatePlayerLevelUI === 'function') updatePlayerLevelUI();
+        
         document.getElementById('auth-screen')?.classList.add('hidden');
         document.getElementById('login-screen')?.classList.add('hidden');
         document.getElementById('menu-screen')?.classList.remove('hidden');
         
-        if (typeof updateProfileDisplay === 'function') updateProfileDisplay();
+        if (typeof updateCategoryProgress === "function") updateCategoryProgress();
         if (typeof checkLevelAccess === 'function') checkLevelAccess();
+
+        const avatarContainer = document.getElementById('dashboard-avatars');
+        if (avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
+        
+        if (typeof updateDashboardAvatars === "function") updateDashboardAvatars();
+        if (typeof updateProfileDisplay === 'function') updateProfileDisplay();
 
     } catch (error) {
         console.error(error);
@@ -1365,7 +1376,6 @@ async function startGameHub() {
         startBtn.disabled = false;
     }
 }
-
         // ==========================================
         // MASUK KE MENU UTAMA
         // ==========================================
