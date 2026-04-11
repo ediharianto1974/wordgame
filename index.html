@@ -2350,48 +2350,52 @@ async function showLeaderboard() {
                 }
             }
 
-            // 1. LUKIS AVATAR
-            let avatarHtml = '';
-            if (student.activeAvatar) {
-                let active = student.activeAvatar;
-                let avatarKey = active.key || active.id || active.avatarKey;
-                let visualContent = '';
-                let isLegendaryImage = false;
-                const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
+// 1. LUKIS AVATAR
+let avatarHtml = '';
+if (student.activeAvatar) {
+    let active = student.activeAvatar;
+    let avatarKey = active.key || active.id || active.avatarKey;
+    let visualContent = '';
+    let isLegendaryImage = false;
+    const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
 
-                if (rawData && rawData[avatarKey] && rawData[avatarKey].levels) {
-                    let safeLevel = active.level || 1; 
-                    const levelInfo = rawData[avatarKey].levels[safeLevel - 1];
-                    if (levelInfo && levelInfo.img) {
-                        visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto">`;
-                        isLegendaryImage = true;
-                    } else {
-                        let iconToUse = (levelInfo && levelInfo.icon) ? levelInfo.icon : active.icon;
-                        visualContent = `<i class="${iconToUse} text-xl md:text-2xl text-yellow-600"></i>`;
-                    }
-                } else {
-                    visualContent = active.img 
-                        ? `<img src="${active.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md legendary-avatar mx-auto">` 
-                        : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
-                    if (active.img) isLegendaryImage = true;
-                }
-                
-                let containerClass = isLegendaryImage 
-                    ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" 
-                    : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; 
+    if (rawData && rawData[avatarKey] && rawData[avatarKey].levels) {
+        let safeLevel = active.level || 1; 
+        
+        // 🚨 KOD YANG DIBETULKAN: Gunakan .find() berbanding [safeLevel - 1]
+        // Cari gambar tahap tertinggi yang pemain layak pakai
+        const levelInfo = rawData[avatarKey].levels.slice().reverse().find(l => safeLevel >= l.level);
 
-                avatarHtml = `
-                    <div class="flex flex-col items-center justify-center p-2">
-                        <div class="${containerClass}">
-                            ${visualContent}
-                            <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level || 1}</div>
-                        </div>
-                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto mt-1">${active.name}</div>
-                    </div>`;
-            } else {
-                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center py-4">No Guardian</div>`;
-            }
+        if (levelInfo && levelInfo.img) {
+            visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto">`;
+            isLegendaryImage = true;
+        } else {
+            let iconToUse = (levelInfo && levelInfo.icon) ? levelInfo.icon : active.icon;
+            visualContent = `<i class="${iconToUse} text-xl md:text-2xl text-yellow-600"></i>`;
+        }
+    } else {
+        visualContent = active.img 
+            ? `<img src="${active.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md legendary-avatar mx-auto">` 
+            : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
+        if (active.img) isLegendaryImage = true;
+    }
+    
+    let containerClass = isLegendaryImage 
+        ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" 
+        : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; 
 
+    avatarHtml = `
+        <div class="flex flex-col items-center justify-center p-2">
+            <div class="${containerClass}">
+                ${visualContent}
+                <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level || 1}</div>
+            </div>
+            <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto mt-1">${active.name}</div>
+        </div>`;
+} else {
+    avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center py-4">No Guardian</div>`;
+}
+			
             // 2. GELARAN KARAKTER (MENGGUNAKAN CSS ASAL ANDA)
             const titleName = student.activeTitle;
             const rawAchievements = (typeof achievementsData !== 'undefined') ? achievementsData : [];
