@@ -3275,19 +3275,21 @@ function updateCategoryProgress() {
 
 // 1. Fungsi membuka borang pembelian
 function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
-    // Pastikan data pemain tempatan wujud
-    if (typeof localPlayerData === 'undefined' || !localPlayerData.name) {
+    // KEMASKINI: Cari nama dari memori local storage dengan lebih meluas
+    const playerName = localStorage.getItem("currentPlayerName") || localStorage.getItem("playerName") || (typeof currentPlayerName !== 'undefined' ? currentPlayerName : "");
+    
+    if (!playerName || playerName === "") {
         alert("Sila log masuk terlebih dahulu untuk membeli.");
         return;
     }
 
     // Isi maklumat ke dalam borang
-    document.getElementById('eduStudentName').value = localPlayerData.name;
+    document.getElementById('eduStudentName').value = playerName;
     document.getElementById('eduItemID').value = itemId;
     document.getElementById('eduItemName').value = itemName;
     document.getElementById('eduBasePrice').value = itemPrice;
     
-    // Anggap stok dari parameter (kita tetapkan 999 jika belum ada integrasi stok real-time penuh)
+    // Anggap stok dari parameter
     const stockToShow = currentStock !== undefined ? currentStock : 999;
     document.getElementById('eduItemStock').value = stockToShow;
     
@@ -3313,47 +3315,6 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     document.getElementById('eduCheckoutModal').classList.remove('hidden');
 }
 
-// 2. Fungsi tutup borang
-function closeEduCheckout() {
-    document.getElementById('eduCheckoutModal').classList.add('hidden');
-}
-
-// 3. Fungsi pengiraan harga auto (bila murid tukar kuantiti)
-function calculateEduTotal() {
-    const qty = parseInt(document.getElementById('eduQuantity').value) || 1;
-    const price = parseInt(document.getElementById('eduBasePrice').value) || 0;
-    const stock = parseInt(document.getElementById('eduItemStock').value) || 0;
-    
-    const total = qty * price;
-    document.getElementById('eduTotalCost').value = total;
-
-    if (qty > stock) {
-        showEduWarning(`Stok cikgu tidak mencukupi! Hanya tinggal ${stock} unit.`);
-        disableEduConfirmBtn();
-    } else if (qty < 1) {
-        showEduWarning(`Kuantiti mesti sekurang-kurangnya 1.`);
-        disableEduConfirmBtn();
-    } else if (localPlayerData && localPlayerData.coins < total) {
-        showEduWarning(`Koin anda tidak mencukupi! Perlu ${total} koin.`);
-        disableEduConfirmBtn();
-    } else {
-        document.getElementById('eduWarningMsg').classList.add('hidden');
-        document.getElementById('eduConfirmBtn').disabled = false;
-        document.getElementById('eduConfirmBtn').classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-}
-
-function showEduWarning(msg) {
-    const warningEl = document.getElementById('eduWarningMsg');
-    warningEl.textContent = msg;
-    warningEl.classList.remove('hidden');
-}
-
-function disableEduConfirmBtn() {
-    const btn = document.getElementById('eduConfirmBtn');
-    btn.disabled = true;
-    btn.classList.add('opacity-50', 'cursor-not-allowed');
-}
 
 // 4. FUNGSI HANTAR DATA KE GOOGLE SHEETS
 async function submitEduCheckout() {
@@ -3363,7 +3324,11 @@ async function submitEduCheckout() {
     const qty = parseInt(document.getElementById('eduQuantity').value);
     const totalCost = parseInt(document.getElementById('eduTotalCost').value);
 
-    // Tukar butang ke loading state supaya murid tak klik banyak kali
+    // KEMASKINI: Dapatkan nama & kelas yang sebenar
+    const playerName = localStorage.getItem("currentPlayerName") || localStorage.getItem("playerName") || (typeof currentPlayerName !== 'undefined' ? currentPlayerName : "");
+    const playerClass = localStorage.getItem("currentPlayerClass") || localStorage.getItem("playerClass") || (typeof currentPlayerClass !== 'undefined' ? currentPlayerClass : "-");
+
+    // Tukar butang ke loading state
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses Pesanan...';
     btn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -3371,8 +3336,8 @@ async function submitEduCheckout() {
     try {
         const payload = {
             action: "buyEduItem",
-            name: localPlayerData.name,
-            class: localPlayerData.class || localPlayerData.cls || "-",
+            name: playerName, // Menggunakan nama yang tepat
+            class: playerClass, // Menggunakan kelas yang tepat
             itemID: itemID,
             quantity: qty
         };
@@ -3385,27 +3350,25 @@ async function submitEduCheckout() {
         const result = await response.json();
 
         if (result.error) {
-            // Ralat dari belakang (Cth: limit tercapai, koin tak cukup)
             showEduWarning("Gagal: " + result.error);
             btn.innerHTML = '<i class="fas fa-check"></i> Sahkan';
             btn.disabled = false;
             btn.classList.remove('opacity-50', 'cursor-not-allowed');
         } else if (result.result === "success") {
-            // Berjaya beli!
-            // 1. Tolak koin dalam memori game
-            localPlayerData.coins = result.newCoins;
+            // Berjaya beli! Tolak koin
+            if (typeof localPlayerData !== 'undefined') {
+                localPlayerData.coins = result.newCoins;
+            }
             
-            // 2. Update paparan koin di skrin utama (jika ada fungsi updateUI)
+            // Update paparan koin di skrin utama (jika ada fungsi updateUI)
             if (typeof updateUI === 'function') updateUI(); 
             
-            // 3. Tutup Modal
             closeEduCheckout();
             
-            // 4. Maklumkan murid
             alert("✅ Pembelian berjaya! Pesanan telah dihantar. Sila jumpa cikgu untuk menuntut barang anda.");
             
-            // 5. Kemaskini paparan Shop (refresh jika perlu)
-            // window.location.reload(); // (Boleh buang komen ini jika nak page auto-refresh lepas beli)
+            // Refresh halaman supaya Shop kemaskini baki koin dengan betul
+            window.location.reload(); 
         }
     } catch (error) {
         console.error("Checkout Error:", error);
