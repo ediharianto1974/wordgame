@@ -1532,7 +1532,12 @@ function renderShop() {
     } else {
         // --- TAMBAH SYARAT LEVEL DI SINI ---
         const canAfford = localPlayerData.coins >= nextLevelData.price;
-        const levelMet = localPlayerData.level >= nextLevelData.level; // Semak level pemain
+        // Dapatkan level pemain yang sebenar menggunakan getPlayerLevelInfo
+const playerTotalScore = Number(localPlayerData.Total || localPlayerData.totalScore || 0);
+const actualPlayerLevel = getPlayerLevelInfo(playerTotalScore).level;
+
+// Semak adakah level pemain mencukupi
+const levelMet = actualPlayerLevel >= nextLevelData.level;
 
         if (canAfford && levelMet) {
             btnHtml = `<button onclick="buyAvatar('${key}', ${nextLevelData.level}, ${nextLevelData.price})" class="w-full mt-4 bg-indigo-500 ...">Unlock Lvl ${nextLevelData.level} (${nextLevelData.price} 🪙)</button>`;
