@@ -1276,6 +1276,9 @@ async function startGameHub() {
         } 
         // SITUATION C: Account Exists (Returning Student)
         else {
+            // ==========================================
+            // KEMASKINI UNTUK SITUATION C1
+            // ==========================================
             if (data.hasPin === false) {
                 const autoPin = Math.floor(1000 + Math.random() * 9000).toString();
                 alert(`🚨 ANNOUNCEMENT FOR RETURNING STUDENTS 🚨\n\nThe system is now more secure! We have generated a special PIN for your account:\n\n👉 YOUR PIN: ${autoPin} 👈\n\nPLEASE WRITE IT DOWN NOW! You must use this PIN to log in next time.`);
@@ -1301,9 +1304,15 @@ async function startGameHub() {
                 };
                 studentInfo = { name: nameInput, class: classInput };
 
-                if (typeof applyTitleStyle === "function") applyTitleStyle(localPlayerData.activeTitle);
+                // Pakaikan style title terus ke dashboard
+                if (typeof applyTitleStyle === "function") {
+                    applyTitleStyle(localPlayerData.activeTitle);
+                }
                 await saveCloudPlayerData(); 
             } 
+            // ==========================================
+            // KEMASKINI UNTUK SITUATION C2
+            // ==========================================
             else {
                 if (!pinInput) {
                     alert("Please enter your PIN to continue!");
@@ -1333,10 +1342,13 @@ async function startGameHub() {
                 };
                 studentInfo = { name: nameInput, class: classInput };
                 
-                if (typeof applyTitleStyle === "function") applyTitleStyle(localPlayerData.activeTitle);
+                if (typeof applyTitleStyle === "function") {
+                    applyTitleStyle(localPlayerData.activeTitle);
+                }
+
                 alert("Login Successful! Welcome back, " + nameInput + "!");
             }
-        } 
+        } // <--- Penutup lengkap untuk Situation C
 
         // ==========================================
         // SEMAKAN ADMIN (GAME MASTER)
@@ -1346,6 +1358,25 @@ async function startGameHub() {
         } else {
             document.getElementById('btn-admin-panel')?.classList.add('hidden');
         }
+
+        // ==========================================
+        // MASUK KE MENU UTAMA (Selepas Login Berjaya)
+        // ==========================================
+        document.getElementById('login-screen')?.classList.add('hidden');
+        document.getElementById('menu-screen')?.classList.remove('hidden');
+        
+        // Panggil fungsi render UI jika wujud dalam fail anda
+        if (typeof updateProfileDisplay === 'function') updateProfileDisplay();
+        if (typeof checkLevelAccess === 'function') checkLevelAccess();
+
+    } catch (error) {
+        console.error("Login Error:", error);
+        alert("An error occurred. Please try again.");
+    } finally {
+        startBtn.innerText = "START ADVENTURE";
+        startBtn.disabled = false;
+    }
+}
 
         // ==========================================
         // MASUK KE MENU UTAMA
