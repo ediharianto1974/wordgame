@@ -1534,16 +1534,24 @@ function updateDashboardAvatars() {
             }
         }
 
-        async function openShop() {
-            document.getElementById('menu-screen').classList.add('hidden');
-            document.getElementById('shop-screen').classList.remove('hidden');
-            
-            switchShopTab('tab-avatars');
-            document.getElementById('tab-avatars').innerHTML = '<div class="col-span-1 md:col-span-3 text-center py-10 text-indigo-500 font-bold"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><br>Connecting to Cloud Server...</div>';
-            
-            await loadCloudPlayerData();
-            renderShop();
-        }
+       async function openShop() {
+    document.getElementById('menu-screen').classList.add('hidden');
+    document.getElementById('shop-screen').classList.remove('hidden');
+    
+    switchShopTab('tab-avatars');
+    
+    // Saya ubah sedikit ayat loading supaya merangkumi semakan stok stor
+    document.getElementById('tab-avatars').innerHTML = '<div class="col-span-1 md:col-span-3 text-center py-10 text-indigo-500 font-bold"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><br>Connecting to Cloud & Checking Edu Stock...</div>';
+    
+    // 1. Dapatkan data koin & inventori murid
+    await loadCloudPlayerData();
+    
+    // 2. Dapatkan data STOK LIVE dari Google Sheets
+    await syncEduStock();
+    
+    // 3. Lukis paparan kedai (selepas kedua-dua data di atas selesai dimuat turun)
+    renderShop();
+}
 
         function backToMenuFromShop() {
             document.getElementById('shop-screen').classList.add('hidden');
@@ -3499,6 +3507,45 @@ async function submitEduCheckout() {
         btn.innerHTML = '<i class="fas fa-check"></i> Sahkan';
         btn.disabled = false;
         btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+}
+
+// ==========================================
+// FUNGSI LIVE STOCK SYNC DARI GOOGLE SHEETS
+// ==========================================
+async function syncEduStock() {
+    // 1. Tukar teks butang/tajuk kedai supaya murid tahu sistem sedang muat turun data
+    const eduContainer = document.getElementById('edu-container') || document.querySelector('.edu-items-container');
+    if (eduContainer) {
+        eduContainer.innerHTML = '<div class="col-span-full text-center text-indigo-500 py-4"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><br>Menyemak stok terkini di stor cikgu...</div>';
+    }
+
+    try {
+        // 2. Panggil Google Sheets untuk minta data EduInventory
+        const response = await fetch(SCRIPT_URL + "?action=getEduInventory");
+        const realTimeInventory = await response.json();
+
+        if (realTimeInventory && realTimeInventory.length > 0) {
+            // 3. Kemaskini stok di dalam memori data.js kita
+            realTimeInventory.forEach(dbItem => {
+                // Cari item yang sepadan dalam shopItems
+                let localItem = shopItems.find(item => item.id === dbItem.id);
+                if (localItem) {
+                    localItem.stock = dbItem.stock;   // Kemaskini stok terkini
+                    localItem.price = dbItem.price;   // Kemaskini harga (jika cikgu ubah di Sheet)
+                }
+            });
+            
+            // 4. Lukis semula paparan kedai dengan stok dan harga yang betul!
+            // Gantikan dengan nama fungsi yang anda guna untuk lukis kedai.
+            // Contohnya: showShop() atau renderShop() atau bahagian render Edu items anda.
+            if (typeof renderShop === 'function') {
+                renderShop();
+            }
+        }
+    } catch (error) {
+        console.error("Gagal menyemak stok:", error);
+        if (eduContainer) eduContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-4">Gagal menyambung ke pangkalan data stor.</div>';
     }
 }
 </script>
