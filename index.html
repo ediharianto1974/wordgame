@@ -1282,21 +1282,32 @@ async function startGameHub() {
             document.getElementById('auth-screen').classList.remove('hidden');
         }
 
+// Fungsi bantuan untuk menyorokkan skrin dengan selamat
+function hideScreenSafe(id) {
+    let screen = document.getElementById(id);
+    if (screen) {
+        screen.classList.add('hidden');
+    }
+}
+
 function backToMenu() {
     // 1. Hentikan masa (jika ada)
     if (typeof currentTimer !== 'undefined') {
         clearInterval(currentTimer);
     }
 
-    // 2. TUTUP SEMUA SKRIN DENGAN SELAMAT (Guna tanda '?')
-    document.getElementById('game-arena')?.classList.add('hidden');
-    document.getElementById('leaderboard-screen')?.classList.add('hidden');
-    document.getElementById('achievements-screen')?.classList.add('hidden'); 
-    document.getElementById('shop-screen')?.classList.add('hidden'); // <--- Ditambah untuk Shop
-    document.getElementById('avatar-screen')?.classList.add('hidden'); // Tambah jika anda ada skrin Avatar
+    // 2. Tutup semua skrin dengan fungsi selamat
+    hideScreenSafe('game-arena');
+    hideScreenSafe('leaderboard-screen');
+    hideScreenSafe('achievements-screen');
+    hideScreenSafe('shop-screen');
+    hideScreenSafe('avatar-screen'); // Gantikan jika ada nama ID skrin lain
 
-    // 3. BUKA SEMULA MENU UTAMA
-    document.getElementById('menu-screen')?.classList.remove('hidden');
+    // 3. Buka semula Menu Utama
+    let menuScreen = document.getElementById('menu-screen');
+    if (menuScreen) {
+        menuScreen.classList.remove('hidden');
+    }
     
     // 4. Semak level
     if (typeof checkLevelAccess === 'function') {
