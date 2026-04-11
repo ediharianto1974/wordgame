@@ -1368,15 +1368,6 @@ async function startGameHub() {
         if (typeof updateDashboardAvatars === "function") updateDashboardAvatars();
         if (typeof updateProfileDisplay === 'function') updateProfileDisplay();
 
-    } catch (error) {
-        console.error(error);
-        alert("System error. Please ensure your internet connection is stable and try again.");
-    } finally {
-        startBtn.innerText = "START ADVENTURE";
-        startBtn.disabled = false;
-    }
-}
-	
         // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
         if (typeof getCurrentEvent === "function") {
             const currentEvent = getCurrentEvent();
@@ -1392,23 +1383,20 @@ async function startGameHub() {
             }
         }
 
-        startBtn.innerText = "START ADVENTURE";
-        startBtn.disabled = false;
-
         // 👉 PENGGERA ACHIEVEMENT 👈
-        // (Sistem akan semak secara "retroactive" sebaik sahaja paparan menu dibuka)
         if (typeof checkAchievements === "function") {
             checkAchievements();
         }
 
-		// 👉 PENGGERA LEVEL REWARD 👈
-		if (typeof checkLevelRewardsOnLogin === "function") {
-    		checkLevelRewardsOnLogin();
-}
+        // 👉 PENGGERA LEVEL REWARD 👈
+        if (typeof checkLevelRewardsOnLogin === "function") {
+            checkLevelRewardsOnLogin();
+        }
 
     } catch (error) {
-        console.error(error);
+        console.error("Login Error:", error);
         alert("System error. Please ensure your internet connection is stable and try again.");
+    } finally {
         startBtn.innerText = "START ADVENTURE";
         startBtn.disabled = false;
     }
