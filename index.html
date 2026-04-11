@@ -1128,50 +1128,50 @@ window.onload = async () => {
     // ==========================================
     // 1. KAWALAN SKRIN (ELAK BERTINDIH MASA REFRESH)
     // ==========================================
-    // Semak adakah murid sudah login sebelum ini (Cari dalam memori)
-    // Nota: Saya guna 'localPlayerData', tukar jika anda guna nama key lain masa save
     let isUserLoggedIn = localStorage.getItem('localPlayerData') || localStorage.getItem('playerName'); 
 
     if (!isUserLoggedIn) {
-        // JIKA BELUM LOGIN: Pastikan skrin login muncul, TUTUP skrin lain
+        // JIKA BELUM LOGIN: Pastikan skrin login muncul
+        document.getElementById('auth-screen')?.classList.remove('hidden');
         document.getElementById('login-screen')?.classList.remove('hidden');
+        
+        // 🚨 PASTIKAN SEMUA SKRIN LAIN DITUTUP (Terutamanya game-arena) 🚨
         document.getElementById('menu-screen')?.classList.add('hidden');
-        document.getElementById('game-arena')?.classList.add('hidden');
+        document.getElementById('game-arena')?.classList.add('hidden'); 
         document.getElementById('leaderboard-screen')?.classList.add('hidden');
         document.getElementById('shop-screen')?.classList.add('hidden');
         document.getElementById('achievements-screen')?.classList.add('hidden');
-        
-        // Pastikan butang admin juga tersembunyi
+        document.getElementById('admin-screen')?.classList.add('hidden');
         document.getElementById('btn-admin-panel')?.classList.add('hidden');
     } else {
-        // JIKA SUDAH LOGIN: Terus masuk Menu Utama, TUTUP skrin login
+        // JIKA SUDAH LOGIN: Terus masuk Menu Utama
+        document.getElementById('auth-screen')?.classList.add('hidden');
         document.getElementById('login-screen')?.classList.add('hidden');
+        
+        // 🚨 BUKA MENU DAN GAME ARENA 🚨
         document.getElementById('menu-screen')?.classList.remove('hidden');
+        document.getElementById('game-arena')?.classList.remove('hidden'); 
         
-        // --- SEMAKAN ADMIN UNTUK PAPAR BUTANG KETIKA AUTO-LOGIN / REFRESH ---
+        // --- SEMAKAN ADMIN ---
         let savedName = localStorage.getItem('playerName') || "";
-        
-        // Jika anda simpan dalam bentuk objek JSON (localPlayerData)
         let localDataStr = localStorage.getItem('localPlayerData');
         if (localDataStr) {
             try {
                 let parsedData = JSON.parse(localDataStr);
-                savedName = parsedData.name || savedName; // Guna nama dari JSON jika wujud
+                savedName = parsedData.name || savedName; 
             } catch(e) {}
         }
 
-        // Semak jika nama pemain ialah GAME MASTER
         if (savedName.trim().toUpperCase() === "GAME MASTER") {
             document.getElementById('btn-admin-panel')?.classList.remove('hidden');
         } else {
             document.getElementById('btn-admin-panel')?.classList.add('hidden');
         }
-        // ----------------------------------------------------------------------
         
-        // Panggil fungsi kemaskini (jika ada) supaya kad level dilukis dengan betul
         if (typeof checkLevelAccess === 'function') checkLevelAccess();
     }
-            // ==========================================
+	
+			// ==========================================
             // 2. KOD ASAL ANDA (MENARIK DATA NAMA)
             // ==========================================
             const datalist = document.getElementById('name-suggestions');
@@ -1347,7 +1347,7 @@ async function startGameHub() {
             document.getElementById('btn-admin-panel')?.classList.add('hidden');
         }
 
-        // ==========================================
+// ==========================================
         // PROCESS TO OPEN MAIN MENU
         // ==========================================
         document.getElementById('display-name').innerText = studentInfo.name;
@@ -1355,9 +1355,13 @@ async function startGameHub() {
         
         if (typeof updatePlayerLevelUI === 'function') updatePlayerLevelUI();
         
+        // TUTUP SKRIN LOGIN
         document.getElementById('auth-screen')?.classList.add('hidden');
         document.getElementById('login-screen')?.classList.add('hidden');
+        
+        // 🚨 BUKA MENU & GAME ARENA SEMENTAK 🚨
         document.getElementById('menu-screen')?.classList.remove('hidden');
+        document.getElementById('game-arena')?.classList.remove('hidden'); // <--- Baris ini yang membetulkan Game Card hilang!
         
         if (typeof updateCategoryProgress === "function") updateCategoryProgress();
         if (typeof checkLevelAccess === 'function') checkLevelAccess();
@@ -3603,10 +3607,17 @@ async function syncEduStock() {
     }
 }
 
-// Membuka Panel Admin
+// 1. Membuka Panel Admin & Muat Turun Data
 async function openAdminDashboard() {
-    document.getElementById('menu-screen').classList.add('hidden');
-    document.getElementById('admin-screen').classList.remove('hidden');
+    // 🚨 TUTUP SEMUA SKRIN LAIN SUPAYA TIDAK BERTINDIH 🚨
+    document.getElementById('menu-screen')?.classList.add('hidden');
+    document.getElementById('game-arena')?.classList.add('hidden'); // <--- Ini pembetulannya!
+    document.getElementById('shop-screen')?.classList.add('hidden');
+    document.getElementById('leaderboard-screen')?.classList.add('hidden');
+    document.getElementById('achievements-screen')?.classList.add('hidden');
+    
+    // PAPARKAN SKRIN ADMIN
+    document.getElementById('admin-screen')?.classList.remove('hidden');
     
     const listContainer = document.getElementById('admin-order-list');
     const loader = document.getElementById('admin-loader');
@@ -3620,35 +3631,37 @@ async function openAdminDashboard() {
         
         loader.classList.add('hidden');
         
-        if (orders.length === 0) {
+        if (!orders || orders.length === 0) {
             listContainer.innerHTML = '<tr><td colspan="5" class="text-center p-10 text-gray-400">Tiada pesanan ditemui.</td></tr>';
             return;
         }
 
+        // Susun pesanan yang terbaru di atas (reverse)
         orders.reverse().forEach(order => {
-            const statusClass = order.status === 'Pending' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600';
-            const actionButton = order.status === 'Pending' 
-                ? `<button onclick="completeOrder('${order.orderID}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs">
+            const isPending = order.status.toUpperCase() === 'PENDING';
+            const statusClass = isPending ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600';
+            const actionButton = isPending 
+                ? `<button onclick="completeOrder('${order.orderID}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow text-xs font-bold transition">
                     <i class="fas fa-check"></i> Selesai
                    </button>` 
-                : `<span class="text-gray-400 text-xs italic">Selesai</span>`;
+                : `<span class="text-gray-400 text-xs italic font-semibold"><i class="fas fa-check-double"></i> Selesai</span>`;
 
             const row = `
                 <tr class="border-b hover:bg-gray-50 transition">
                     <td class="p-4">
                         <div class="font-bold text-xs text-indigo-600">${order.orderID}</div>
-                        <div class="text-xs text-gray-400">${new Date(order.timestamp).toLocaleDateString()}</div>
+                        <div class="text-[11px] text-gray-500">${new Date(order.timestamp).toLocaleDateString()}</div>
                     </td>
                     <td class="p-4">
-                        <div class="font-bold uppercase">${order.studentName}</div>
+                        <div class="font-bold uppercase text-sm">${order.studentName}</div>
                         <div class="text-xs text-gray-500">${order.studentClass}</div>
                     </td>
                     <td class="p-4 text-sm">
-                        <span class="font-semibold text-gray-700">${order.itemName}</span> 
-                        <span class="text-xs px-2 py-0.5 bg-gray-200 rounded-full">x${order.quantity}</span>
+                        <span class="font-semibold text-gray-800">${order.itemName}</span> 
+                        <span class="ml-1 text-xs px-2 py-0.5 bg-gray-200 text-gray-700 rounded-full font-bold">x${order.quantity}</span>
                     </td>
                     <td class="p-4">
-                        <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${order.status}</span>
+                        <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase shadow-sm ${statusClass}">${order.status}</span>
                     </td>
                     <td class="p-4 text-center">${actionButton}</td>
                 </tr>
@@ -3658,13 +3671,16 @@ async function openAdminDashboard() {
 
     } catch (error) {
         console.error("Gagal menarik data pesanan:", error);
-        loader.innerHTML = '<p class="text-red-500">Ralat sambungan server.</p>';
+        loader.classList.add('hidden');
+        listContainer.innerHTML = '<tr><td colspan="5" class="text-center p-10 text-red-500 font-bold">Ralat sambungan ke pelayan. Sila cuba lagi.</td></tr>';
     }
 }
 
+// 3. Tutup Panel Admin
 function closeAdmin() {
-    document.getElementById('admin-screen').classList.add('hidden');
-    document.getElementById('menu-screen').classList.remove('hidden');
+    document.getElementById('admin-screen')?.classList.add('hidden');
+    document.getElementById('menu-screen')?.classList.remove('hidden');
+    document.getElementById('game-arena')?.classList.remove('hidden'); // <--- KEMBALIKAN GAME ARENA
 }
 </script>
 </body>
