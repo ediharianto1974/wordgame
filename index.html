@@ -3275,25 +3275,36 @@ function updateCategoryProgress() {
 
 // 1. Fungsi membuka borang pembelian
 function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
-    // KOREK NAMA TERUS DARI KOTAK LOG MASUK UTAMA
-    const playerName = document.getElementById('student-name').value.trim().toUpperCase();
-    
-    if (!playerName || playerName === "") {
-        alert("Sila log masuk terlebih dahulu untuk membeli.");
+    // KOREK NAMA TERUS DARI SKRIN PROFIL ANDA (Lebih Selamat)
+    let playerName = "PELAJAR";
+    const profileNameEl = document.getElementById('profile-name');
+    if (profileNameEl && profileNameEl.innerText.trim() !== "Nama Pelajar") {
+        playerName = profileNameEl.innerText.trim().toUpperCase();
+    }
+
+    // Semak jika kotak borang wujud sebelum masukkan data (Mengelakkan ralat 'null')
+    const elStudentName = document.getElementById('eduStudentName');
+    const elItemID = document.getElementById('eduItemID');
+    const elItemName = document.getElementById('eduItemName');
+    const elBasePrice = document.getElementById('eduBasePrice');
+    const elItemStock = document.getElementById('eduItemStock');
+    const elQuantity = document.getElementById('eduQuantity');
+
+    if (!elStudentName || !elItemID || !elItemName || !elBasePrice || !elItemStock || !elQuantity) {
+        alert("Ralat HTML: Ada bahagian borang Edu Shop yang tertinggal/hilang. Sila semak semula kod HTML Modal anda.");
         return;
     }
 
-    // Isi maklumat ke dalam borang
-    document.getElementById('eduStudentName').value = playerName;
-    document.getElementById('eduItemID').value = itemId;
-    document.getElementById('eduItemName').value = itemName;
-    document.getElementById('eduBasePrice').value = itemPrice;
+    // Masukkan maklumat ke dalam borang dengan selamat
+    elStudentName.value = playerName;
+    elItemID.value = itemId;
+    elItemName.value = itemName;
+    elBasePrice.value = itemPrice;
     
     // Anggap stok dari parameter
     const stockToShow = currentStock !== undefined ? currentStock : 999;
-    document.getElementById('eduItemStock').value = stockToShow;
-    
-    document.getElementById('eduQuantity').value = 1;
+    elItemStock.value = stockToShow;
+    elQuantity.value = 1;
     
     // Kira jumlah kos awal
     calculateEduTotal();
@@ -3301,9 +3312,11 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     // Sembunyikan mesej ralat & aktifkan butang
     document.getElementById('eduWarningMsg').classList.add('hidden');
     const btn = document.getElementById('eduConfirmBtn');
-    btn.disabled = false;
-    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-    btn.innerHTML = '<i class="fas fa-check"></i> Sahkan';
+    if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.innerHTML = '<i class="fas fa-check"></i> Sahkan';
+    }
 
     // Jika stok habis, halang
     if(stockToShow <= 0) {
@@ -3312,7 +3325,8 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     }
 
     // Paparkan Modal
-    document.getElementById('eduCheckoutModal').classList.remove('hidden');
+    const modal = document.getElementById('eduCheckoutModal');
+    if (modal) modal.classList.remove('hidden');
 }
 
 
@@ -3324,9 +3338,10 @@ async function submitEduCheckout() {
     const qty = parseInt(document.getElementById('eduQuantity').value);
     const totalCost = parseInt(document.getElementById('eduTotalCost').value);
 
-    // KOREK NAMA & KELAS TERUS DARI KOTAK LOG MASUK UTAMA
-    const playerName = document.getElementById('student-name').value.trim().toUpperCase();
-    const playerClass = document.getElementById('student-class').value.trim().toUpperCase() || "-";
+    // Dapatkan nama dari profil
+    let playerName = document.getElementById('eduStudentName').value;
+    // Kelas lalai (jika tak dapat dikesan)
+    let playerClass = (typeof localPlayerData !== 'undefined' && localPlayerData.class) ? localPlayerData.class : "-";
 
     // Tukar butang ke loading state
     btn.disabled = true;
@@ -3336,8 +3351,8 @@ async function submitEduCheckout() {
     try {
         const payload = {
             action: "buyEduItem",
-            name: playerName, // Menggunakan nama yang tepat
-            class: playerClass, // Menggunakan kelas yang tepat
+            name: playerName, 
+            class: playerClass, 
             itemID: itemID,
             quantity: qty
         };
