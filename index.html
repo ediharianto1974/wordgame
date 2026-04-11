@@ -3145,11 +3145,6 @@ function startMic(btnElement) {
     checkLevelAccess();
 });
 
-	function backToMenu() {
-    // 1. Sembunyikan Arena Permainan dan Skrin Skor
-    document.getElementById('game-arena').classList.add('hidden');
-    document.getElementById('final-score').classList.add('hidden');
-
     // 2. Tunjukkan semula Menu Utama
     document.getElementById('menu-screen').classList.remove('hidden');
 		updateCategoryProgress();
