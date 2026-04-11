@@ -1749,7 +1749,7 @@ async function buyItem(itemId) {
             }
         }
 
-        function renderInventory() {
+function renderInventory() {
     const container = document.getElementById('inventory-container');
     container.innerHTML = '';
     let hasItems = false;
@@ -1759,7 +1759,9 @@ async function buyItem(itemId) {
         for (const [key, level] of Object.entries(localPlayerData.avatars)) {
             if (level > 0 && avatars[key]) {
                 hasItems = true;
-                let displayData = avatars[key].levels[level - 1];
+                
+                // 👉 KOD DIBAIKI: Guna .find() untuk elak ralat undefined
+                let displayData = avatars[key].levels.find(l => l.level === level);
 
                 // Semak jika avatar ini sedang dipakai
                 let isEquipped = localPlayerData.activeAvatar && localPlayerData.activeAvatar.key === key;
@@ -1768,7 +1770,6 @@ async function buyItem(itemId) {
                     ? `<button disabled class="mt-2 text-[10px] bg-green-500 text-white px-3 py-1 rounded-full font-bold shadow-sm">EQUIPPED <i class="fas fa-check-circle"></i></button>`
                     : `<button onclick="equipAvatar('${key}', ${level})" class="mt-2 text-[10px] bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-full font-bold shadow-sm transition transform hover:scale-105">EQUIP</button>`;
 
-                // 🟢 TAMBAH DEFINISI avatarVisual DI SINI (Sebelum innerHTML) 🟢
                 const avatarVisual = displayData.img
                     ? `<img src="${displayData.img}" class="w-12 h-12 mb-1 object-contain legendary-avatar ${isEquipped ? 'drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]' : ''}" alt="${displayData.name}">`
                     : `<i class="${displayData.icon} text-3xl mb-1 ${isEquipped ? 'text-green-600' : 'text-indigo-500'}"></i>`;
@@ -1806,15 +1807,14 @@ async function buyItem(itemId) {
         container.innerHTML = '<p class="text-sm text-gray-400 italic">Your inventory is empty. Play more games to buy guardians and stationeries!</p>';
     }
 }
-		
+        
 // --- FUNGSI BAHARU UNTUK EQUIP AVATAR ---
 async function equipAvatar(avatarKey) {
     // 1. Dapatkan level tertinggi/terkini secara langsung dari beg galas (inventory)
     let myLevel = localPlayerData.avatars[avatarKey] || 1; 
     
-    // 2. Ambil data nama & ikon berdasarkan level tertinggi tersebut
-    // Dalam kod Cikgu, ia menggunakan 'displayData'
-    let displayData = avatars[avatarKey].levels[myLevel - 1];
+    // 👉 KOD DIBAIKI: Guna .find() untuk elak ralat undefined masa tekan butang Equip
+    let displayData = avatars[avatarKey].levels.find(l => l.level === myLevel);
     
     if (displayData) {
         localPlayerData.activeAvatar = {
@@ -1822,7 +1822,6 @@ async function equipAvatar(avatarKey) {
             level: myLevel,
             name: displayData.name,
             icon: displayData.icon,
-            // 👉 KEMASKINI DI SINI: Gunakan displayData.img bukannya selectedLevelData
             img: displayData.img || null
         };
         
