@@ -301,6 +301,9 @@
             <button onclick="showAchievementsScreen()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-xl md:rounded-full text-sm md:text-base font-bold shadow transition flex justify-center items-center gap-2">
                 <i class="fas fa-medal"></i> Achievements
             </button>
+			</div> <button id="btn-admin-panel" onclick="openAdminDashboard()" class="hidden w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold py-4 rounded-xl shadow-lg hover:from-yellow-600 hover:to-yellow-700 transition transform hover:scale-105 mt-4 border-2 border-yellow-300">
+            <i class="fas fa-crown text-xl mr-2"></i> PENGURUSAN EDUSHOP
+        </button>
         </div>
     </div>
 
@@ -1122,30 +1125,52 @@ const achievementsData = [
         }
 
 window.onload = async () => {
-            // ==========================================
-            // 1. KAWALAN SKRIN (ELAK BERTINDIH MASA REFRESH)
-            // ==========================================
-            // Semak adakah murid sudah login sebelum ini (Cari dalam memori)
-            // Nota: Saya guna 'localPlayerData', tukar jika anda guna nama key lain masa save
-            let isUserLoggedIn = localStorage.getItem('localPlayerData') || localStorage.getItem('playerName'); 
+    // ==========================================
+    // 1. KAWALAN SKRIN (ELAK BERTINDIH MASA REFRESH)
+    // ==========================================
+    // Semak adakah murid sudah login sebelum ini (Cari dalam memori)
+    // Nota: Saya guna 'localPlayerData', tukar jika anda guna nama key lain masa save
+    let isUserLoggedIn = localStorage.getItem('localPlayerData') || localStorage.getItem('playerName'); 
 
-            if (!isUserLoggedIn) {
-                // JIKA BELUM LOGIN: Pastikan skrin login muncul, TUTUP skrin lain
-                document.getElementById('login-screen')?.classList.remove('hidden');
-                document.getElementById('menu-screen')?.classList.add('hidden');
-                document.getElementById('game-arena')?.classList.add('hidden');
-                document.getElementById('leaderboard-screen')?.classList.add('hidden');
-                document.getElementById('shop-screen')?.classList.add('hidden');
-                document.getElementById('achievements-screen')?.classList.add('hidden');
-            } else {
-                // JIKA SUDAH LOGIN: Terus masuk Menu Utama, TUTUP skrin login
-                document.getElementById('login-screen')?.classList.add('hidden');
-                document.getElementById('menu-screen')?.classList.remove('hidden');
-                
-                // Panggil fungsi kemaskini (jika ada) supaya kad level dilukis dengan betul
-                if (typeof checkLevelAccess === 'function') checkLevelAccess();
-            }
+    if (!isUserLoggedIn) {
+        // JIKA BELUM LOGIN: Pastikan skrin login muncul, TUTUP skrin lain
+        document.getElementById('login-screen')?.classList.remove('hidden');
+        document.getElementById('menu-screen')?.classList.add('hidden');
+        document.getElementById('game-arena')?.classList.add('hidden');
+        document.getElementById('leaderboard-screen')?.classList.add('hidden');
+        document.getElementById('shop-screen')?.classList.add('hidden');
+        document.getElementById('achievements-screen')?.classList.add('hidden');
+        
+        // Pastikan butang admin juga tersembunyi
+        document.getElementById('btn-admin-panel')?.classList.add('hidden');
+    } else {
+        // JIKA SUDAH LOGIN: Terus masuk Menu Utama, TUTUP skrin login
+        document.getElementById('login-screen')?.classList.add('hidden');
+        document.getElementById('menu-screen')?.classList.remove('hidden');
+        
+        // --- SEMAKAN ADMIN UNTUK PAPAR BUTANG KETIKA AUTO-LOGIN / REFRESH ---
+        let savedName = localStorage.getItem('playerName') || "";
+        
+        // Jika anda simpan dalam bentuk objek JSON (localPlayerData)
+        let localDataStr = localStorage.getItem('localPlayerData');
+        if (localDataStr) {
+            try {
+                let parsedData = JSON.parse(localDataStr);
+                savedName = parsedData.name || savedName; // Guna nama dari JSON jika wujud
+            } catch(e) {}
+        }
 
+        // Semak jika nama pemain ialah GAME MASTER
+        if (savedName.trim().toUpperCase() === "GAME MASTER") {
+            document.getElementById('btn-admin-panel')?.classList.remove('hidden');
+        } else {
+            document.getElementById('btn-admin-panel')?.classList.add('hidden');
+        }
+        // ----------------------------------------------------------------------
+        
+        // Panggil fungsi kemaskini (jika ada) supaya kad level dilukis dengan betul
+        if (typeof checkLevelAccess === 'function') checkLevelAccess();
+    }
             // ==========================================
             // 2. KOD ASAL ANDA (MENARIK DATA NAMA)
             // ==========================================
@@ -1325,6 +1350,27 @@ async function startGameHub() {
                 alert("Login Successful! Welcome back, " + nameInput + "!");
             }
         } // <--- Penutup lengkap untuk Situation C
+
+		// ==========================================
+        // TAMBAH KOD SEMAKAN ADMIN DI SINI
+        // ==========================================
+        if (nameInput.toUpperCase() === "GAME MASTER") {
+            document.getElementById('btn-admin-panel')?.classList.remove('hidden');
+        } else {
+            document.getElementById('btn-admin-panel')?.classList.add('hidden');
+        }
+        
+        // (Nota: Kod asal anda yang menyembunyikan 'login-screen' dan membuka 'menu-screen' 
+        // sepatutnya berada di bawah garisan ini. Biarkan ia seperti biasa.)
+
+    } catch (error) {
+        console.error("Login Error:", error);
+        alert("An error occurred. Please try again.");
+    } finally {
+        startBtn.innerText = "START ADVENTURE";
+        startBtn.disabled = false;
+    }
+}
 
         // --- PROCESS TO OPEN MAIN MENU ---
         document.getElementById('display-name').innerText = studentInfo.name;
