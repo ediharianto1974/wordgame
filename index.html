@@ -1664,22 +1664,23 @@ function renderShop() {
     renderInventory(); 
 }
 		
-        async function buyAvatar(avatarKey, level, price) {
+async function buyAvatar(avatarKey, level, price) {
             if(localPlayerData.coins >= price) {
                 localPlayerData.coins -= price;
                 
                 // 1. Simpan level baharu ke dalam beg galas (inventory)
                 localPlayerData.avatars[avatarKey] = level;
                 
+                // KOTHA KODU: Index vaadakunda, exact level match ayye data ni find cheyali
+                let displayData = avatars[avatarKey].levels.find(l => l.level === level);
+                
                 // 2. KOD AUTO-UPDATE: Semak jika pelajar sedang memakai avatar ini
                 if (localPlayerData.activeAvatar && localPlayerData.activeAvatar.key === avatarKey) {
-                    let displayData = avatars[avatarKey].levels[level - 1];
-                    
                     // Terus tukar baju di badan ke level baharu!
                     localPlayerData.activeAvatar.level = level;
                     localPlayerData.activeAvatar.name = displayData.name;
                     localPlayerData.activeAvatar.icon = displayData.icon;
-					localPlayerData.activeAvatar.img = displayData.img || null;
+                    localPlayerData.activeAvatar.img = displayData.img || null;
                 }
                 
                 // 3. Muat semula paparan dan simpan ke Cloud (Google Sheets)
@@ -1687,11 +1688,12 @@ function renderShop() {
                 updateDashboardAvatars(); // Refresh gambar di menu utama
                 await saveCloudPlayerData(); 
                 
-                let guardianName = avatars[avatarKey].levels[level - 1].name;
+                // KOTHA KODU: displayData nunchi peru thesukovali
+                let guardianName = displayData.name;
                 alert(`✨ MAGIC UNLOCKED! ✨\nYour guardian has evolved to [${guardianName}] (Level ${level})!`);
             }
         }
-
+	
 async function buyItem(itemId) {
             const item = shopItems.find(i => i.id === itemId);
             const isEdu = item.category === 'edu'; // Semak jika ia item Edu Shop
