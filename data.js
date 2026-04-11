@@ -1130,22 +1130,26 @@ const shopBadges = [
 // ------------------------------------------
     // KATEGORI: EDU SHOP (BARANGAN SEKOLAH / ALAT TULIS)
     // ------------------------------------------
-        const shopItems = [
-    { id: 'edu_eraser', category: 'edu', name: 'Eraser', price: 1000, icon: 'fas fa-eraser text-pink-400', desc: 'A basic pink eraser to fix tiny mistakes.' },
-    { id: 'edu_pencil', category: 'edu', name: 'Pencil', price: 1500, icon: 'fas fa-pencil-alt text-yellow-500', desc: 'A sharp 2B pencil for writing down answers.' },
-    { id: 'edu_pen', category: 'edu', name: 'Pen', price: 3000, icon: 'fas fa-pen text-blue-600', desc: 'A smooth blue pen for confident writing.' },
-    { id: 'edu_ruler', category: 'edu', name: 'Ruler', price: 3500, icon: 'fas fa-ruler text-green-500', desc: 'Keep your lines straight and neat.' },
-    { id: 'edu_sharpener', category: 'edu', name: 'Sharpener', price: 7000, icon: 'fas fa-cube text-red-500', desc: 'Keep your pencils sharp and ready.' },
-    { id: 'edu_exercise_book', category: 'edu', name: 'Exercise Book', price: 10000, icon: 'fas fa-book-open text-blue-400', desc: 'A standard book for daily grammar practice.' },
-    { id: 'edu_color_paper', category: 'edu', name: 'Color Paper', price: 10000, icon: 'fas fa-copy text-pink-500', desc: 'Bright colorful papers for your art projects.' },
-    { id: 'edu_notebook', category: 'edu', name: 'Notebook', price: 12000, icon: 'fas fa-book text-indigo-500', desc: 'A premium notebook with thick pages.' },
-    { id: 'edu_drawing_book', category: 'edu', name: 'Drawing Book', price: 20000, icon: 'fas fa-book-reader text-orange-400', desc: 'A large book for your creative ideas.' },
-    { id: 'edu_pencil_box', category: 'edu', name: 'Pencil Box', price: 50000, icon: 'fas fa-box text-purple-500', desc: 'A cool box to store all your stationery.' },
-    { id: 'edu_adv_sharpener', category: 'edu', name: 'Advance Sharpener', price: 75000, icon: 'fas fa-cogs text-gray-700', desc: 'An automatic sharpener. Fast and easy!' },
-    { id: 'edu_pencil_color', category: 'edu', name: 'Pencil Color', price: 100000, icon: 'fas fa-pencil-ruler text-yellow-600', desc: 'A set of 24 beautiful colored pencils.' },
-    { id: 'edu_water_color', category: 'edu', name: 'Water Color', price: 150000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Premium water colors for a masterpiece!' }
-];
+const shopItems = [
+    // --- HAD HARIAN (DAILY) ---
+    { id: 'edu_eraser', category: 'edu', limitType: 'daily', name: 'Eraser', price: 1000, icon: 'fas fa-eraser text-pink-400', desc: 'A basic pink eraser to fix tiny mistakes.' },
+    { id: 'edu_pencil', category: 'edu', limitType: 'daily', name: 'Pencil', price: 1500, icon: 'fas fa-pencil-alt text-yellow-500', desc: 'A sharp 2B pencil for writing down answers.' },
+    { id: 'edu_pen', category: 'edu', limitType: 'daily', name: 'Pen', price: 3000, icon: 'fas fa-pen text-blue-600', desc: 'A smooth blue pen for confident writing.' },
+    { id: 'edu_ruler', category: 'edu', limitType: 'daily', name: 'Ruler', price: 3500, icon: 'fas fa-ruler text-green-500', desc: 'Keep your lines straight and neat.' },
+    { id: 'edu_sharpener', category: 'edu', limitType: 'daily', name: 'Sharpener', price: 7000, icon: 'fas fa-cube text-red-500', desc: 'Keep your pencils sharp and ready.' },
 
+    // --- HAD BULANAN (MONTHLY) ---
+    { id: 'edu_exercise_book', category: 'edu', limitType: 'monthly', name: 'Exercise Book', price: 10000, icon: 'fas fa-book-open text-blue-400', desc: 'A standard book for daily grammar practice.' },
+    { id: 'edu_color_paper', category: 'edu', limitType: 'monthly', name: 'Color Paper', price: 10000, icon: 'fas fa-copy text-pink-500', desc: 'Bright colorful papers for your art projects.' },
+    { id: 'edu_notebook', category: 'edu', limitType: 'monthly', name: 'Notebook', price: 12000, icon: 'fas fa-book text-indigo-500', desc: 'A premium notebook with thick pages.' },
+    { id: 'edu_drawing_book', category: 'edu', limitType: 'monthly', name: 'Drawing Book', price: 20000, icon: 'fas fa-book-reader text-orange-400', desc: 'A large book for your creative ideas.' },
+
+    // --- HAD TAHUNAN (YEARLY) ---
+    { id: 'edu_pencil_box', category: 'edu', limitType: 'yearly', name: 'Pencil Box', price: 50000, icon: 'fas fa-box text-purple-500', desc: 'A cool box to store all your stationery.' },
+    { id: 'edu_adv_sharpener', category: 'edu', limitType: 'yearly', name: 'Advance Sharpener', price: 75000, icon: 'fas fa-cogs text-gray-700', desc: 'An automatic sharpener. Fast and easy!' },
+    { id: 'edu_pencil_color', category: 'edu', limitType: 'yearly', name: 'Pencil Color', price: 100000, icon: 'fas fa-pencil-ruler text-yellow-600', desc: 'A set of 24 beautiful colored pencils.' },
+    { id: 'edu_water_color', category: 'edu', limitType: 'yearly', name: 'Water Color', price: 150000, icon: 'fas fa-paint-brush text-teal-500', desc: 'Premium water colors for a masterpiece!' }
+];
 // ==========================================
 // 3. DATA PENCAPAIAN (ACHIEVEMENTS)
 // ==========================================
