@@ -1266,17 +1266,17 @@ async function startGameHub() {
                 name: nameInput, class: classInput, passcode: autoPin,
                 coins: 0, inventory: [], avatars: {}, activeAvatar: null,
                 achievements: [], totalScore: 0,
-                activeTitle: "Novice", // 🚨 Title diletakkan untuk murid baru
-				claimedLevels: [],
-				games: {}, // 🚨 Tambah ini
-                lastPlayed: [] // 🚨 Tambah ini
+                activeTitle: "Novice", 
+                claimedLevels: [],
+                games: {}, 
+                lastPlayed: [] 
             };
             studentInfo = { name: nameInput, class: classInput };
             await saveCloudPlayerData(); 
         } 
         // SITUATION C: Account Exists (Returning Student)
         else {
-// ==========================================
+            // ==========================================
             // KEMASKINI UNTUK SITUATION C1
             // ==========================================
             if (data.hasPin === false) {
@@ -1299,8 +1299,8 @@ async function startGameHub() {
                     totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
                     activeTitle: data.activeTitle || "Novice", 
                     claimedLevels: Array.isArray(data.claimedLevels) ? data.claimedLevels : [],
-                    games: parsedGames, // 🚨 Markah masuk ke sini
-                    lastPlayed: parsedMem // 🚨 Memori dipulihkan di sini
+                    games: parsedGames, 
+                    lastPlayed: parsedMem 
                 };
                 studentInfo = { name: nameInput, class: classInput };
 
@@ -1310,7 +1310,7 @@ async function startGameHub() {
                 }
                 await saveCloudPlayerData(); 
             } 
-// ==========================================
+            // ==========================================
             // KEMASKINI UNTUK SITUATION C2
             // ==========================================
             else {
@@ -1337,12 +1337,11 @@ async function startGameHub() {
                     totalScore: data.Total || data.total || data.TOTAL || data.totalScore || data.coins || 0,
                     activeTitle: data.activeTitle || "Novice", 
                     claimedLevels: Array.isArray(data.claimedLevels) ? data.claimedLevels : [],
-                    games: parsedGames, // 🚨 Markah masuk ke sini
-                    lastPlayed: parsedMem // 🚨 Memori dipulihkan di sini
+                    games: parsedGames, 
+                    lastPlayed: parsedMem 
                 };
                 studentInfo = { name: nameInput, class: classInput };
-				
-                // PANGGIL FUNGSI STYLE UNTUK PEMAIN C2 JUGA (Supaya title tak jadi warna kelabu bila login)
+                
                 if (typeof applyTitleStyle === "function") {
                     applyTitleStyle(localPlayerData.activeTitle);
                 }
@@ -1351,17 +1350,24 @@ async function startGameHub() {
             }
         } // <--- Penutup lengkap untuk Situation C
 
-		// ==========================================
-        // TAMBAH KOD SEMAKAN ADMIN DI SINI
+        // ==========================================
+        // SEMAKAN ADMIN (GAME MASTER)
         // ==========================================
         if (nameInput.toUpperCase() === "GAME MASTER") {
             document.getElementById('btn-admin-panel')?.classList.remove('hidden');
         } else {
             document.getElementById('btn-admin-panel')?.classList.add('hidden');
         }
+
+        // ==========================================
+        // MASUK KE MENU UTAMA (Selepas Login Berjaya)
+        // ==========================================
+        document.getElementById('login-screen')?.classList.add('hidden');
+        document.getElementById('menu-screen')?.classList.remove('hidden');
         
-        // (Nota: Kod asal anda yang menyembunyikan 'login-screen' dan membuka 'menu-screen' 
-        // sepatutnya berada di bawah garisan ini. Biarkan ia seperti biasa.)
+        // Panggil fungsi render UI jika wujud dalam fail anda
+        if (typeof updateProfileDisplay === 'function') updateProfileDisplay();
+        if (typeof checkLevelAccess === 'function') checkLevelAccess();
 
     } catch (error) {
         console.error("Login Error:", error);
