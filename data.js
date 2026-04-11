@@ -264,8 +264,7 @@ const gameData = {
         { q: "beautiful / gave / a / mother / my / I / flower", a: "i gave my mother a beautiful flower|i gave my mother a beautiful flower." },
         { q: "shoes / are / Your / dirty / very", a: "your shoes are very dirty|your shoes are very dirty." },
         { q: "the / winner / is / race / of / He / the", a: "he is the winner of the race|he is the winner of the race." },
-        { q: "glass / Please / a / me / give / water / of", a: "please give me a glass of water|please give me a glass of water." },
-        { q: "tired / am / I / very / today", a: "i am very tired today|today i am very tired|i am very tired today.|today i am very tired." }
+        { q: "glass / Please / a / me / give / water / of", a: "please give me a glass of water|please give me a glass of water." }
     ],
 
     pastTense: [
