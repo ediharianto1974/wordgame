@@ -3275,8 +3275,8 @@ function updateCategoryProgress() {
 
 // 1. Fungsi membuka borang pembelian
 function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
-    // KEMASKINI: Cari nama dari memori local storage dengan lebih meluas
-    const playerName = localStorage.getItem("currentPlayerName") || localStorage.getItem("playerName") || (typeof currentPlayerName !== 'undefined' ? currentPlayerName : "");
+    // KOREK NAMA TERUS DARI KOTAK LOG MASUK UTAMA
+    const playerName = document.getElementById('student-name').value.trim().toUpperCase();
     
     if (!playerName || playerName === "") {
         alert("Sila log masuk terlebih dahulu untuk membeli.");
@@ -3324,9 +3324,9 @@ async function submitEduCheckout() {
     const qty = parseInt(document.getElementById('eduQuantity').value);
     const totalCost = parseInt(document.getElementById('eduTotalCost').value);
 
-    // KEMASKINI: Dapatkan nama & kelas yang sebenar
-    const playerName = localStorage.getItem("currentPlayerName") || localStorage.getItem("playerName") || (typeof currentPlayerName !== 'undefined' ? currentPlayerName : "");
-    const playerClass = localStorage.getItem("currentPlayerClass") || localStorage.getItem("playerClass") || (typeof currentPlayerClass !== 'undefined' ? currentPlayerClass : "-");
+    // KOREK NAMA & KELAS TERUS DARI KOTAK LOG MASUK UTAMA
+    const playerName = document.getElementById('student-name').value.trim().toUpperCase();
+    const playerClass = document.getElementById('student-class').value.trim().toUpperCase() || "-";
 
     // Tukar butang ke loading state
     btn.disabled = true;
