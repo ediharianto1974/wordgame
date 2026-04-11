@@ -1040,7 +1040,34 @@ const achievementsData = [
             });
         }
 
-        window.onload = async () => {
+window.onload = async () => {
+            // ==========================================
+            // 1. KAWALAN SKRIN (ELAK BERTINDIH MASA REFRESH)
+            // ==========================================
+            // Semak adakah murid sudah login sebelum ini (Cari dalam memori)
+            // Nota: Saya guna 'localPlayerData', tukar jika anda guna nama key lain masa save
+            let isUserLoggedIn = localStorage.getItem('localPlayerData') || localStorage.getItem('playerName'); 
+
+            if (!isUserLoggedIn) {
+                // JIKA BELUM LOGIN: Pastikan skrin login muncul, TUTUP skrin lain
+                document.getElementById('login-screen')?.classList.remove('hidden');
+                document.getElementById('menu-screen')?.classList.add('hidden');
+                document.getElementById('game-arena')?.classList.add('hidden');
+                document.getElementById('leaderboard-screen')?.classList.add('hidden');
+                document.getElementById('shop-screen')?.classList.add('hidden');
+                document.getElementById('achievements-screen')?.classList.add('hidden');
+            } else {
+                // JIKA SUDAH LOGIN: Terus masuk Menu Utama, TUTUP skrin login
+                document.getElementById('login-screen')?.classList.add('hidden');
+                document.getElementById('menu-screen')?.classList.remove('hidden');
+                
+                // Panggil fungsi kemaskini (jika ada) supaya kad level dilukis dengan betul
+                if (typeof checkLevelAccess === 'function') checkLevelAccess();
+            }
+
+            // ==========================================
+            // 2. KOD ASAL ANDA (MENARIK DATA NAMA)
+            // ==========================================
             const datalist = document.getElementById('name-suggestions');
             const loadingText = document.getElementById('loading-status');
             const startBtn = document.getElementById('start-btn');
