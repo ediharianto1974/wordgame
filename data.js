@@ -908,7 +908,7 @@ bot: {
                 level: 100, 
                 name: 'God-Tier Grammar Mecha', 
                 price: 300000, 
-                img: 'avata_bot100.png', 
+                img: 'avatar_bot100.png', 
                 icon: 'fas fa-user-astronaut fa-beat text-red-500 drop-shadow-2xl text-4xl', 
                 desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
