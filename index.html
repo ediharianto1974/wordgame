@@ -3322,24 +3322,21 @@ function updateCategoryProgress() {
 
 // 1. Fungsi membuka borang pembelian
 function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
-    // KOREK NAMA DENGAN LEBIH TEPAT (Guna textContent)
+    // --- PENGESAN NAMA SUPER KEBAL ---
     let playerName = "PELAJAR";
     
-    // Cuba ambil dari data tempatan jika wujud
-    if (typeof localPlayerData !== 'undefined' && localPlayerData.name) {
-        playerName = localPlayerData.name;
-    } else if (typeof localPlayerData !== 'undefined' && localPlayerData.id) {
-        playerName = localPlayerData.id; 
-    } else {
-        // Cedok dari profil secara paksa
-        const profileNameEl = document.getElementById('profile-name');
-        if (profileNameEl) {
-            let textName = profileNameEl.textContent.trim();
-            if (textName && textName !== "Nama Pelajar") {
-                playerName = textName.toUpperCase();
-            }
-        }
+    // Semak Kotak Log Masuk Utama (Tempat anda taip Game Master)
+    const loginInput = document.getElementById('student-name');
+    const profileName = document.getElementById('profile-name');
+    
+    if (loginInput && loginInput.value.trim() !== "") {
+        playerName = loginInput.value.trim().toUpperCase(); // Cara 1 (Paling Tepat)
+    } else if (typeof localPlayerData !== 'undefined' && localPlayerData.name) {
+        playerName = localPlayerData.name; // Cara 2 (Dari memori)
+    } else if (profileName && profileName.textContent.trim() !== "Nama Pelajar" && profileName.textContent.trim() !== "") {
+        playerName = profileName.textContent.trim().toUpperCase(); // Cara 3 (Dari profil)
     }
+    // ---------------------------------
 
     // Semak jika kotak borang wujud sebelum masukkan data
     const elStudentName = document.getElementById('eduStudentName');
@@ -3387,6 +3384,7 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     const modal = document.getElementById('eduCheckoutModal');
     if (modal) modal.classList.remove('hidden');
 }
+	
 // 2. Fungsi tutup borang
 function closeEduCheckout() {
     const modal = document.getElementById('eduCheckoutModal');
