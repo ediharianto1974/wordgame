@@ -874,8 +874,8 @@ const avatars = {
             }
         ]
     },
-    bot: {
-        id: 'avatar_bot', maxLevel: 10, theme: 'Punctuation & Mechanics',
+bot: {
+        id: 'avatar_bot', maxLevel: 100, theme: 'Punctuation & Mechanics', // maxLevel ditukar ke 100
         levels: [
             { level: 1, name: 'Comma Cube', price: 300, icon: 'fas fa-box fa-pulse text-gray-300', desc: 'A basic pause in the sentence.' },
             { level: 2, name: 'Period Processor', price: 600, icon: 'fas fa-box fa-shake text-gray-400', desc: 'Ending sentences with certainty.' },
@@ -893,6 +893,24 @@ const avatars = {
                 img: 'avatar_bot.png',
                 icon: 'fas fa-user-astronaut fa-spin legendary-avatar text-purple-500 drop-shadow-lg text-2xl', 
                 desc: 'The Flawless Proofreading Titan!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Punctuation Prime', 
+                price: 30000, 
+                img: 'avatar_bot50.png',
+                icon: 'fas fa-robot fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Grammar Mecha', 
+                price: 300000, 
+                img: 'avata_bot100.png', 
+                icon: 'fas fa-user-astronaut fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
