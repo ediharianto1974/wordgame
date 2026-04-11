@@ -2297,7 +2297,6 @@ async function showLeaderboard() {
                 };
             }
             
-            // PAKSA MARKAH MENJADI NOMBOR
             if (s.type && s.score !== undefined) {
                 let numericScore = Number(s.score) || 0;
                 let numericTotal = Number(s.total) || 0;
@@ -2336,7 +2335,12 @@ async function showLeaderboard() {
         body.innerHTML = "";
         let allRowsHTML = "";
 
-        // GELUNG UNTUK 50 PEMAIN TERATAS
+        // 🔥 PERSEDIAAN NAMA PEMAIN (UNTUK SEMAKAN RANKING)
+        // Kita simpan nama dalam pembolehubah selamat supaya tidak ralat toUpperCase()
+        const currentPlayerName = (typeof localPlayerData !== 'undefined' && localPlayerData && localPlayerData.name) 
+                                  ? String(localPlayerData.name).toUpperCase() 
+                                  : "";
+
         leaderboard.slice(0, 50).forEach((student, index) => {
             let currentRank = index + 1;
             let rankIcon = `#${index+1}`;
@@ -2344,112 +2348,92 @@ async function showLeaderboard() {
             if(index === 1) rankIcon = `🥈`;
             if(index === 2) rankIcon = `🥉`;
             
-            if (typeof localPlayerData !== 'undefined' && localPlayerData && student.name === localPlayerData.name.toUpperCase()) {
+            // 🚨 BAHAGIAN YANG DIBETULKAN (Semakan Nama Selamat)
+            if (currentPlayerName !== "" && student.name === currentPlayerName) {
                 if (typeof checkLeaderboardAchievements === 'function') {
                     checkLeaderboardAchievements(currentRank);
                 }
             }
 
-// 1. LUKIS AVATAR
-let avatarHtml = '';
-if (student.activeAvatar) {
-    let active = student.activeAvatar;
-    let avatarKey = active.key || active.id || active.avatarKey;
-    let visualContent = '';
-    let isLegendaryImage = false;
-    const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
+            // 1. LUKIS AVATAR (Guna logik .find yang kita bincang sebelum ini)
+            let avatarHtml = '';
+            if (student.activeAvatar) {
+                let active = student.activeAvatar;
+                let avatarKey = active.key || active.id || active.avatarKey;
+                let visualContent = '';
+                let isLegendaryImage = false;
+                const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
 
-    if (rawData && rawData[avatarKey] && rawData[avatarKey].levels) {
-        let safeLevel = active.level || 1; 
-        
-        // 🚨 KOD YANG DIBETULKAN: Gunakan .find() berbanding [safeLevel - 1]
-        // Cari gambar tahap tertinggi yang pemain layak pakai
-        const levelInfo = rawData[avatarKey].levels.slice().reverse().find(l => safeLevel >= l.level);
+                if (rawData && rawData[avatarKey] && rawData[avatarKey].levels) {
+                    let safeLevel = active.level || 1; 
+                    const levelInfo = rawData[avatarKey].levels.slice().reverse().find(l => safeLevel >= l.level);
 
-        if (levelInfo && levelInfo.img) {
-            visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto">`;
-            isLegendaryImage = true;
-        } else {
-            let iconToUse = (levelInfo && levelInfo.icon) ? levelInfo.icon : active.icon;
-            visualContent = `<i class="${iconToUse} text-xl md:text-2xl text-yellow-600"></i>`;
-        }
-    } else {
-        visualContent = active.img 
-            ? `<img src="${active.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md legendary-avatar mx-auto">` 
-            : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
-        if (active.img) isLegendaryImage = true;
-    }
-    
-    let containerClass = isLegendaryImage 
-        ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" 
-        : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; 
+                    if (levelInfo && levelInfo.img) {
+                        visualContent = `<img src="${levelInfo.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_8px_rgba(255,140,0,0.8)] legendary-avatar mx-auto">`;
+                        isLegendaryImage = true;
+                    } else {
+                        let iconToUse = (levelInfo && levelInfo.icon) ? levelInfo.icon : active.icon;
+                        visualContent = `<i class="${iconToUse} text-xl md:text-2xl text-yellow-600"></i>`;
+                    }
+                } else {
+                    visualContent = active.img 
+                        ? `<img src="${active.img}" class="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md legendary-avatar mx-auto">` 
+                        : `<i class="${active.icon} text-xl md:text-2xl text-yellow-600"></i>`;
+                    if (active.img) isLegendaryImage = true;
+                }
+                
+                let containerClass = isLegendaryImage 
+                    ? "w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative" 
+                    : "avatar-3d-glow bg-indigo-50 border-2 border-indigo-200 rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mb-1 relative"; 
 
-    avatarHtml = `
-        <div class="flex flex-col items-center justify-center p-2">
-            <div class="${containerClass}">
-                ${visualContent}
-                <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level || 1}</div>
-            </div>
-            <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto mt-1">${active.name}</div>
-        </div>`;
-} else {
-    avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center py-4">No Guardian</div>`;
-}
-			
-            // 2. GELARAN KARAKTER (MENGGUNAKAN CSS ASAL ANDA)
-            const titleName = student.activeTitle;
+                avatarHtml = `
+                    <div class="flex flex-col items-center justify-center p-2">
+                        <div class="${containerClass}">
+                            ${visualContent}
+                            <div class="absolute -bottom-1 -right-1 z-10 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white shadow-sm">Lvl ${active.level || 1}</div>
+                        </div>
+                        <div class="text-[9px] font-bold text-yellow-700 text-center uppercase bg-yellow-100 px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap w-max mx-auto mt-1">${active.name}</div>
+                    </div>`;
+            } else {
+                avatarHtml = `<div class="text-[10px] text-gray-400 italic text-center py-4">No Guardian</div>`;
+            }
+
+            // 2. GELARAN KARAKTER (🚨 DIBETULKAN: Pastikan String sebelum toUpperCase)
+            const titleName = String(student.activeTitle || "Novice");
             const rawAchievements = (typeof achievementsData !== 'undefined') ? achievementsData : [];
             const titleData = rawAchievements.find(ach => ach.name === titleName);
             const tier = titleData ? titleData.tier : 'common';
             const achId = titleData ? titleData.id : ''; 
             
             let titleHTML = "";
-            // Nota: Saya tambah .toUpperCase() supaya tulisan nampak kemas (huruf besar)
-            if (achId === 'ach_16') {
-                titleHTML = `<div class="title-king inline-block mt-1">👑 ${titleName.toUpperCase()}</div>`;
-            } 
-            else if (achId === 'ach_15') {
-                titleHTML = `<div class="title-legendary-beast inline-block mt-1">👾 ${titleName.toUpperCase()}</div>`;
-            }
-            else if (achId === 'ach_08') {
-                titleHTML = `<div class="title-master inline-block mt-1">🔥 ${titleName.toUpperCase()}</div>`;
-            }
-            else if (tier === 'legendary') {
-                titleHTML = `<div class="title-legendary inline-block mt-1">🏆 ${titleName.toUpperCase()}</div>`;
-            } 
-            else if (tier === 'epic') {
-                titleHTML = `<div class="title-epic text-[10px] md:text-xs inline-block mt-1">✨ ${titleName.toUpperCase()}</div>`;
-            } 
-            else if (tier === 'rare') {
-                titleHTML = `<div class="title-rare text-[10px] md:text-xs inline-block mt-1">⭐ ${titleName.toUpperCase()}</div>`;
-            } 
-            else {
-                titleHTML = `<div class="title-common text-[10px] md:text-xs inline-block mt-1">${titleName.toUpperCase()}</div>`;
-            }
+            const upperTitle = titleName.toUpperCase();
 
-            // 3. PENGIRAAN LEVEL & GELARAN LEVEL (Formula Betul: / 100 + 1)
+            if (achId === 'ach_16') titleHTML = `<div class="title-king inline-block mt-1">👑 ${upperTitle}</div>`;
+            else if (achId === 'ach_15') titleHTML = `<div class="title-legendary-beast inline-block mt-1">👾 ${upperTitle}</div>`;
+            else if (achId === 'ach_08') titleHTML = `<div class="title-master inline-block mt-1">🔥 ${upperTitle}</div>`;
+            else if (tier === 'legendary') titleHTML = `<div class="title-legendary inline-block mt-1">🏆 ${upperTitle}</div>`;
+            else if (tier === 'epic') titleHTML = `<div class="title-epic text-[10px] md:text-xs inline-block mt-1">✨ ${upperTitle}</div>`;
+            else if (tier === 'rare') titleHTML = `<div class="title-rare text-[10px] md:text-xs inline-block mt-1">⭐ ${upperTitle}</div>`;
+            else titleHTML = `<div class="title-common text-[10px] md:text-xs inline-block mt-1">${upperTitle}</div>`;
+
+            // 3. PENGIRAAN LEVEL
             let studentLevel = Math.floor(student.grandScore / 100) + 1;
-
             let studentLevelTitle = "Novice";
-            if (studentLevel >= 151) {
-                studentLevelTitle = "Transcendent";
-            } else if (studentLevel >= 101) {
-                studentLevelTitle = "Omniscient";
-            } else if (studentLevel >= 51) {
-                studentLevelTitle = "Adept";
-            }
+            if (studentLevel >= 151) studentLevelTitle = "Transcendent";
+            else if (studentLevel >= 101) studentLevelTitle = "Omniscient";
+            else if (studentLevel >= 51) studentLevelTitle = "Adept";
 
             let newLevelBadgeHTML = `<div class="mt-1 flex items-center gap-1 text-[11px] md:text-sm font-semibold text-pink-600"><i class="fas fa-comment"></i> Lv.${studentLevel} ${studentLevelTitle}</div>`;
 
-            // 4. LENCANA PERMAINAN MINIGAME
+            // 4. LENCANA PERMAINAN
             let gamesBadgesHtml = student.gameList.map(game => {
                 return `<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] md:text-xs px-2 py-1 rounded-md m-0.5 font-semibold">${game.name}: <span class="text-green-600">${game.score}/${game.total}</span></span>`;
             }).join('');
 
-            // 5. MARKAH KESELURUHAN (TOTAL XP)
+            // 5. MARKAH KESELURUHAN
             const totalHtmlRes = `<span class="bg-indigo-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full font-bold shadow-md text-xs md:text-base whitespace-nowrap">${student.grandScore} XP</span>`;
 
-            // 6. BINA BARIS JADUAL HTML (Susunan teratur)
+            // 6. BINA BARIS JADUAL
             const row = `
                 <tr class="border-b-2 border-indigo-100 hover:bg-gray-50 transition">
                     <td class="p-2 md:p-4 font-bold text-indigo-600 text-sm md:text-xl text-center align-middle">${rankIcon}</td>
@@ -2468,16 +2452,14 @@ if (student.activeAvatar) {
                     <td class="p-2 md:p-4 text-center align-middle">${totalHtmlRes}</td>
                 </tr>
             `;
-            
             allRowsHTML += row; 
         });
 
-        // MASUKKAN SEMUA DATA KE DALAM JADUAL SAKALIGUS
         body.innerHTML = allRowsHTML;
 
     } catch (error) {
         console.error("Leaderboard Error:", error);
-        body.innerHTML = `<tr><td colspan='6' class='p-8 text-center text-red-500'><i class='fas fa-exclamation-triangle'></i> Failed to load data. Please refresh.</td></tr>`;
+        body.innerHTML = `<tr><td colspan='6' class='p-8 text-center text-red-500 font-bold'><i class='fas fa-exclamation-triangle'></i> Ralat: ${error.message} <br> <span class='text-xs'>Sila refresh halaman.</span></td></tr>`;
     }
 }
 	
