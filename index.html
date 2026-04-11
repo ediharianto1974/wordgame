@@ -2049,29 +2049,32 @@ let xpToAdd = parseInt(score) || 0;
 let liveLevel = Math.floor(currentXP / 100) + 1;
 
 // 💥 A. SYARAT XP BERPERINGKAT (DIMINISHING RETURNS)
-if (liveLevel >= 100) {
-    // 1. HAD MAKSIMUM (HARD CAP): Level 100 ke atas tidak dapat XP
+
+// 1. TAPISAN PERTAMA: Jika markah 0, memang dapat 0 XP. (Cegah eksploitasi)
+if (xpToAdd === 0) {
     xpToAdd = 0;
 } 
-else if (liveLevel >= 90) {
-    // Level 90-99: Bahagi 6
-    xpToAdd = Math.max(1, Math.round(xpToAdd / 6));
-} 
-else if (liveLevel >= 80) {
-    // Level 80-89: Bahagi 5
-    xpToAdd = Math.max(1, Math.round(xpToAdd / 5));
-} 
-else if (liveLevel >= 70) {
-    // Level 70-79: Bahagi 4
-    xpToAdd = Math.max(1, Math.round(xpToAdd / 4));
-} 
-else if (liveLevel >= 60) {
-    // Level 60-69: Bahagi 3
-    xpToAdd = Math.max(1, Math.round(xpToAdd / 3));
-} 
-else if (liveLevel >= 50) {
-    // Level 50-59: Bahagi 2
-    xpToAdd = Math.max(1, Math.round(xpToAdd / 2));
+// 2. Jika ada markah, baru kira mengikut level
+else {
+    if (liveLevel >= 100) {
+        // HAD MAKSIMUM: Level 100 ke atas tidak dapat XP
+        xpToAdd = 0;
+    } 
+    else if (liveLevel >= 90) {
+        xpToAdd = Math.max(1, Math.round(xpToAdd / 6));
+    } 
+    else if (liveLevel >= 80) {
+        xpToAdd = Math.max(1, Math.round(xpToAdd / 5));
+    } 
+    else if (liveLevel >= 70) {
+        xpToAdd = Math.max(1, Math.round(xpToAdd / 4));
+    } 
+    else if (liveLevel >= 60) {
+        xpToAdd = Math.max(1, Math.round(xpToAdd / 3));
+    } 
+    else if (liveLevel >= 50) {
+        xpToAdd = Math.max(1, Math.round(xpToAdd / 2));
+    }
 }
 
 // B. Tambah XP ke dalam memori
