@@ -3316,20 +3316,20 @@ function updateCategoryProgress() {
     }
 }
 
-	// ==========================================
+// ==========================================
 // FUNGSI EDU SHOP: BORANG & CHECKOUT
 // ==========================================
 
 // 1. Fungsi membuka borang pembelian
 function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
-    // KOREK NAMA TERUS DARI SKRIN PROFIL ANDA (Lebih Selamat)
+    // KOREK NAMA TERUS DARI SKRIN PROFIL ANDA
     let playerName = "PELAJAR";
     const profileNameEl = document.getElementById('profile-name');
     if (profileNameEl && profileNameEl.innerText.trim() !== "Nama Pelajar") {
         playerName = profileNameEl.innerText.trim().toUpperCase();
     }
 
-    // Semak jika kotak borang wujud sebelum masukkan data (Mengelakkan ralat 'null')
+    // Semak jika kotak borang wujud sebelum masukkan data
     const elStudentName = document.getElementById('eduStudentName');
     const elItemID = document.getElementById('eduItemID');
     const elItemName = document.getElementById('eduItemName');
@@ -3338,11 +3338,11 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     const elQuantity = document.getElementById('eduQuantity');
 
     if (!elStudentName || !elItemID || !elItemName || !elBasePrice || !elItemStock || !elQuantity) {
-        alert("Ralat HTML: Ada bahagian borang Edu Shop yang tertinggal/hilang. Sila semak semula kod HTML Modal anda.");
+        alert("Ralat HTML: Ada bahagian borang Edu Shop yang tertinggal/hilang.");
         return;
     }
 
-    // Masukkan maklumat ke dalam borang dengan selamat
+    // Masukkan maklumat ke dalam borang
     elStudentName.value = playerName;
     elItemID.value = itemId;
     elItemName.value = itemName;
@@ -3376,6 +3376,58 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     if (modal) modal.classList.remove('hidden');
 }
 
+// 2. Fungsi tutup borang
+function closeEduCheckout() {
+    const modal = document.getElementById('eduCheckoutModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+// 3. FUNGSI PENGIRAAN HARGA AUTO (INI YANG HILANG TADI)
+function calculateEduTotal() {
+    const qty = parseInt(document.getElementById('eduQuantity').value) || 1;
+    const price = parseInt(document.getElementById('eduBasePrice').value) || 0;
+    const stock = parseInt(document.getElementById('eduItemStock').value) || 0;
+    
+    const total = qty * price;
+    const elTotalCost = document.getElementById('eduTotalCost');
+    if(elTotalCost) elTotalCost.value = total;
+
+    if (qty > stock) {
+        showEduWarning(`Stok cikgu tidak mencukupi! Hanya tinggal ${stock} unit.`);
+        disableEduConfirmBtn();
+    } else if (qty < 1) {
+        showEduWarning(`Kuantiti mesti sekurang-kurangnya 1.`);
+        disableEduConfirmBtn();
+    } else if (typeof localPlayerData !== 'undefined' && localPlayerData.coins < total) {
+        showEduWarning(`Koin anda tidak mencukupi! Perlu ${total} koin.`);
+        disableEduConfirmBtn();
+    } else {
+        const warningEl = document.getElementById('eduWarningMsg');
+        if(warningEl) warningEl.classList.add('hidden');
+        
+        const btn = document.getElementById('eduConfirmBtn');
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
+}
+
+function showEduWarning(msg) {
+    const warningEl = document.getElementById('eduWarningMsg');
+    if(warningEl) {
+        warningEl.textContent = msg;
+        warningEl.classList.remove('hidden');
+    }
+}
+
+function disableEduConfirmBtn() {
+    const btn = document.getElementById('eduConfirmBtn');
+    if(btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+}
 
 // 4. FUNGSI HANTAR DATA KE GOOGLE SHEETS
 async function submitEduCheckout() {
@@ -3383,7 +3435,7 @@ async function submitEduCheckout() {
     
     const itemID = document.getElementById('eduItemID').value;
     const qty = parseInt(document.getElementById('eduQuantity').value);
-    const totalCost = parseInt(document.getElementById('eduTotalCost').value);
+    // const totalCost = parseInt(document.getElementById('eduTotalCost').value);
 
     // Dapatkan nama dari profil
     let playerName = document.getElementById('eduStudentName').value;
