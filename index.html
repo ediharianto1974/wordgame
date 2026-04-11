@@ -812,8 +812,18 @@ function getPlayerLevelInfo(totalScore) {
     let calculatedLevel = Math.floor(score / xpPerLevel) + 1;
     if (calculatedLevel > 150) calculatedLevel = 150; // 💥 TUKAR KE 150
 
-    // Cari pangkat dari data.js
-    let currentRank = levelRanks.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel) || {title: "Mythic", icon: "✨", colorClass: "text-purple-500"};
+    // 🚨 KOD PENYELAMAT: Cari senarai pangkat dengan selamat (Elak ralat is not defined)
+    const ranksArray = (typeof LEVEL_RANKS !== 'undefined') ? LEVEL_RANKS : 
+                       (typeof levelRanks !== 'undefined') ? levelRanks : 
+                       (typeof levelData !== 'undefined') ? levelData : [];
+
+    // Cari pangkat dari ranksArray
+    let currentRank = ranksArray.find(r => calculatedLevel >= r.minLevel && calculatedLevel <= r.maxLevel);
+    
+    // Jika tak jumpa (fallback)
+    if (!currentRank) {
+        currentRank = ranksArray.length > 0 ? ranksArray[ranksArray.length - 1] : {title: "Novice", icon: "🔰", colorClass: "text-gray-500"};
+    }
 
     // PENGIRAAN PROGRESS BAR
     let currentLevelBaseXP = (calculatedLevel - 1) * xpPerLevel;
@@ -823,12 +833,12 @@ function getPlayerLevelInfo(totalScore) {
     let xpNeededForNextLevel = xpPerLevel; 
     
     // Jika sudah level maksimum (150)
-    if (calculatedLevel >= 150) { // 💥 TUKAR KE 150
+    if (calculatedLevel >= 150) { 
         xpInCurrentLevel = xpNeededForNextLevel; 
     }
     
     let percentage = 100;
-    if (calculatedLevel < 150) { // 💥 TUKAR KE 150
+    if (calculatedLevel < 150) { 
         percentage = Math.max(0, Math.min(100, (xpInCurrentLevel / xpNeededForNextLevel) * 100));
     }
 
