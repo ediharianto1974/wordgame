@@ -1076,7 +1076,7 @@ const shopBadges = [
     { id: "gb_13", name: "Grammar Badge", icon: "fas fa-spell-check", price: 5000, type: "game", tier: "common", condition: "none" },
     { id: "gb_14", name: "Architect Badge", icon: "fas fa-ruler-combined", price: 5000, type: "game", tier: "common", condition: "none" },
     { id: "gb_15", name: "Listening Badge", icon: "fas fa-headphones", price: 5000, type: "game", tier: "common", condition: "none" },
-    { id: "gb_16", name: "Speaking Badge", icon: "fas fa-microphone", price: 5000, type: "game", tier: "common", condition: "none" }
+    { id: "gb_16", name: "Speaking Badge", icon: "fas fa-microphone", price: 5000, type: "game", tier: "common", condition: "none" },
 
     // ---------------------------------------------------------
     // 2. ACHIEVEMENT BADGES (Terkunci sehingga syarat dipenuhi)
