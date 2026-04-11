@@ -1412,16 +1412,23 @@ function updateDashboardAvatars() {
         const rawData = (typeof avatars !== 'undefined') ? avatars : (typeof avatarsData !== 'undefined' ? avatarsData : null);
 
         if (rawData && rawData[avatarKey]) {
-            const levelInfo = rawData[avatarKey].levels[active.level - 1];
+            // 👉 KOD DIBAIKI: Guna .find() untuk cari level yang tepat
+            const levelInfo = rawData[avatarKey].levels.find(l => l.level === active.level);
             
-            // 1. SETTING UNTUK IMEJ LEVEL 10
-            if (levelInfo && levelInfo.img) {
-                // Saiz dibesarkan dari w-10 ke w-20/w-24
-                visualContent = `<img src="${levelInfo.img}" class="w-24 h-24 object-contain drop-shadow-[0_0_15px_rgba(255,140,0,0.8)] mx-auto legendary-avatar" alt="${active.name}">`;
-                isLegendaryImage = true;
+            // Semak jika levelInfo wujud
+            if (levelInfo) {
+                // 1. SETTING UNTUK IMEJ LEVEL 10, 50, 100
+                if (levelInfo.img) {
+                    // Saiz dibesarkan dari w-10 ke w-20/w-24
+                    visualContent = `<img src="${levelInfo.img}" class="w-24 h-24 object-contain drop-shadow-[0_0_15px_rgba(255,140,0,0.8)] mx-auto legendary-avatar" alt="${active.name}">`;
+                    isLegendaryImage = true;
+                } else {
+                    // SETTING UNTUK IKON BIASA
+                    visualContent = `<i class="${levelInfo.icon || active.icon} text-3xl text-green-600"></i>`;
+                }
             } else {
-                // SETTING UNTUK IKON BIASA
-                visualContent = `<i class="${levelInfo.icon || active.icon} text-3xl text-green-600"></i>`;
+                // Fallback jika data level tak wujud
+                visualContent = `<i class="${active.icon} text-3xl text-green-600"></i>`;
             }
         } else {
             visualContent = `<i class="${active.icon} text-3xl text-green-600"></i>`;
@@ -1429,7 +1436,7 @@ function updateDashboardAvatars() {
 
         // 2. BINA HTML BERDASARKAN JENIS VISUAL
         if (isLegendaryImage) {
-            // REKA BENTUK LEVEL 10 (Tiada bulatan, gambar lebih besar dan bebas)
+            // REKA BENTUK LEVEL 10, 50, 100 (Tiada bulatan, gambar lebih besar dan bebas)
             container.innerHTML = `
                 <div class="flex items-center justify-center hover:scale-110 transition cursor-pointer" 
                      title="${active.name} (Level ${active.level})"
@@ -1520,16 +1527,23 @@ function renderShop() {
         let displayData = nextLevelData || avatar.levels[avatar.levels.length - 1]; 
 
         let btnHtml = '';
-        if (currentLevel >= avatar.maxLevel) {
-            btnHtml = `<button disabled class="w-full mt-4 bg-gray-300 text-gray-600 font-bold py-2 rounded-xl cursor-not-allowed border border-gray-400">MAX LEVEL REACHED</button>`;
+    if (currentLevel >= avatar.maxLevel) {
+        btnHtml = `<button disabled class="w-full mt-4 bg-gray-300 ...">MAX LEVEL REACHED</button>`;
+    } else {
+        // --- TAMBAH SYARAT LEVEL DI SINI ---
+        const canAfford = localPlayerData.coins >= nextLevelData.price;
+        const levelMet = localPlayerData.level >= nextLevelData.level; // Semak level pemain
+
+        if (canAfford && levelMet) {
+            btnHtml = `<button onclick="buyAvatar('${key}', ${nextLevelData.level}, ${nextLevelData.price})" class="w-full mt-4 bg-indigo-500 ...">Unlock Lvl ${nextLevelData.level} (${nextLevelData.price} 🪙)</button>`;
+        } else if (!levelMet) {
+            // Jika level tak cukup, butang jadi kelabu walaupun duit cukup
+            btnHtml = `<button disabled class="w-full mt-4 bg-gray-200 text-gray-400 font-bold py-2 rounded-xl border border-gray-300 cursor-not-allowed">Locked (Need Player Lvl ${nextLevelData.level})</button>`;
         } else {
-            const canAfford = localPlayerData.coins >= nextLevelData.price;
-            if (canAfford) {
-                btnHtml = `<button onclick="buyAvatar('${key}', ${nextLevelData.level}, ${nextLevelData.price})" class="w-full mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 rounded-xl transition shadow shadow-indigo-300">Unlock Lvl ${nextLevelData.level} (${nextLevelData.price} <i class="fas fa-coins"></i>)</button>`;
-            } else {
-                btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${nextLevelData.price} <i class="fas fa-coins"></i></button>`;
-            }
+            // Duit tak cukup
+            btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 ...">Need ${nextLevelData.price} 🪙</button>`;
         }
+    }
 
         const avatarVisual = displayData.img 
             ? `<img src="${displayData.img}" class="h-16 w-auto object-contain mx-auto drop-shadow-xl" alt="${displayData.name}">` 
