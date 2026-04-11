@@ -1496,7 +1496,7 @@ function updateDashboardAvatars() {
             updateDashboardAvatars(); 
         }
 
-        function renderShop() {
+function renderShop() {
     document.getElementById('coin-balance').innerText = localPlayerData.coins;
     
     const avatarsContainer = document.getElementById('tab-avatars');
@@ -1508,12 +1508,16 @@ function updateDashboardAvatars() {
     eduContainer.innerHTML = '';
 
     // ==========================================
-    // 1. RENDER AVATARS / GUARDIANS (Kekal Sama)
+    // 1. RENDER AVATARS / GUARDIANS
     // ==========================================
     for (const [key, avatar] of Object.entries(avatars)) {
         let currentLevel = localPlayerData.avatars[key] || 0;
-        let nextLevelData = avatar.levels.find(l => l.level === currentLevel + 1);
-        let displayData = nextLevelData || avatar.levels[avatar.maxLevel - 1]; 
+        
+        // PERUBAHAN 1: Cari level seterusnya yang "Lebih Besar" (>), bukan tepat-tepat tambah 1.
+        let nextLevelData = avatar.levels.find(l => l.level > currentLevel);
+        
+        // PERUBAHAN 2: Jika dah max (tiada nextLevelData), ambil item paling akhir dalam senarai (length - 1)
+        let displayData = nextLevelData || avatar.levels[avatar.levels.length - 1]; 
 
         let btnHtml = '';
         if (currentLevel >= avatar.maxLevel) {
@@ -1546,7 +1550,7 @@ function updateDashboardAvatars() {
             </div>
         `;
     }
-
+	
     // ==========================================
     // 2. RENDER BADGES BAHARU (Game & Achievements)
     // ==========================================
