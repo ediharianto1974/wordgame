@@ -1707,7 +1707,7 @@ const levelMet = actualPlayerLevel >= nextLevelData.level;
                 let btnHtml = '';
                 if (canAfford) {
                     // 🔴 DI SINI PERUBAHAN BERLAKU: Tukar buyItem kepada openEduCheckout
-                    btnHtml = `<button onclick="openEduCheckout('${item.id}', '${item.name}', ${item.price}, 999)" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow shadow-green-300">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
+                    btnHtml = `<button onclick="openEduCheckout('${item.id}', '${item.name}', ${item.price}, ${item.stock || 0})" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition shadow shadow-green-300">Buy (${item.price} <i class="fas fa-coins"></i>)</button>`;
                 } else {
                     btnHtml = `<button disabled class="w-full mt-4 bg-red-100 text-red-400 font-bold py-2 rounded-xl cursor-not-allowed border border-red-200">Need ${item.price} <i class="fas fa-coins"></i></button>`;
                 }
@@ -3322,11 +3322,23 @@ function updateCategoryProgress() {
 
 // 1. Fungsi membuka borang pembelian
 function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
-    // KOREK NAMA TERUS DARI SKRIN PROFIL ANDA
+    // KOREK NAMA DENGAN LEBIH TEPAT (Guna textContent)
     let playerName = "PELAJAR";
-    const profileNameEl = document.getElementById('profile-name');
-    if (profileNameEl && profileNameEl.innerText.trim() !== "Nama Pelajar") {
-        playerName = profileNameEl.innerText.trim().toUpperCase();
+    
+    // Cuba ambil dari data tempatan jika wujud
+    if (typeof localPlayerData !== 'undefined' && localPlayerData.name) {
+        playerName = localPlayerData.name;
+    } else if (typeof localPlayerData !== 'undefined' && localPlayerData.id) {
+        playerName = localPlayerData.id; 
+    } else {
+        // Cedok dari profil secara paksa
+        const profileNameEl = document.getElementById('profile-name');
+        if (profileNameEl) {
+            let textName = profileNameEl.textContent.trim();
+            if (textName && textName !== "Nama Pelajar") {
+                playerName = textName.toUpperCase();
+            }
+        }
     }
 
     // Semak jika kotak borang wujud sebelum masukkan data
@@ -3348,8 +3360,8 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     elItemName.value = itemName;
     elBasePrice.value = itemPrice;
     
-    // Anggap stok dari parameter
-    const stockToShow = currentStock !== undefined ? currentStock : 999;
+    // Papar stok sebenar
+    const stockToShow = currentStock !== undefined ? currentStock : 0;
     elItemStock.value = stockToShow;
     elQuantity.value = 1;
     
@@ -3375,7 +3387,6 @@ function openEduCheckout(itemId, itemName, itemPrice, currentStock) {
     const modal = document.getElementById('eduCheckoutModal');
     if (modal) modal.classList.remove('hidden');
 }
-
 // 2. Fungsi tutup borang
 function closeEduCheckout() {
     const modal = document.getElementById('eduCheckoutModal');
