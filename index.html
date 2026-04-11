@@ -1348,7 +1348,7 @@ async function startGameHub() {
         }
 
         // ==========================================
-        // PROCESS TO OPEN MAIN MENU (Kod UI Asal Anda)
+        // PROCESS TO OPEN MAIN MENU
         // ==========================================
         document.getElementById('display-name').innerText = studentInfo.name;
         document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
@@ -1376,42 +1376,7 @@ async function startGameHub() {
         startBtn.disabled = false;
     }
 }
-        // ==========================================
-        // MASUK KE MENU UTAMA
-        // ==========================================
-        document.getElementById('login-screen')?.classList.add('hidden');
-        document.getElementById('menu-screen')?.classList.remove('hidden');
-        
-        if (typeof updateProfileDisplay === 'function') updateProfileDisplay();
-        if (typeof checkLevelAccess === 'function') checkLevelAccess();
-
-    } catch (error) {
-        // INI ADALAH BAHAGIAN KOD ASAL ANDA
-        console.error(error);
-        alert("System error. Please ensure your internet connection is stable and try again.");
-        startBtn.innerText = "START ADVENTURE";
-        startBtn.disabled = false;
-    }
-}
 	
-        // --- PROCESS TO OPEN MAIN MENU ---
-        document.getElementById('display-name').innerText = studentInfo.name;
-        document.getElementById('display-class').innerText = "Class: " + studentInfo.class;
-		updatePlayerLevelUI();
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('menu-screen').classList.remove('hidden');
-		if (typeof updateCategoryProgress === "function") {
-            updateCategoryProgress();
-        }
-		checkLevelAccess();
-
-        const avatarContainer = document.getElementById('dashboard-avatars');
-        if(avatarContainer) avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-indigo-500"></i>';
-        
-        if (typeof updateDashboardAvatars === "function") {
-            updateDashboardAvatars();
-        }
-
         // --- SEMAK ACARA BULANAN (LIMITED TIME EVENT) ---
         if (typeof getCurrentEvent === "function") {
             const currentEvent = getCurrentEvent();
