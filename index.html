@@ -2045,16 +2045,36 @@ async function finishGame() {
 let currentXP = parseInt(localPlayerData.totalScore) || parseInt(localPlayerData.Total) || 0;
 let xpToAdd = parseInt(score) || 0;
 
-// KIRA LEVEL SEMASA SECARA LIVE
+// KIRA LEVEL SEMASA SECARA LIVE (Setiap 100 XP = 1 Level)
 let liveLevel = Math.floor(currentXP / 100) + 1;
 
-// 💥 A. SYARAT XP HARDCORE (Level 50 dan ke atas)
-if (liveLevel >= 50) {
-    // Hanya dapat 1 XP walau berapa pun markah yang betul
-    xpToAdd = 1;
+// 💥 A. SYARAT XP BERPERINGKAT (DIMINISHING RETURNS)
+if (liveLevel >= 100) {
+    // 1. HAD MAKSIMUM (HARD CAP): Level 100 ke atas tidak dapat XP
+    xpToAdd = 0;
+} 
+else if (liveLevel >= 90) {
+    // Level 90-99: Bahagi 6
+    xpToAdd = Math.max(1, Math.round(xpToAdd / 6));
+} 
+else if (liveLevel >= 80) {
+    // Level 80-89: Bahagi 5
+    xpToAdd = Math.max(1, Math.round(xpToAdd / 5));
+} 
+else if (liveLevel >= 70) {
+    // Level 70-79: Bahagi 4
+    xpToAdd = Math.max(1, Math.round(xpToAdd / 4));
+} 
+else if (liveLevel >= 60) {
+    // Level 60-69: Bahagi 3
+    xpToAdd = Math.max(1, Math.round(xpToAdd / 3));
+} 
+else if (liveLevel >= 50) {
+    // Level 50-59: Bahagi 2
+    xpToAdd = Math.max(1, Math.round(xpToAdd / 2));
 }
 
-// Tambah XP ke dalam memori
+// B. Tambah XP ke dalam memori
 localPlayerData.totalScore = currentXP + xpToAdd;
 localPlayerData.Total = localPlayerData.totalScore;
 
