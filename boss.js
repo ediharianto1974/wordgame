@@ -395,20 +395,24 @@ function showDamageIndicator(val) {
 }
 
 // -----------------------------------------------------------------
-// 7. KEMASKINI HP BOSS KE SERVER (VERSI FIX)
+// 7. KEMASKINI HP BOSS KE SERVER (VERSI LENGKAP & FIX)
 // -----------------------------------------------------------------
 function updateBossHPOnServer(damageAmt) {
+    // URL Web App Google Apps Script anda
     const scriptURL = "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec"; 
     
     const payload = {
         action: "submitDamage",
         eventID: window.currentActiveBoss.eventID,
-        damage: damageAmt,
+        damage: damageAmt, 
         studentName: (localPlayerData && localPlayerData.name) ? localPlayerData.name : "Pemain Berani"
     };
 
-    // Hantar data dan tunggu respon server
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify(payload) })
+    // Hantar data ke server
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify(payload) 
+    })
     .then(res => res.json())
     .then(data => {
         if(data.result === "success") {
@@ -418,28 +422,51 @@ function updateBossHPOnServer(damageAmt) {
             const newHP = data.newHP;
             const maxHP = window.currentActiveBoss.maxHp;
             
-            // Kemaskini Visual HP
-            hpBar.style.width = (newHP / maxHP) * 100 + "%";
-            hpText.innerText = `HP: ${newHP} / ${maxHP}`;
+            // 1. Kemaskini Visual HP Bar
+            if (hpBar) hpBar.style.width = (newHP / maxHP) * 100 + "%";
+            if (hpText) hpText.innerText = `HP: ${newHP} / ${maxHP}`;
             
+            // 2. Semak jika Boss sudah kalah
             if(newHP <= 0) {
-                // JIKA BOSS MATI: Hentikan masa dan tunjukkan Result
+                // Hentikan timer serta merta
                 clearInterval(bossTimerInterval);
-                alert("🎉 AMAZING! BOSS HAVE BEEN DEFEATED!");
-                fetchBossResults(window.currentActiveBoss.eventID);
+
+                // --- PENTING: TUTUP OVERLAY SUPAYA TIDAK MELINDUNG RANKING ---
+                const overlay = document.getElementById('boss-battle-overlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                }
+
+                // Tunjukkan mesej kemenangan
+                Swal.fire({
+                    icon: 'success',
+                    title: 'BOSS TELAH TEWAS!',
+                    text: 'Serangan terakhir anda telah berjaya! Syabas!',
+                    confirmButtonText: 'Lihat Ranking 🏆',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Panggil fungsi paparan jadual ranking
+                        fetchBossResults(window.currentActiveBoss.eventID);
+                    }
+                });
+
             } else {
-                // JIKA BOSS BELUM MATI: Barulah kita jana soalan seterusnya
+                // 3. Jika Boss masih hidup, teruskan ke soalan seterusnya
                 setTimeout(generateBossQuestion, 500);
-                
-                // Reset semula teks butang jika anda ada tukar tadi
+
+                // Reset semula teks butang (jika anda tukar sebelum ini)
                 const submitBtn = document.getElementById('boss-submit-btn');
                 if(submitBtn) submitBtn.innerText = "Serang! ⚔️";
             }
+        } else {
+            console.error("Ralat Server:", data.error);
         }
     })
     .catch(err => {
-        console.error("Ralat server:", err);
-        alert("Sambungan terputus! Sila periksa internet.");
+        console.error("Ralat penghantaran damage:", err);
+        // Jika internet murid bermasalah, benarkan mereka teruskan soalan
+        setTimeout(generateBossQuestion, 1000);
     });
 }
 	
