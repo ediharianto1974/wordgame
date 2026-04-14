@@ -419,7 +419,7 @@ function updateBossHPOnServer(damageAmt) {
             
             if(newHP <= 0) {
                 alert("🎉 AMAZING! BOSS HAVE BEEN DEFEATED!");
-                fetchBossResults(currentEventID);
+                fetchBossResults(window.currentActiveBoss.eventID);
             }
         }
     })
@@ -472,7 +472,10 @@ async function fetchBossResults(eventID) {
     });
 
     try {
-        let response = await fetch(scriptURL, { // Pastikan pembolehubah scriptURL anda betul
+        // Tambah baris scriptURL ini
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec";
+        
+        let response = await fetch(scriptURL, { 
             method: 'POST',
             body: JSON.stringify({ action: "getBossResults", eventID: eventID })
         });
