@@ -551,16 +551,16 @@ function showBossResultsModal(rankings, lastHitName) {
             .last-hit-badge { background-color: #ff4d4d; color: white; padding: 2px 6px; border-radius: 5px; font-size: 10px; margin-left: 5px;}
         </style>
         <div style="text-align: left; margin-bottom: 10px;">
-            <strong>⚔️ Pembunuh Boss (Last Hit):</strong> <span style="color: red; font-weight: bold;">${lastHitName || "Tiada"}</span> (+500 Koin)
+            <strong>⚔️ Boss Killer (Last Hit):</strong> <span style="color: red; font-weight: bold;">${lastHitName || "None"}</span> (+500 Koin)
         </div>
         <div style="max-height: 250px; overflow-y: auto;">
         <table class="result-table">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nama Penyerang</th>
+                    <th>Attacker</th>
                     <th>Damage 💥</th>
-                    <th>Koin Diperoleh 💰</th>
+                    <th>Coins 💰</th>
                 </tr>
             </thead>
             <tbody>
@@ -589,10 +589,10 @@ function showBossResultsModal(rankings, lastHitName) {
 
     // Paparkan menggunakan SweetAlert2
     Swal.fire({
-        title: '🏆 KEPUTUSAN BOSS BATTLE 🏆',
+        title: '🏆 BOSS BATTLE RESULT 🏆',
         html: tableHTML,
         width: '600px',
-        confirmButtonText: 'Tutup & Kembali',
+        confirmButtonText: 'CLOSE & LOGIN',
         confirmButtonColor: '#3085d6',
         allowOutsideClick: false
     }).then((result) => {
