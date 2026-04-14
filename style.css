@@ -207,12 +207,21 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Pastikan overlay boss berada di lapisan yang betul */
 #boss-battle-overlay {
-    z-index: 50; /* Cukup sekadar untuk tutup skrin utama, tapi bawah SweetAlert */
+    position: fixed; /* atau absolute jika perlu */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50; /* Di bawah SweetAlert (1060) tapi di atas UI utama */
+    background-color: rgba(0, 0, 0, 0.8); /* Contoh latar belakang gelap */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.score-text {
-    font-size: 0.75rem;
-    color: #6b7280;
-    margin-top: 4px;
+/* Pastikan class 'hidden' benar-benar berfungsi */
+.hidden {
+    display: none !important;
 }
