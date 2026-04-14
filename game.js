@@ -197,6 +197,12 @@ function timeUp() {
 }
 
 async function finishGame() {
+    // ==========================================
+    // 1. TANGKAP NAMA AWAL-AWAL SEBELUM MEMORI HILANG
+    // ==========================================
+    let currentPlayerName = localPlayerData.name || localStorage.getItem("playerName") || "Guest";
+    let currentPlayerClass = localPlayerData.class || localStorage.getItem("playerClass") || "-";
+
     const checkBtn = document.getElementById('check-btn');
     if (checkBtn && checkBtn.disabled) return; 
     
@@ -226,6 +232,7 @@ async function finishGame() {
         input.readOnly = true;
     });
 
+    // MASALAH BERLAKU DI SINI: loadCloudPlayerData mungkin memadam localPlayerData.name
     if (typeof loadCloudPlayerData === "function") await loadCloudPlayerData();
 
     if (!localPlayerData.games) localPlayerData.games = {};
@@ -263,22 +270,14 @@ async function finishGame() {
     if (typeof checkChallengeReward === "function") coinsEarned += checkChallengeReward(score); 
     if (coinsEarned > 0) localPlayerData.coins = (parseInt(localPlayerData.coins) || 0) + coinsEarned;
 
-// ==========================================
-    // 📨 PENAMBAHAN BARU: HANTAR DATA KE "Scores"
+    // ==========================================
+    // 2. POSMEN MENGHANTAR MARKAH (GUNA NAMA YANG DITANGKAP)
     // ==========================================
     try {
-        // --- KOD BAHARU: Buang passcode, utamakan memori kekal (localStorage) ---
-        let savedName = localStorage.getItem("playerName") || localStorage.getItem("username") || localStorage.getItem("currentPlayerName");
-        let savedClass = localStorage.getItem("playerClass") || localStorage.getItem("currentClass");
-
-        // Cari nama sebenar. Jika masih tiada, kekalkan "Guest" (jangan guna passcode)
-        let playerName = localPlayerData.name || localPlayerData.Name || savedName || "Guest";
-        let playerClass = localPlayerData.class || localPlayerData.Class || savedClass || "-";
-
         const scorePayload = {
             action: "submitScore",
-            name: playerName,
-            cls: playerClass,
+            name: currentPlayerName, // <--- Kita guna nama yang dah ditangkap awal-awal
+            cls: currentPlayerClass, // <--- Guna kelas yang dah ditangkap awal-awal
             type: currentGameType,             
             score: score,
             total: total
