@@ -207,6 +207,10 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+#boss-battle-overlay {
+    z-index: 50; /* Cukup sekadar untuk tutup skrin utama, tapi bawah SweetAlert */
+}
+
 .score-text {
     font-size: 0.75rem;
     color: #6b7280;
