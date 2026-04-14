@@ -196,7 +196,8 @@ function startBossFight() {
         console.log("⚔️ Perlawanan bermula menentang:", bossData.eventID);
         
         // Seterusnya: Panggil fungsi untuk menjana soalan pertama
-        generateBossQuestion(); 
+        generateBossQuestion();
+		startBossSync();
     }
 }
 
@@ -430,6 +431,7 @@ function updateBossHPOnServer(damageAmt) {
             if(newHP <= 0) {
                 // Hentikan timer serta merta
                 clearInterval(bossTimerInterval);
+				clearInterval(bossSyncInterval);
 
                 // --- PENTING: TUTUP OVERLAY SUPAYA TIDAK MELINDUNG RANKING ---
                 const overlay = document.getElementById('boss-battle-overlay');
@@ -603,4 +605,62 @@ function showBossResultsModal(rankings, lastHitName) {
             location.reload(); // Ini akan refresh semula game
         }
     });
+}
+
+// ==========================================
+// SISTEM SYNC HP BACKGROUND (LIVE UPDATE)
+// ==========================================
+let bossSyncInterval;
+
+function startBossSync() {
+    // Ejen ini akan semak server setiap 5 saat (5000ms)
+    bossSyncInterval = setInterval(async () => {
+        if (!window.currentActiveBoss) return;
+
+        // PENTING: Masukkan URL Web App anda di sini
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec";
+        
+        try {
+            const timeStamp = new Date().getTime();
+            const response = await fetch(`${scriptURL}?action=getActiveBoss&t=${timeStamp}`);
+            const data = await response.json();
+
+            // Jika ada data dari server
+            if (data) {
+                // 1. Kemaskini HP Bar supaya nampak damage orang lain
+                const hpBar = document.getElementById('boss-hp-bar');
+                const hpText = document.getElementById('boss-hp-text');
+                
+                if (hpBar) hpBar.style.width = (data.currentHp / data.maxHp) * 100 + "%";
+                if (hpText) hpText.innerText = `HP: ${data.currentHp} / ${data.maxHp}`;
+
+                // 2. Jika ejen dapati Boss dah mati (oleh orang lain)
+                if (data.currentHp <= 0) {
+                    console.log("Boss telah dibunuh oleh pemain lain!");
+                    
+                    clearInterval(bossSyncInterval); // Hentikan perisik
+                    clearInterval(bossTimerInterval); // Hentikan masa soalan pemain ini
+
+                    // Tutup skrin boss
+                    const overlay = document.getElementById('boss-battle-overlay');
+                    if (overlay) overlay.classList.add('hidden');
+
+                    // Beritahu pemain perlawanan dah tamat
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'PERLAWANAN TAMAT!',
+                        text: 'Boss telah berjaya ditewaskan oleh pemain lain!',
+                        confirmButtonText: 'Lihat Ranking 🏆',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetchBossResults(window.currentActiveBoss.eventID);
+                        }
+                    });
+                }
+            }
+        } catch (err) {
+            console.error("Ralat sync background:", err);
+        }
+    }, 5000); // Semak setiap 5 saat. Jangan letak 1 saat, nanti Google Script block sebab spam!
 }
