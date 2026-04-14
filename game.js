@@ -263,15 +263,20 @@ async function finishGame() {
     if (typeof checkChallengeReward === "function") coinsEarned += checkChallengeReward(score); 
     if (coinsEarned > 0) localPlayerData.coins = (parseInt(localPlayerData.coins) || 0) + coinsEarned;
 
-    // ==========================================
+// ==========================================
     // 📨 PENAMBAHAN BARU: HANTAR DATA KE "Scores"
     // ==========================================
     try {
+        // --- KOD BAHARU: Cari nama dari pelbagai sumber ---
+        let playerName = localPlayerData.name || localPlayerData.Name || localPlayerData.passcode || localStorage.getItem("playerName") || localStorage.getItem("username") || "Guest";
+        
+        let playerClass = localPlayerData.class || localPlayerData.Class || localStorage.getItem("playerClass") || "-";
+
         const scorePayload = {
             action: "submitScore",
-            name: localPlayerData.name || "Guest",
-            cls: localPlayerData.class || "-", // Rekod kelas murid
-            type: currentGameType,             // Rekod jenis game (cth: missing, spelling)
+            name: playerName,
+            cls: playerClass,
+            type: currentGameType,             
             score: score,
             total: total
         };
