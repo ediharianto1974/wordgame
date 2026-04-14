@@ -419,7 +419,7 @@ function updateBossHPOnServer(damageAmt) {
             
             if(newHP <= 0) {
                 alert("🎉 AMAZING! BOSS HAVE BEEN DEFEATED!");
-                location.reload(); 
+                fetchBossResults(currentEventID);
             }
         }
     })
