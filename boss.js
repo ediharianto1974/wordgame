@@ -455,3 +455,105 @@ function startBossTimer() {
         }
     }, 1000);
 }
+
+// ==========================================
+// FUNGSI PAPARAN KEPUTUSAN BOSS (RESULT SCREEN)
+// ==========================================
+
+async function fetchBossResults(eventID) {
+    // Tunjukkan mesej loading sementara tunggu data dari server
+    Swal.fire({
+        title: 'Mendapatkan Keputusan...',
+        text: 'Sila tunggu sebentar, sedang mengira markah & ganjaran.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        let response = await fetch(scriptURL, { // Pastikan pembolehubah scriptURL anda betul
+            method: 'POST',
+            body: JSON.stringify({ action: "getBossResults", eventID: eventID })
+        });
+        
+        let data = await response.json();
+        
+        if (data.result === "success") {
+            Swal.close(); // Tutup loading
+            showBossResultsModal(data.rankings, data.lastHit);
+        } else {
+            Swal.fire('Ralat', 'Gagal mendapatkan data keputusan.', 'error');
+        }
+    } catch (error) {
+        console.error("Ralat:", error);
+        Swal.fire('Ralat', 'Sistem tergendala.', 'error');
+    }
+}
+
+function showBossResultsModal(rankings, lastHitName) {
+    // Bina jadual HTML untuk senarai ranking
+    let tableHTML = `
+        <style>
+            .result-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+            .result-table th, .result-table td { padding: 8px; border-bottom: 1px solid #ddd; text-align: center; }
+            .result-table th { background-color: #f2f2f2; color: #333; }
+            .rank-1 { background-color: #ffd700; font-weight: bold; color: #000; } /* Emas */
+            .rank-2 { background-color: #e6e8fa; font-weight: bold; color: #000; } /* Perak */
+            .rank-3 { background-color: #cd7f32; font-weight: bold; color: #000; } /* Gangsa */
+            .last-hit-badge { background-color: #ff4d4d; color: white; padding: 2px 6px; border-radius: 5px; font-size: 10px; margin-left: 5px;}
+        </style>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <strong>⚔️ Pembunuh Boss (Last Hit):</strong> <span style="color: red; font-weight: bold;">${lastHitName || "Tiada"}</span> (+500 Koin)
+        </div>
+        <div style="max-height: 250px; overflow-y: auto;">
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nama Penyerang</th>
+                    <th>Damage 💥</th>
+                    <th>Koin Diperoleh 💰</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    rankings.forEach((player, index) => {
+        let rankNum = index + 1;
+        let rowClass = "";
+        if (rankNum === 1) rowClass = "rank-1";
+        else if (rankNum === 2) rowClass = "rank-2";
+        else if (rankNum === 3) rowClass = "rank-3";
+
+        let lastHitTag = player.isLastHit ? `<span class="last-hit-badge">LAST HIT</span>` : "";
+
+        tableHTML += `
+            <tr class="${rowClass}">
+                <td>${rankNum}</td>
+                <td style="text-align: left;">${player.name} ${lastHitTag}</td>
+                <td>${player.damage}</td>
+                <td>+${player.coinsEarned}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table></div>`;
+
+    // Paparkan menggunakan SweetAlert2
+    Swal.fire({
+        title: '🏆 KEPUTUSAN BOSS BATTLE 🏆',
+        html: tableHTML,
+        width: '600px',
+        confirmButtonText: 'Tutup & Kembali',
+        confirmButtonColor: '#3085d6',
+        allowOutsideClick: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ARAHAN: Masukkan kod untuk kembali ke menu utama anda di sini
+            // Contoh: window.location.href = "menu.html"; 
+            // Atau jika menggunakan paparan tab: showTab('mainMenu');
+            location.reload(); // Ini akan refresh semula game
+        }
+    });
+}
