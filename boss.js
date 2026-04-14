@@ -277,18 +277,22 @@ function generateBossQuestion() {
 function checkBossAnswer(chosen, correct) {
     clearInterval(bossTimerInterval); // Hentikan timer serta merta
 
-    // Semak jawapan (Abaikan huruf besar/kecil)
+// Semak jawapan (Abaikan huruf besar/kecil)
     if (String(chosen).toLowerCase() === String(correct).toLowerCase()) {
         
         // JAWAPAN BETUL: Damage boss ikut baki masa (bossTimeLeft)
         let damageToBoss = bossTimeLeft; 
         if (damageToBoss < 1) damageToBoss = 1; // Minimum damage = 1
 
+        // (Pilihan) Tukar teks butang supaya murid tahu sistem sedang proses
+        const submitBtn = document.getElementById('boss-submit-btn');
+        if(submitBtn) submitBtn.innerText = "Sistem mengira... ⏳";
+
         showDamageIndicator("-" + damageToBoss, "boss"); 
         updateBossHPOnServer(damageToBoss);
         
-        // Teruskan ke soalan seterusnya
-        setTimeout(generateBossQuestion, 1500);
+        // PERHATIAN: Baris 'setTimeout(generateBossQuestion)' dibuang dari sini.
+        // Kita biarkan updateBossHPOnServer yang tentukan sama ada nak keluar soalan baru atau tidak.
 
     } else {
         
@@ -391,19 +395,19 @@ function showDamageIndicator(val) {
 }
 
 // -----------------------------------------------------------------
-// 7. KEMASKINI HP BOSS KE SERVER
+// 7. KEMASKINI HP BOSS KE SERVER (VERSI FIX)
 // -----------------------------------------------------------------
 function updateBossHPOnServer(damageAmt) {
-    // PENTING: Masukkan URL Web App anda
     const scriptURL = "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec"; 
     
     const payload = {
         action: "submitDamage",
         eventID: window.currentActiveBoss.eventID,
-        damage: damageAmt, // Hantar nilai masa (timer) sebagai damage
+        damage: damageAmt,
         studentName: (localPlayerData && localPlayerData.name) ? localPlayerData.name : "Pemain Berani"
     };
 
+    // Hantar data dan tunggu respon server
     fetch(scriptURL, { method: 'POST', body: JSON.stringify(payload) })
     .then(res => res.json())
     .then(data => {
@@ -414,18 +418,31 @@ function updateBossHPOnServer(damageAmt) {
             const newHP = data.newHP;
             const maxHP = window.currentActiveBoss.maxHp;
             
+            // Kemaskini Visual HP
             hpBar.style.width = (newHP / maxHP) * 100 + "%";
             hpText.innerText = `HP: ${newHP} / ${maxHP}`;
             
             if(newHP <= 0) {
+                // JIKA BOSS MATI: Hentikan masa dan tunjukkan Result
+                clearInterval(bossTimerInterval);
                 alert("🎉 AMAZING! BOSS HAVE BEEN DEFEATED!");
                 fetchBossResults(window.currentActiveBoss.eventID);
+            } else {
+                // JIKA BOSS BELUM MATI: Barulah kita jana soalan seterusnya
+                setTimeout(generateBossQuestion, 500);
+                
+                // Reset semula teks butang jika anda ada tukar tadi
+                const submitBtn = document.getElementById('boss-submit-btn');
+                if(submitBtn) submitBtn.innerText = "Serang! ⚔️";
             }
         }
     })
-    .catch(err => console.error("Ralat server:", err));
+    .catch(err => {
+        console.error("Ralat server:", err);
+        alert("Sambungan terputus! Sila periksa internet.");
+    });
 }
-
+	
 // -----------------------------------------------------------------
 // 2. SISTEM TIMER SOALAN
 // -----------------------------------------------------------------
