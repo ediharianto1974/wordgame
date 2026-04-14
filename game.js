@@ -262,6 +262,41 @@ async function finishGame() {
     let coinsEarned = score * 2 * (typeof getCurrentEvent === "function" && getCurrentEvent() ? getCurrentEvent().multiplier : 1); 
     if (typeof checkChallengeReward === "function") coinsEarned += checkChallengeReward(score); 
     if (coinsEarned > 0) localPlayerData.coins = (parseInt(localPlayerData.coins) || 0) + coinsEarned;
+
+    // ==========================================
+    // 📨 PENAMBAHAN BARU: HANTAR DATA KE "Scores"
+    // ==========================================
+    try {
+        const scorePayload = {
+            action: "submitScore",
+            name: localPlayerData.name || "Guest",
+            cls: localPlayerData.class || "-", // Rekod kelas murid
+            type: currentGameType,             // Rekod jenis game (cth: missing, spelling)
+            score: score,
+            total: total
+        };
+
+        // Pastikan SCRIPT_URL menghala ke Apps Script anda
+        const targetURL = (typeof SCRIPT_URL !== "undefined") ? SCRIPT_URL : "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec";
+
+        fetch(targetURL, {
+            method: "POST",
+            body: JSON.stringify(scorePayload)
+        })
+        .then(res => res.json())
+        .then(data => console.log("✅ Markah berjaya dihantar ke Scores:", data))
+        .catch(err => console.error("❌ Ralat hantar markah:", err));
+    } catch (error) {
+        console.error("Gagal menjana payload markah:", error);
+    }
+    // ==========================================
+
+    // Kemaskini UI (Wajib ada)
+    if (typeof updatePlayerLevelUI === "function") updatePlayerLevelUI();
+    if (typeof saveCloudPlayerData === "function") saveCloudPlayerData();
+
+    const praiseEl = document.getElementById('praise-text');
+    if (praiseEl) praiseEl.innerText = score === total ? "Excellent! 🌟" : "Good Job! 💪";
     
     // ==========================================
     // PENAMBAHAN BARU: SEMAK RESULT CABARAN RAKAN
