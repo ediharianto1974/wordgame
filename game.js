@@ -267,10 +267,13 @@ async function finishGame() {
     // 📨 PENAMBAHAN BARU: HANTAR DATA KE "Scores"
     // ==========================================
     try {
-        // --- KOD BAHARU: Cari nama dari pelbagai sumber ---
-        let playerName = localPlayerData.name || localPlayerData.Name || localPlayerData.passcode || localStorage.getItem("playerName") || localStorage.getItem("username") || "Guest";
-        
-        let playerClass = localPlayerData.class || localPlayerData.Class || localStorage.getItem("playerClass") || "-";
+        // --- KOD BAHARU: Buang passcode, utamakan memori kekal (localStorage) ---
+        let savedName = localStorage.getItem("playerName") || localStorage.getItem("username") || localStorage.getItem("currentPlayerName");
+        let savedClass = localStorage.getItem("playerClass") || localStorage.getItem("currentClass");
+
+        // Cari nama sebenar. Jika masih tiada, kekalkan "Guest" (jangan guna passcode)
+        let playerName = localPlayerData.name || localPlayerData.Name || savedName || "Guest";
+        let playerClass = localPlayerData.class || localPlayerData.Class || savedClass || "-";
 
         const scorePayload = {
             action: "submitScore",
@@ -281,7 +284,6 @@ async function finishGame() {
             total: total
         };
 
-        // Pastikan SCRIPT_URL menghala ke Apps Script anda
         const targetURL = (typeof SCRIPT_URL !== "undefined") ? SCRIPT_URL : "https://script.google.com/macros/s/AKfycbwG1uiPv8Z0LCpHxmmcs5H3ZT_aPh0uOTfTCqmb5lyGF4C224BXObkeGJgq8pnj8W6C/exec";
 
         fetch(targetURL, {
