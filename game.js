@@ -253,8 +253,17 @@ async function finishGame() {
         input.readOnly = true;
     });
 
-    // MASALAH BERLAKU DI SINI: loadCloudPlayerData mungkin memadam localPlayerData.name
+// MASALAH BERLAKU DI SINI: loadCloudPlayerData mungkin memadam localPlayerData.name
     if (typeof loadCloudPlayerData === "function") await loadCloudPlayerData();
+
+    // ==========================================
+    // 2. SUNTIK SEMULA INGATAN (Penyelesaian Amnesia)
+    // ==========================================
+    localPlayerData.name = currentPlayerName;
+    localPlayerData.class = currentPlayerClass;
+    localStorage.setItem("playerName", currentPlayerName);
+    localStorage.setItem("playerClass", currentPlayerClass);
+    // ==========================================
 
     if (!localPlayerData.games) localPlayerData.games = {};
     let currentBest = localPlayerData.games[currentGameType] ? localPlayerData.games[currentGameType].score : -1;
