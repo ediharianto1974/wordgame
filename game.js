@@ -161,7 +161,7 @@ function initGame(type) {
                 <p class="font-bold text-gray-500 mb-2">Sebut ayat di bawah:</p>
                 <h1 class="text-2xl font-extrabold text-indigo-700 mb-4 target-word">${item.q}</h1>
                 
-                <button type="button" onclick="startListening(this)" class="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full font-bold shadow-md">
+                <button type="button" onclick="startMic(this)" class="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full font-bold shadow-md">
                     🎤 Tekan & Cakap
                 </button>
                 
@@ -755,7 +755,7 @@ window.playAudio = function(wordToSay) {
 /* ==========================================
    FUNGSI AI SUARA (SPEECH RECOGNITION)
    ========================================== */
-window.startListening = function(btnElement) {
+window.startMic = function(btnElement) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         alert("Sila gunakan Google Chrome untuk ciri Mikrofon.");
