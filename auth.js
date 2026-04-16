@@ -101,10 +101,20 @@ async function startGameHub() {
     const classInput = document.getElementById('student-class').value.trim();
     const pinInput = document.getElementById('student-pin').value.trim(); 
 
+    // Semakan Pertama: Pastikan kotak tak kosong
     if (!nameInput || !classInput) {
         alert("Please enter your name and class first!");
         return;
     }
+
+    // ==========================================
+    // PENGAWAL NAMA PENUH (WAJIB 2 PERKATAAN)
+    // ==========================================
+    if (nameInput.indexOf(' ') === -1 && nameInput.toUpperCase() !== "GAME MASTER") {
+        alert("Sila masukkan NAMA PENUH anda berserta nama bapa (Contoh: Ahmad Zaki) untuk mengelakkan nama sama dengan murid lain.");
+        return; // Hentikan proses jika hanya 1 perkataan
+    }
+    // ==========================================
 
     const startBtn = document.getElementById('start-btn');
     startBtn.innerText = "Loading data...";
