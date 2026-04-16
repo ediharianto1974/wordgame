@@ -714,3 +714,19 @@ function checkAndCompleteChallenge(playerFinalScore) {
         saveCloudPlayerData();
     }
 }
+
+/* ==========================================
+   FUNGSI AUDIO UNTUK LISTENING GAME (WEB SPEECH API)
+   ========================================== */
+window.playAudio = function(wordToSay) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); 
+        var msg = new SpeechSynthesisUtterance();
+        msg.text = wordToSay;
+        msg.lang = 'en-US'; 
+        msg.rate = 0.85; // Diperlahankan sedikit supaya murid dengar dengan jelas
+        window.speechSynthesis.speak(msg);
+    } else {
+        alert("Maaf, pelayar (browser) peranti ini tidak menyokong fungsi audio.");
+    }
+};
