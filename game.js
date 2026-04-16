@@ -153,10 +153,31 @@ function initGame(type) {
     allQuestions.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = "bg-white p-5 rounded-2xl border-l-4 border-indigo-400 shadow-sm";
-        div.innerHTML = `
-            <p class="font-bold text-gray-700 mb-3">${index + 1}. ${item.q}</p>
-            <input type="text" class="game-input w-full p-3 rounded-lg bg-gray-50 border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Type your answer here..." data-answer="${item.a}">
-        `;
+        
+        // JIKA PERMAINAN ADALAH SPEAKING / PRONUNCIATION
+        if (type === 'speaking' || type === 'pronunciation') {
+            div.classList.add('text-center'); // Ketengahkan tulisan untuk game ini
+            div.innerHTML = `
+                <p class="font-bold text-gray-500 mb-2">Sebut ayat di bawah:</p>
+                <h1 class="text-2xl font-extrabold text-indigo-700 mb-4 target-word">${item.q}</h1>
+                
+                <button type="button" onclick="startListening(this)" class="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full font-bold shadow-md">
+                    🎤 Tekan & Cakap
+                </button>
+                
+                <p class="status-text text-sm text-gray-500 mt-3 italic"></p>
+                
+                <input type="hidden" class="game-input" data-answer="${item.a}" value="">
+            `;
+        } 
+        // JIKA PERMAINAN LAIN (Menaip macam biasa)
+        else {
+            div.innerHTML = `
+                <p class="font-bold text-gray-700 mb-3">${index + 1}. ${item.q}</p>
+                <input type="text" class="game-input w-full p-3 rounded-lg bg-gray-50 border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Type your answer here..." data-answer="${item.a}">
+            `;
+        }
+        
         container.appendChild(div);
     });
 
@@ -729,4 +750,70 @@ window.playAudio = function(wordToSay) {
     } else {
         alert("Maaf, pelayar (browser) peranti ini tidak menyokong fungsi audio.");
     }
+};
+
+/* ==========================================
+   FUNGSI AI SUARA (SPEECH RECOGNITION)
+   ========================================== */
+window.startListening = function(btnElement) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("Sila gunakan Google Chrome untuk ciri Mikrofon.");
+        return;
+    }
+
+    // Cari elemen di sekeliling butang yang ditekan
+    const parentDiv = btnElement.parentElement;
+    const targetWord = parentDiv.querySelector('.target-word').innerText.toLowerCase();
+    const statusText = parentDiv.querySelector('.status-text');
+    const hiddenInput = parentDiv.querySelector('.game-input');
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    recognition.onstart = function() {
+        btnElement.innerHTML = "🎙️ Mendengar...";
+        btnElement.classList.replace('bg-red-500', 'bg-red-800');
+        statusText.innerText = "Sila sebut sekarang...";
+    };
+
+    recognition.onresult = function(event) {
+        // Ambil suara murid
+        let transcript = event.results[0][0].transcript.toLowerCase().trim();
+        
+        // Buang tanda baca supaya AI tak keliru
+        let cleanTranscript = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+        let cleanTarget = targetWord.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+
+        if (cleanTranscript === cleanTarget) {
+            statusText.innerText = "✅ TEPAT! (" + transcript + ")";
+            statusText.classList.replace('text-gray-500', 'text-green-600');
+            // Masukkan jawapan betul ke dalam input ghaib
+            hiddenInput.value = targetWord; 
+            btnElement.innerHTML = "✅ Selesai";
+            btnElement.disabled = true;
+            btnElement.classList.replace('bg-red-800', 'bg-green-500');
+        } else {
+            statusText.innerText = "❌ Anda sebut: '" + transcript + "'. Cuba lagi!";
+            statusText.classList.replace('text-gray-500', 'text-red-500');
+            btnElement.innerHTML = "🎤 Cuba Lagi";
+            btnElement.classList.replace('bg-red-800', 'bg-red-500');
+        }
+    };
+
+    recognition.onerror = function() {
+        statusText.innerText = "Gagal mengecam suara. Tekan butang lagi.";
+        btnElement.innerHTML = "🎤 Tekan & Cakap";
+        btnElement.classList.replace('bg-red-800', 'bg-red-500');
+    };
+
+    recognition.onend = function() {
+        if(btnElement.innerHTML !== "✅ Selesai") {
+            btnElement.innerHTML = "🎤 Tekan & Cakap";
+            btnElement.classList.replace('bg-red-800', 'bg-red-500');
+        }
+    };
+
+    recognition.start();
 };
