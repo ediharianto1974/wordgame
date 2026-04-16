@@ -830,10 +830,10 @@ guessing: [
 // 2. DATA AVATAR / GUARDIANS (10 JENIS & 10 LEVEL)
 // ==========================================
 const avatars = {
-    dragon: {
-        id: 'avatar_dragon', maxLevel: 10, theme: 'Grammar & Syntax',
+dragon: {
+        id: 'avatar_dragon', maxLevel: 100, theme: 'Grammar & Syntax',
         levels: [
-            { level: 1, name: 'Noun Egg', price: 3000, icon: 'fas fa-egg fa-pulse text-orange-200', desc: 'A basic naming word waiting to hatch.' },
+            { level: 1, name: 'Noun Egg', price: 300, icon: 'fas fa-egg fa-pulse text-orange-200', desc: 'A basic naming word waiting to hatch.' },
             { level: 2, name: 'Verb Hatchling', price: 600, icon: 'fas fa-egg fa-shake text-orange-300', desc: 'It is moving! An action word is born.' },
             { level: 3, name: 'Adjective Drake', price: 900, icon: 'fas fa-dragon fa-bounce text-orange-400', desc: 'Adding colorful descriptions to sentences.' },
             { level: 4, name: 'Pronoun Flyer', price: 1200, icon: 'fas fa-dragon fa-fade text-orange-500', desc: 'Replacing nouns and flying higher.' },
@@ -849,6 +849,24 @@ const avatars = {
                 img: 'avatar_dragon.png', 
                 icon: 'fas fa-dragon fa-beat legendary-avatar text-red-600 drop-shadow-lg text-2xl', 
                 desc: 'The God of Grammar! Unstoppable accuracy!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Lexical Prime', 
+                price: 30000, 
+                img: 'avatar_dragon50.png',
+                icon: 'fas fa-dragon fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Lexical Librarian', 
+                price: 300000, 
+                img: 'avatar_dragon100.png', 
+                icon: 'fas fa-dragon fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
