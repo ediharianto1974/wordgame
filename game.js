@@ -753,7 +753,7 @@ window.playAudio = function(wordToSay) {
 };
 
 /* ==========================================
-   FUNGSI AI SUARA (SPEECH RECOGNITION)
+   FUNGSI AI SUARA (SPEECH RECOGNITION) - VERSI KEBAL
    ========================================== */
 window.startMic = function(btnElement) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -762,9 +762,18 @@ window.startMic = function(btnElement) {
         return;
     }
 
-    // Cari elemen di sekeliling butang yang ditekan
-    const parentDiv = btnElement.parentElement;
-    const targetWord = parentDiv.querySelector('.target-word').innerText.toLowerCase();
+    // CARA BAHARU: Suruh sistem cari kotak utama (kad putih) berbanding kotak sebelah
+    const parentDiv = btnElement.closest('.bg-white') || btnElement.parentElement;
+    
+    // Cari elemen perkataan (AI akan cari class .target-word ATAU tag <h1> sebagai sandaran)
+    const wordElement = parentDiv.querySelector('.target-word') || parentDiv.querySelector('h1');
+    
+    if (!wordElement) {
+        alert("Ralat Sistem: Tidak dapat mengesan teks soalan di skrin.");
+        return;
+    }
+
+    const targetWord = wordElement.innerText.toLowerCase();
     const statusText = parentDiv.querySelector('.status-text');
     const hiddenInput = parentDiv.querySelector('.game-input');
 
@@ -775,7 +784,7 @@ window.startMic = function(btnElement) {
     recognition.onstart = function() {
         btnElement.innerHTML = "🎙️ Mendengar...";
         btnElement.classList.replace('bg-red-500', 'bg-red-800');
-        statusText.innerText = "Sila sebut sekarang...";
+        if(statusText) statusText.innerText = "Sila sebut sekarang...";
     };
 
     recognition.onresult = function(event) {
@@ -787,23 +796,28 @@ window.startMic = function(btnElement) {
         let cleanTarget = targetWord.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 
         if (cleanTranscript === cleanTarget) {
-            statusText.innerText = "✅ TEPAT! (" + transcript + ")";
-            statusText.classList.replace('text-gray-500', 'text-green-600');
+            if(statusText) {
+                statusText.innerText = "✅ TEPAT! (" + transcript + ")";
+                statusText.classList.replace('text-gray-500', 'text-green-600');
+            }
             // Masukkan jawapan betul ke dalam input ghaib
-            hiddenInput.value = targetWord; 
+            if(hiddenInput) hiddenInput.value = targetWord; 
+            
             btnElement.innerHTML = "✅ Selesai";
             btnElement.disabled = true;
             btnElement.classList.replace('bg-red-800', 'bg-green-500');
         } else {
-            statusText.innerText = "❌ Anda sebut: '" + transcript + "'. Cuba lagi!";
-            statusText.classList.replace('text-gray-500', 'text-red-500');
+            if(statusText) {
+                statusText.innerText = "❌ Anda sebut: '" + transcript + "'. Cuba lagi!";
+                statusText.classList.replace('text-gray-500', 'text-red-500');
+            }
             btnElement.innerHTML = "🎤 Cuba Lagi";
             btnElement.classList.replace('bg-red-800', 'bg-red-500');
         }
     };
 
-    recognition.onerror = function() {
-        statusText.innerText = "Gagal mengecam suara. Tekan butang lagi.";
+    recognition.onerror = function(event) {
+        if(statusText) statusText.innerText = "Gagal mengecam suara. Sila tekan sekali lagi.";
         btnElement.innerHTML = "🎤 Tekan & Cakap";
         btnElement.classList.replace('bg-red-800', 'bg-red-500');
     };
