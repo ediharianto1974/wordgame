@@ -852,8 +852,8 @@ const avatars = {
             }
         ]
     },
-    owl: {
-        id: 'avatar_owl', maxLevel: 10, theme: 'Vocabulary & Spelling',
+owl: {
+        id: 'avatar_owl', maxLevel: 100, theme: 'Vocabulary & Spelling', // maxLevel ditukar ke 100
         levels: [
             { level: 1, name: 'Phonics Egg', price: 300, icon: 'fas fa-egg fa-pulse text-blue-200', desc: 'The foundation of sounds and letters.' },
             { level: 2, name: 'Syllable Egg', price: 600, icon: 'fas fa-egg fa-shake text-blue-300', desc: 'Vibrating with word parts.' },
@@ -871,6 +871,24 @@ const avatars = {
                 img: 'avatar_owl.png',
                 icon: 'fas fa-feather-alt fa-beat legendary-avatar text-indigo-500 drop-shadow-lg text-2xl', 
                 desc: 'The Guardian of the Ultimate Dictionary!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Lexicon Prime', 
+                price: 30000, 
+                img: 'avatar_owl50.png',
+                icon: 'fas fa-feather-alt fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Quantum Poet', 
+                price: 300000, 
+                img: 'avatar_owl100.png', 
+                icon: 'fas fa-feather-alt fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
@@ -914,8 +932,8 @@ bot: {
             }
         ]
     },
-    wolf: {
-        id: 'avatar_wolf', maxLevel: 10, theme: 'Speaking & Fluency',
+wolf: {
+        id: 'avatar_wolf', maxLevel: 100, theme: 'Speaking & Fluency',
         levels: [
             { level: 1, name: 'Whisper Paw', price: 300, icon: 'fas fa-paw fa-pulse text-cyan-200', desc: 'Practicing quiet pronunciation.' },
             { level: 2, name: 'Echo Paw', price: 600, icon: 'fas fa-paw fa-shake text-cyan-300', desc: 'Repeating native sounds perfectly.' },
@@ -933,11 +951,29 @@ bot: {
                 img: 'avatar_wolf.png',
                 icon: 'fas fa-moon fa-beat legendary-avatar text-cyan-500 drop-shadow-lg text-2xl', 
                 desc: 'The Legendary Voice of the Forest!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Aetheric Prime', 
+                price: 30000, 
+                img: 'avatar_wolf50.png',
+                icon: 'fas fa-moon fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Aetheric Scribe', 
+                price: 300000, 
+                img: 'avatar_wolf100.png', 
+                icon: 'fas fa-moon fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
     phoenix: {
-        id: 'avatar_phoenix', maxLevel: 10, theme: 'Writing & Composition',
+        id: 'avatar_phoenix', maxLevel: 100, theme: 'Writing & Composition',
         levels: [
             { level: 1, name: 'Idea Feather', price: 300, icon: 'fas fa-fire fa-pulse text-yellow-300', desc: 'A tiny spark of a writing topic.' },
             { level: 2, name: 'Drafting Feather', price: 600, icon: 'fas fa-fire fa-shake text-yellow-400', desc: 'Putting first thoughts on paper.' },
@@ -955,11 +991,29 @@ bot: {
                 img: 'avatar_phoenix.png',
                 icon: 'fas fa-fire-alt fa-beat legendary-avatar text-yellow-500 drop-shadow-lg text-2xl', 
                 desc: 'The Immortal Master of Stories!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Arcanist Prime', 
+                price: 30000, 
+                img: 'avatar_phoenix50.png',
+                icon: 'fas fa-fire-alt fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Data Arcanist', 
+                price: 300000, 
+                img: 'avatar_phoenix100.png', 
+                icon: 'fas fa-fire-alt fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
     leviathan: {
-        id: 'avatar_leviathan', maxLevel: 10, theme: 'Reading & Comprehension',
+        id: 'avatar_leviathan', maxLevel: 100, theme: 'Reading & Comprehension',
         levels: [
             { level: 1, name: 'Context Drop', price: 300, icon: 'fas fa-tint fa-pulse text-blue-200', desc: 'Guessing meaning from context.' },
             { level: 2, name: 'Skimming Drop', price: 600, icon: 'fas fa-tint fa-shake text-blue-300', desc: 'Reading fast to get the main idea.' },
@@ -977,11 +1031,29 @@ bot: {
                 img: 'avatar_leviathan.png',
                 icon: 'fas fa-water fa-beat legendary-avatar text-blue-500 drop-shadow-lg text-2xl', 
                 desc: 'An unstoppable wave of knowledge!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Nanotech Prime', 
+                price: 30000, 
+                img: 'avatar_leviathan50.png',
+                icon: 'fas fa-water fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Nanotech Bard', 
+                price: 300000, 
+                img: 'avatar_leviathan100.png', 
+                icon: 'fas fa-water fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
     unicorn: {
-        id: 'avatar_unicorn', maxLevel: 10, theme: 'Figurative Language',
+        id: 'avatar_unicorn', maxLevel: 100, theme: 'Figurative Language',
         levels: [
             { level: 1, name: 'Rhyme Dust', price: 300, icon: 'fas fa-star fa-pulse text-pink-200', desc: 'Words that sound magically alike.' },
             { level: 2, name: 'Simile Dust', price: 600, icon: 'fas fa-star fa-shake text-pink-300', desc: 'As bright as a glowing star.' },
@@ -999,11 +1071,29 @@ bot: {
                 img: 'avatar_unicorn.png',
                 icon: 'fas fa-horse-head fa-beat legendary-avatar text-pink-500 drop-shadow-lg text-2xl', 
                 desc: 'The most beautiful magic in literature!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Cosmic Prime', 
+                price: 30000, 
+                img: 'avatar_unicorn50.png',
+                icon: 'fas fa-horse-head fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Cosmic Narrator', 
+                price: 300000, 
+                img: 'avatar_unicorn100.png', 
+                icon: 'fas fa-horse-head fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
     golem: {
-        id: 'avatar_golem', maxLevel: 10, theme: 'Tenses & Structure',
+        id: 'avatar_golem', maxLevel: 100, theme: 'Tenses & Structure',
         levels: [
             { level: 1, name: 'Past Pebble', price: 300, icon: 'fas fa-circle fa-pulse text-gray-400', desc: 'Actions that already happened.' },
             { level: 2, name: 'Present Pebble', price: 600, icon: 'fas fa-circle fa-shake text-gray-500', desc: 'Actions happening right now.' },
@@ -1021,11 +1111,29 @@ bot: {
                 img: 'avatar_golem.png',
                 icon: 'fas fa-mountain fa-shake legendary-avatar text-gray-900 drop-shadow-lg text-2xl', 
                 desc: 'The Unshakeable Earth Shaker!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Cyber Prime', 
+                price: 30000, 
+                img: 'avatar_golem50.png',
+                icon: 'fas fa-mountain fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Cyber Etymologist', 
+                price: 300000, 
+                img: 'avatar_golem100.png', 
+                icon: 'fas fa-mountain fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
     fairy: {
-        id: 'avatar_fairy', maxLevel: 10, theme: 'Listening & Communication',
+        id: 'avatar_fairy', maxLevel: 100, theme: 'Listening & Communication',
         levels: [
             { level: 1, name: 'Sound Seedling', price: 300, icon: 'fas fa-seedling fa-pulse text-green-300', desc: 'Catching the first English sounds.' },
             { level: 2, name: 'Tune Sprout', price: 600, icon: 'fas fa-seedling fa-shake text-green-400', desc: 'Listening to the rhythm of sentences.' },
@@ -1038,16 +1146,34 @@ bot: {
             { level: 9, name: 'Polyglot Mythic', price: 2700, icon: 'fas fa-tree fa-pulse text-teal-800', desc: 'Glowing with communication magic.' },
             { 
                 level: 10, 
-                name: 'Bionic Botanis & Grammarian ', 
+                name: 'Bionic Botanist & Grammarian', 
                 price: 3000, 
                 img: 'avatar_fairy.png',
                 icon: 'fas fa-tree fa-beat legendary-avatar text-green-500 drop-shadow-lg text-2xl', 
                 desc: 'The Queen of Global Connections!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Botanist Prime', 
+                price: 30000, 
+                img: 'avatar_fairy50.png',
+                icon: 'fas fa-tree fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Bionic Botanist', 
+                price: 300000, 
+                img: 'avatar_fairy100.png', 
+                icon: 'fas fa-tree fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     },
     lion: {
-        id: 'avatar_lion', maxLevel: 10, theme: 'Debate & Persuasion',
+        id: 'avatar_lion', maxLevel: 100, theme: 'Debate & Persuasion',
         levels: [
             { level: 1, name: 'Claim Kitten', price: 300, icon: 'fas fa-bolt fa-pulse text-yellow-200', desc: 'Making a tiny but valid point.' },
             { level: 2, name: 'Reason Kitten', price: 600, icon: 'fas fa-bolt fa-shake text-yellow-300', desc: 'Backing up claims with "because".' },
@@ -1065,11 +1191,28 @@ bot: {
                 img: 'avatar_lion.png',
                 icon: 'fas fa-crown fa-beat legendary-avatar text-yellow-400 drop-shadow-lg text-2xl', 
                 desc: 'The Absolute King of the Stage!' 
+            },
+            // ======== TAMBAHAN LEVEL 50 ========
+            { 
+                level: 50, 
+                name: 'Supreme Aether Prime', 
+                price: 30000, 
+                img: 'avatar_lion50.png',
+                icon: 'fas fa-crown fa-spin text-yellow-500 drop-shadow-lg text-3xl', 
+                desc: 'Exclusive Guardian for reaching Level 50!' 
+            },
+            // ======== TAMBAHAN LEVEL 100 ========
+            { 
+                level: 100, 
+                name: 'God-Tier Aether Historian', 
+                price: 300000, 
+                img: 'avatar_lion100.png', 
+                icon: 'fas fa-crown fa-beat text-red-500 drop-shadow-2xl text-4xl', 
+                desc: 'Mythical Guardian for the ultimate Level 100 player!' 
             }
         ]
     }
 };
-
 // ==========================================
 // DATA KEDAI BADGE (BADGES SHOP)
 // ==========================================
